@@ -14,7 +14,10 @@ const ArticleItem = ({ article }: ArticleItemProps) => {
       <p className="my-2 text-xl text-gray-700 p-1 line-clamp-1">
         {article.body}
       </p>
-      <Link className="text-xl bg-purple-700 hover:bg-purple-800 w-full block text-center p-1 text-white rounded-lg" href={`/articles/${article.id}`}>
+      <Link
+        className="text-xl bg-purple-700 hover:bg-purple-800 w-full block text-center p-1 text-white rounded-lg"
+        href={`/articles/${article.id}`}
+      >
         Read More
       </Link>
     </div>
