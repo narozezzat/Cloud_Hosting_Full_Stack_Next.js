@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import { ToastContainer } from 'react-toastify';
 import './globals.css'
 import Header from '@/components/header/Header';
 import Footer from '@/components/Footer';
@@ -11,13 +12,14 @@ export const metadata: Metadata = {
   description: 'Cloud hosting project',
 }
 
-export default function RootLayout({children}: {children: React.ReactNode}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body className={inter.className}>
         <Header />
+        <ToastContainer theme='colored' position='top-center' />
         <main>
-         {children}
+          {children}
         </main>
         <Footer />
       </body>
