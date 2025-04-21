@@ -1,3 +1,6 @@
+import AddCommentForm from "@/components/comments/AddCommentForm";
+import CommentItem from "@/components/comments/CommentItem";
+
 interface SingleArticlePageProps {
     params: {
         id: string;
@@ -18,8 +21,8 @@ const SingleArticlePage = async ({ params }: SingleArticlePageProps) => {
     // }, [router]);
 
     return (
-        <section className="fix-height container m-auto w-full px-5 pt-8 md:w-3/4">
-            <div className="bg-white p-7 rounded-lg">
+        <section className="container m-auto w-full px-5 pt-8 md:w-3/4 pb-14">
+            <div className="bg-white p-7 rounded-lg mb-7">
                 {/* <button
                     className="bg-gray-700 text-white px-3 py-1 rounded-lg"
                 >
@@ -31,6 +34,13 @@ const SingleArticlePage = async ({ params }: SingleArticlePageProps) => {
                 <div className="text-gray-400">1/1/2024</div>
                 <p className="text-gray-800 text-xl mt-5">{article.body}</p>
             </div>
+            <AddCommentForm />
+            <h4 className="text-xl text-gray-800 ps-1 font-semibold mb-2 mt-7">
+                Comments
+            </h4>
+            <CommentItem />
+            <CommentItem />
+            <CommentItem />
         </section >
     )
 }
