@@ -1,3 +1,9 @@
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: 'About',
+  description: 'This is about page',
+}
 const AboutPage = () => {
   return (
     <section className="fix-height container m-auto">

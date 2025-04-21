@@ -1,5 +1,11 @@
 import ArticleItem from "@/components/articles/ArticleItem";
 import { Article } from '@/utils/types';
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: 'Articles',
+  description: 'Articles about programming',
+}
 
 const ArticlesPage = async () => {
   const response = await fetch(
