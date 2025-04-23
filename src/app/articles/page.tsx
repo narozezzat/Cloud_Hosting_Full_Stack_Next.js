@@ -10,6 +10,9 @@ export const metadata: Metadata = {
 }
 
 const ArticlesPage = async () => {
+  // delay 3s
+  // await new Promise((resolve) => setTimeout(resolve, 3000))
+
   const response = await fetch(
     "https://jsonplaceholder.typicode.com/posts",
     // { cache: "no-store" } // To Prevent Caching data and send request again
