@@ -43,12 +43,34 @@ export async function GET(request: NextRequest, { params }: Props) {
  */
 
 export async function PUT(request: NextRequest, { params }: Props) {
-  const article = articles.find((a) => a.id === parseInt(params.id));
-  if (!article) {
-    return NextResponse.json({ message: "article not found" }, { status: 404 });
+  try {
+    const article = await prisma.article.findUnique({
+      where: { id: parseInt(params.id) },
+    });
+
+    if (!article) {
+      return NextResponse.json(
+        { message: "article not found" },
+        { status: 404 }
+      );
+    }
+
+    const body = (await request.json()) as UpdateArticleDto;
+    const updatedArticle = await prisma.article.update({
+      where: { id: parseInt(params.id) },
+      data: {
+        title: body.title,
+        description: body.description,
+      },
+    });
+
+    return NextResponse.json(updatedArticle, { status: 200 });
+  } catch (error) {
+    return NextResponse.json(
+      { message: "internal server error" },
+      { status: 500 }
+    );
   }
-  const body = (await request.json()) as UpdateArticleDto;
-  return NextResponse.json({ message: "article updated" }, { status: 200 });
 }
 
 /**
@@ -58,10 +80,23 @@ export async function PUT(request: NextRequest, { params }: Props) {
  *  @access  public
  */
 export async function DELETE(request: NextRequest, { params }: Props) {
-  const article = articles.find((a) => a.id === parseInt(params.id));
-  if (!article) {
-    return NextResponse.json({ message: "article not found" }, { status: 404 });
-  }
+  try {
+    const article = await prisma.article.findUnique({
+      where: { id: parseInt(params.id) },
+    });
+    if (!article) {
+      return NextResponse.json(
+        { message: "article not found" },
+        { status: 404 }
+      );
+    }
 
-  return NextResponse.json({ message: "article deleted" }, { status: 200 });
+    await prisma.article.delete({ where: { id: parseInt(params.id) } });
+    return NextResponse.json({ message: "article deleted" }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json(
+      { message: "internal server error" },
+      { status: 500 }
+    );
+  }
 }
