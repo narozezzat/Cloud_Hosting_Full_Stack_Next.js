@@ -1,4 +1,5 @@
 import { articles } from "@/utils/data";
+import prisma from "@/utils/db";
 import { UpdateArticleDto } from "@/utils/dtos";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -13,12 +14,25 @@ interface Props {
  *  @access  public
  */
 
-export function GET(request: NextRequest, { params }: Props) {
-  const article = articles.find((a) => a.id === parseInt(params.id));
-  if (!article) {
-    return NextResponse.json({ message: "article not found" }, { status: 404 });
+export async function GET(request: NextRequest, { params }: Props) {
+  try {
+    const article = await prisma.article.findUnique({
+      where: { id: parseInt(params.id) },
+    });
+    if (!article) {
+      return NextResponse.json(
+        { message: "article not found" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(article, { status: 200 });
+  } catch (error) {
+    return NextResponse.json(
+      { message: "internal server error" },
+      { status: 500 }
+    );
   }
-  return NextResponse.json(article, { status: 200 });
 }
 
 /**
