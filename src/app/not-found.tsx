@@ -1,16 +1,17 @@
-import Link from 'next/link';
+import { Button, Result } from 'antd';
 
 const NotFoundPage = () => {
   return (
-    <section className='fix-height flex justify-center items-center flex-col'>
-        <h1 className='text-7xl text-gray-800 font-bold'>404</h1>
-        <p className='text-gray-500 text-3xl mt-2 mb-5'>
-            Page Not Found
-        </p>
-        <Link className='text-xl underline text-blue-700' href="/">
-            Go to home page
-        </Link>
-    </section>
+    <div className="flex fix-height items-center justify-center bg-gray-100">
+      <Result
+        status="404"
+        title="404"
+        subTitle="Sorry, the page you visited does not exist."
+        extra={
+          <Button href='/' type="primary">Back Home</Button>
+        }
+      />
+    </div>
   )
 }
 

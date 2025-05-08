@@ -8,7 +8,7 @@ const HomePage = () => {
       <h2 className="text-center mt-10 text-3xl font-bold">
         Choose Your Web Hosting Plan
       </h2>
-      <div className="container m-auto flex justify-center items-center mt-7 mb-20 flex-wrap md:gap-7">
+      <div className="container m-auto flex justify-center items-center mt-7 flex-wrap md:gap-7">
         <WebHostingPlan />
         <WebHostingPlan />
         <WebHostingPlan />

@@ -1,11 +1,13 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import { ToastContainer } from 'react-toastify';
 import './globals.css'
-import Header from '@/components/header/Header';
-import Footer from '@/components/Footer';
+import Header from '@/components/header/Header'
+import Footer from '@/components/Footer'
+import { ToastContainer } from 'react-toastify'
+import AntThemeProvider from './common/themes/MainThem'
 
-const inter = Inter({ subsets: ['latin'] });
+
+const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'Cloud Hosting',
@@ -13,19 +15,21 @@ export const metadata: Metadata = {
 }
 
 interface RootLayoutProps {
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Header />
-        <ToastContainer theme='colored' position='top-center' />
-        <main>
-          {children}
-        </main>
-        <Footer />
+        <AntThemeProvider>
+          <Header />
+          <ToastContainer theme='colored' position='top-center' />
+          <main>
+            {children}
+          </main>
+          <Footer />
+        </AntThemeProvider>
       </body>
     </html>
   )
