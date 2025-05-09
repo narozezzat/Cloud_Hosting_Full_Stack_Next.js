@@ -1,9 +1,8 @@
 import { LoginUserDto } from "@/utils/dtos";
 import { NextResponse, NextRequest } from "next/server";
-import { loginSchema } from "@/utils/validationShemas";
+import { loginSchema } from "@/utils/validationSchema";
 import prisma from "@/utils/db";
 import bcrypt from "bcryptjs";
-import { JWTPayload } from "@/utils/types";
 import { setCookie } from "@/utils/generateToken";
 /**
  *  @method  POST

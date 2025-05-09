@@ -1,5 +1,5 @@
 import { RegisterUserDto } from "@/utils/dtos";
-import { registerSchema } from "@/utils/validationShemas";
+import { registerSchema } from "@/utils/validationSchema";
 import { NextResponse, NextRequest } from "next/server";
 import prisma from "@/utils/db";
 import bcrypt from "bcryptjs";

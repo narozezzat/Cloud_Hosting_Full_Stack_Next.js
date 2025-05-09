@@ -1,7 +1,7 @@
 import prisma from "@/utils/db";
 import { CreateArticleDto } from "@/utils/dtos";
 import { Article } from "../../../generated/prisma";
-import { createArticleSchema } from "@/utils/validationShemas";
+import { createArticleSchema } from "@/utils/validationSchema";
 import { NextRequest, NextResponse } from "next/server";
 
 /**
