@@ -1,5 +1,7 @@
 "use client";
 
+import FloatInput from "@/app/common/float-input/FloatInput";
+import { Button, Form, Input } from "antd";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from 'react-toastify';
@@ -10,7 +12,6 @@ const LoginForm = () => {
     const [password, setPassword] = useState("");
 
     const formSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
         if (email === "") return toast.error("Email is required");
         if (password === "") return toast.error("Password is required");
         console.log({ email, password });
@@ -18,28 +19,39 @@ const LoginForm = () => {
     }
 
     return (
-        <form onSubmit={formSubmitHandler} className="flex flex-col">
-            <input
-                type="email"
-                placeholder="Enter Your Email"
-                className="w-full p-2 rounded text-xl border mb-4"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-            />
-            <input
-                type="password"
-                placeholder="Enter Your Password"
-                className="w-full p-2 rounded text-xl border mb-4"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-            />
-            <button
-                type="submit"
-                className="text-2xl bg-blue-800 text-white p-2 rounded-lg font-bold"
+        <Form onFinish={formSubmitHandler} className="flex gap-6 flex-col">
+            <Form.Item noStyle>
+                <FloatInput
+                    type="email"
+                    label="Email"
+                    name="email"
+                    className="w-full rounded text-xl"
+                    placeholder="Enter Your Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                />
+            </Form.Item>
+            <Form.Item noStyle>
+                <FloatInput
+                    type="password"
+                    label="Password"
+                    name="password"
+                    className="w-full rounded text-xl border"
+                    placeholder="Enter Your Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                />
+            </Form.Item>
+            <Button
+                type="primary"
+                htmlType="submit"
+                className="w-full h-[48px] rounded text-xl text-white hover:text-white mb-4 font-bold bg-[#0059d6] hover:!bg-[#2419be]"
             >
                 Log In
-            </button>
-        </form>)
+            </Button>
+        </Form>)
 }
 
 export default LoginForm

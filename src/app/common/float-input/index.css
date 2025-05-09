@@ -1,0 +1,44 @@
+.float-label {
+  position: relative;
+  margin-top: 10px;
+  font-size: 14px; /* Base font size */
+}
+
+.label {
+  font-weight: normal;
+  position: absolute;
+  pointer-events: none;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: 0.2s ease all;
+  z-index: 1;
+  font-size: inherit; /* Inherit from parent */
+}
+
+.as-placeholder {
+  color: gray;
+}
+
+.as-label {
+  top: 0;
+  transform: translateY(-50%);
+  font-size: 12px !important; /* Fixed small size when floating */
+  background: white;
+  padding: 0 6px;
+  margin-left: -4px;
+}
+
+.float-label input {
+  border: 1px solid black;
+  padding: 8px;
+}
+
+.float-label input:focus {
+  border: 1px solid #007bad;
+  outline: 1px solid #007bad;
+}
+
+.float-label:focus-within .label {
+  color: #007bad;
+}

@@ -1,5 +1,5 @@
 .header {
-  height: 100px;
+  height: 80px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -10,6 +10,10 @@
   z-index: 1000;
   position: sticky;
   top: 0;
+
+  @media (max-width: 600px) {
+    padding: 0 10px;
+  }
 }
 
 .navbar {
@@ -36,6 +40,7 @@
 
 .navLinks {
   margin-left: 30px;
+  margin-bottom: 0;
 }
 
 .navLink {
@@ -52,9 +57,9 @@
 
 .btn {
   cursor: pointer;
-  background-color: blue;
+  background-color: #0059d6;
   color: white;
-  border-radius: 10px;
+  border-radius: 6px;
   padding: 5px 10px;
   font-size: 21px;
   font-weight: 600;
@@ -63,11 +68,11 @@
 }
 
 .btn:hover {
-  background-color: darkblue;
+  background-color: #2419be;
 }
 
 .navLink:hover {
-  color: darkblue;
+  color: #0059d6;
 }
 
 @media (max-width: 1080px) {

@@ -1,4 +1,6 @@
 "use client";
+import FloatInput from '@/app/common/float-input/FloatInput';
+import { Button, Form } from 'antd';
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 
@@ -8,7 +10,6 @@ const RegisterForm = () => {
     const [password, setPassword] = useState("");
 
     const formSubmitHandler = (e: React.FormEvent) => {
-        e.preventDefault();
         if (username === "") return toast.error("Username is required");
         if (email === "") return toast.error("Email is required");
         if (password === "") return toast.error("Password is required");
@@ -17,32 +18,57 @@ const RegisterForm = () => {
     }
 
     return (
-        <form onSubmit={formSubmitHandler} className="flex flex-col">
-            <input
-                className="mb-4 border rounded p-2 text-xl"
-                type="text"
-                placeholder="Enter Your Username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-            />
-            <input
-                className="mb-4 border rounded p-2 text-xl"
-                type="email"
-                placeholder="Enter Your Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-            />
-            <input
-                className="mb-4 border rounded p-2 text-xl"
-                type="password"
-                placeholder="Enter Your Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-            />
-            <button type="submit" className="text-2xl text-white bg-blue-800 p-2 rounded-lg font-bold">
+        <Form onFinish={formSubmitHandler} className="flex gap-4 flex-col">
+            <Form.Item
+                name="username"
+                noStyle
+            >
+                <FloatInput
+                    className="border rounded w-full text-xl"
+                    type="text"
+                    label="Username"
+                    placeholder="Enter Your Username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                />
+            </Form.Item>
+            <Form.Item
+                name="email"
+                noStyle
+            >
+                <FloatInput
+                    className="border rounded w-full p-2 text-xl"
+                    type="email"
+                    label="Email"
+                    placeholder="Enter Your Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                />
+            </Form.Item>
+            <Form.Item
+                name="password"
+                noStyle
+            >
+                <FloatInput
+                    className="border rounded w-full p-2 text-xl"
+                    type="password"
+                    label="Password"
+                    placeholder="Enter Your Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                />
+            </Form.Item>
+            <Button
+                htmlType='submit'
+                type="primary"
+                className="w-full h-[48px] mt-1 rounded text-xl text-white hover:text-white font-bold bg-[#0059d6] hover:!bg-[#2419be]"
+            >
                 Register
-            </button>
-        </form>
+            </Button>
+        </Form>
     )
 }
 

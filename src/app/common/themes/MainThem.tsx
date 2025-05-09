@@ -39,8 +39,8 @@ export const themeColors = {
     "light-1": "#FFF7E1",
     DEFAULT: "#FFC043",
   },
-  reservedInactive: "#F59E0B",
-  contracted: "#581a85",
+  // reservedInactive: "#F59E0B",
+  // contracted: "#581a85",
 };
 
 const theme: ConfigProviderProps["theme"] = {

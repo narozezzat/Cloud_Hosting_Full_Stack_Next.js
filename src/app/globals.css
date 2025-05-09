@@ -21,9 +21,17 @@ body {
 }
 
 .fix-height {
-  min-height: calc(100vh - 150px);
+  min-height: calc(100vh - 120px);
 }
 
 .overflow-height {
-  height: calc(100vh - 150px);
+  height: calc(100vh - 120px);
+}
+
+.fluid-heading {
+  font-size: clamp(1.5rem, 5vw, 2rem);
+}
+
+.fluid-footer {
+  font-size: clamp(0.8rem, 2vw, 1rem);
 }
