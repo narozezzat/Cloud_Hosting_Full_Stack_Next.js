@@ -1,9 +1,11 @@
-import { getSingleArticle } from "@/apiCalls/articleApiCall";
+// import { getSingleArticle } from "@/apiCalls/articleApiCall";
 import AddCommentForm from "@/components/comments/AddCommentForm";
 import CommentItem from "@/components/comments/CommentItem";
 import { SingleArticle } from "@/utils/types";
 import { verifyTokenForPage } from "@/utils/verifyToken";
 import { cookies } from "next/headers";
+import prisma from "@/utils/db";
+import { redirect } from "next/navigation";
 
 interface SingleArticlePageProps {
     params: {
@@ -15,8 +17,29 @@ const SingleArticlePage = async ({ params }: SingleArticlePageProps) => {
     const token = cookies().get("jwtToken")?.value || "";
     const payload = verifyTokenForPage(token);
 
-    const article: SingleArticle = await getSingleArticle(params.id);
+    //const article: SingleArticle = await getSingleArticle(params.id);
 
+    const article = await prisma.article.findUnique({
+        where: { id: parseInt(params.id) },
+        include: {
+            comments: {
+                include: {
+                    user: {
+                        select: {
+                            username: true,
+                        }
+                    }
+                },
+                orderBy: {
+                    createdAt: 'desc'
+                }
+            }
+        }
+    }) as SingleArticle;
+
+    if (!article) {
+        redirect("/not-found");
+    }
     return (
         <section className="container m-auto w-full px-5 pt-8 md:w-3/4 pb-14">
             <div className="bg-white p-7 rounded-lg mb-7">
