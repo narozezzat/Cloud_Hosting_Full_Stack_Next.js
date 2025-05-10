@@ -2,11 +2,12 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { verifyTokenForPage } from "@/utils/verifyToken";
 import { Article } from "@/generated/prisma";
-import { getArticles, getArticlesCount } from "@/apiCalls/articleApiCall";
+import { getArticles } from "@/apiCalls/articleApiCall";
 import { ARTICLE_PER_PAGE } from "@/utils/constants";
 import Link from "next/link";
 import DeleteArticleButton from "./DeleteArticleButton";
 import Pagination from "@/components/articles/Pagination";
+import prisma from "@/utils/db";
 
 interface AdminArticlesTableProps {
     searchParams: { pageNumber: string };
@@ -22,7 +23,7 @@ const AdminArticlesTable = async ({ searchParams: { pageNumber } }: AdminArticle
     if (payload?.isAdmin === false) redirect("/");
 
     const articles: Article[] = await getArticles(pageNumber);
-    const count: number = await getArticlesCount();
+    const count: number = await prisma.article.count();
     const pages = Math.ceil(count / ARTICLE_PER_PAGE);
 
 
