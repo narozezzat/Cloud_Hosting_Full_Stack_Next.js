@@ -1,6 +1,4 @@
-import { Article } from "./types";
-
-export const articles: Article[] = [
+export const articles = [
   {
     id: 1,
     userId: 101,

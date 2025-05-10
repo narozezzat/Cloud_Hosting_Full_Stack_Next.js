@@ -7,7 +7,11 @@ import { AiOutlineMenu } from "react-icons/ai";
 import { IoMdClose } from "react-icons/io";
 import { usePathname } from "next/navigation";
 
-const Navbar = () => {
+interface NavbarProps {
+    isAdmin: boolean;
+}
+
+const Navbar = ({ isAdmin }: NavbarProps) => {
     const [toggle, setToggle] = useState(false);
     const pathname = usePathname();
 
@@ -51,13 +55,9 @@ const Navbar = () => {
                     >
                         About
                     </Link>
-                    <Link
-                        onClick={() => setToggle(false)}
-                        className={`${styles.navLink} ${pathname.startsWith('/admin') ? styles.activeLink : ''}`}
-                        href="/admin"
-                    >
-                        Admin Dashboard
-                    </Link>
+                    {isAdmin && (
+                        <Link onClick={() => setToggle(false)} className={styles.navLink} href="/admin">Admin Dashboard</Link>
+                    )}
                 </ul>
             </div>
         </nav>
