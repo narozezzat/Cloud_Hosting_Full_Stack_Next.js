@@ -18,7 +18,6 @@
 
 .navbar {
   display: flex;
-  align-items: center;
   justify-content: space-between;
 }
 
@@ -47,6 +46,35 @@
   font-size: 20px;
   font-weight: 600;
   margin: 0 12px;
+  padding-bottom: 3px;
+  border-bottom: 2px solid transparent;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.navLink:hover,
+.activeLink {
+  color: #0059d6;
+  border-bottom: 2px solid #0059d6;
+}
+
+.navLink::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -3px;
+  left: 0;
+  background-color: #0059d6;
+  transition: width 0.3s ease;
+}
+
+.navLink:hover::after {
+  width: 100%;
+}
+
+.activeLink::after {
+  width: 100%;
 }
 
 .right {

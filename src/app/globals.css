@@ -21,11 +21,11 @@ body {
 }
 
 .fix-height {
-  min-height: calc(100vh - 120px);
+  min-height: calc(100vh - 130px);
 }
 
 .overflow-height {
-  height: calc(100vh - 120px);
+  height: calc(100vh - 130px);
 }
 
 .fluid-heading {

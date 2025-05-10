@@ -5,9 +5,11 @@ import { GrTechnology } from "react-icons/gr";
 import { useState } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
 import { IoMdClose } from "react-icons/io";
+import { usePathname } from "next/navigation";
 
 const Navbar = () => {
     const [toggle, setToggle] = useState(false);
+    const pathname = usePathname();
 
     return (
         <nav className={styles.navbar}>
@@ -28,10 +30,34 @@ const Navbar = () => {
                 }}
             >
                 <ul className={styles.navLinks}>
-                    <Link onClick={() => setToggle(false)} className={styles.navLink} href="/">Home</Link>
-                    <Link onClick={() => setToggle(false)} className={styles.navLink} href="/articles">Articles</Link>
-                    <Link onClick={() => setToggle(false)} className={styles.navLink} href="/about">About</Link>
-                    <Link onClick={() => setToggle(false)} className={styles.navLink} href="/admin">Admin Dashboard</Link>
+                    <Link
+                        onClick={() => setToggle(false)}
+                        className={`${styles.navLink} ${pathname === '/' ? styles.activeLink : ''}`}
+                        href="/"
+                    >
+                        Home
+                    </Link>
+                    <Link
+                        onClick={() => setToggle(false)}
+                        className={`${styles.navLink} ${pathname.startsWith('/articles') ? styles.activeLink : ''}`}
+                        href="/articles"
+                    >
+                        Articles
+                    </Link>
+                    <Link
+                        onClick={() => setToggle(false)}
+                        className={`${styles.navLink} ${pathname === '/about' ? styles.activeLink : ''}`}
+                        href="/about"
+                    >
+                        About
+                    </Link>
+                    <Link
+                        onClick={() => setToggle(false)}
+                        className={`${styles.navLink} ${pathname.startsWith('/admin') ? styles.activeLink : ''}`}
+                        href="/admin"
+                    >
+                        Admin Dashboard
+                    </Link>
                 </ul>
             </div>
         </nav>
