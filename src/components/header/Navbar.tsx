@@ -40,7 +40,7 @@ const Navbar = () => {
                     <Link
                         onClick={() => setToggle(false)}
                         className={`${styles.navLink} ${pathname.startsWith('/articles') ? styles.activeLink : ''}`}
-                        href="/articles"
+                        href="/articles?pageNumber=1"
                     >
                         Articles
                     </Link>

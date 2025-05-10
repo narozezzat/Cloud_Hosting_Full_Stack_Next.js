@@ -1,4 +1,3 @@
-import { articles } from "@/utils/data";
 import prisma from "@/utils/db";
 import { UpdateArticleDto } from "@/utils/dtos";
 import { verifyToken } from "@/utils/verifyToken";
