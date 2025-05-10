@@ -1,5 +1,9 @@
+import { getSingleArticle } from "@/apiCalls/articleApiCall";
 import AddCommentForm from "@/components/comments/AddCommentForm";
 import CommentItem from "@/components/comments/CommentItem";
+import { SingleArticle } from "@/utils/types";
+import { verifyTokenForPage } from "@/utils/verifyToken";
+import { cookies } from "next/headers";
 
 interface SingleArticlePageProps {
     params: {
@@ -8,39 +12,37 @@ interface SingleArticlePageProps {
 }
 
 const SingleArticlePage = async ({ params }: SingleArticlePageProps) => {
-    // const router = useRouter();
+    const token = cookies().get("jwtToken")?.value || "";
+    const payload = verifyTokenForPage(token);
 
-    const response = await fetch(`https://jsonplaceholder.typicode.com/posts/${params.id}`);
-    if (!response.ok) {
-        throw new Error("Failed to fetch article");
-    }
-    const article = await response.json();
-
-    // const navigateBack = useCallback(() => {
-    //     router.push(`/users${window?.location?.search}`);
-    // }, [router]);
+    const article: SingleArticle = await getSingleArticle(params.id);
 
     return (
         <section className="container m-auto w-full px-5 pt-8 md:w-3/4 pb-14">
             <div className="bg-white p-7 rounded-lg mb-7">
-                {/* <button
-                    className="bg-gray-700 text-white px-3 py-1 rounded-lg"
-                >
-                    <IoMdArrowBack onClick={() => navigateBack()} />
-                </button> */}
                 <h1 className="text-3xl font-bold text-gray-700 mb-2">
                     {article.title}
                 </h1>
-                <div className="text-gray-400">1/1/2024</div>
-                <p className="text-gray-800 text-xl mt-5">{article.body}</p>
+                <div className="text-gray-400">
+                    {new Date(article.createdAt).toDateString()}
+                </div>
+                <p className="text-gray-800 text-xl mt-5">{article.description}</p>
             </div>
-            <AddCommentForm />
+            <div className="mt-7">
+                {payload ? (
+                    <AddCommentForm articleId={article.id} />
+                ) : (
+                    <p className="text-red-600 md:text-xl">
+                        to write a comment you should log in first
+                    </p>
+                )}
+            </div>
             <h4 className="text-xl text-gray-800 ps-1 font-semibold mb-2 mt-7">
                 Comments
             </h4>
-            <CommentItem />
-            <CommentItem />
-            <CommentItem />
+            {article.comments.map(comment => (
+                <CommentItem key={comment.id} comment={comment} userId={payload?.id} />
+            ))}
         </section >
     )
 }
