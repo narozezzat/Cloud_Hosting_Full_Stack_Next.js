@@ -1,7 +1,9 @@
 "use client";
 
 import FloatInput from "@/app/common/float-input/FloatInput";
+import { DOMAIN } from "@/utils/constants";
 import { Button, Form, Input } from "antd";
+import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from 'react-toastify';
@@ -10,12 +12,23 @@ const LoginForm = () => {
     const router = useRouter();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [loading, setLoading] = useState(false);
 
-    const formSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+    const formSubmitHandler = async (e: React.FormEvent) => {
         if (email === "") return toast.error("Email is required");
         if (password === "") return toast.error("Password is required");
-        console.log({ email, password });
-        router.push("/");
+
+        try {
+            setLoading(true);
+            await axios.post(`${DOMAIN}/api/users/login`, { email, password });
+            router.replace('/');
+            setLoading(false);
+            router.refresh();
+        } catch (error: any) {
+            toast.error(error?.response?.data.message);
+            console.log(error);
+            setLoading(false);
+        }
     }
 
     return (
@@ -45,6 +58,8 @@ const LoginForm = () => {
                 />
             </Form.Item>
             <Button
+                loading={loading}
+                disabled={loading}
                 type="primary"
                 htmlType="submit"
                 className="w-full h-[48px] rounded text-xl text-white hover:text-white mb-4 font-bold bg-[#0059d6] hover:!bg-[#2419be]"
