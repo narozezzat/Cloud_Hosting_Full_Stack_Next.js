@@ -8,6 +8,7 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import UpdateCommentModal from './UpdateCommentModal';
 import DeleteCommentModal from './DeleteCommentModal';
+import ConfirmationModal from '../common/modals/ConfirmationModal';
 
 interface CommentItemProps {
     comment: CommentWithUser;
@@ -58,10 +59,19 @@ const CommentItem = ({ comment, userId }: CommentItemProps) => {
                 />
             }
             {showDeleteModal && (
-                <DeleteCommentModal
-                    text={comment.text}
+                // <DeleteCommentModal
+                //     text={comment.text}
+                //     onClose={() => setShowDeleteModal(false)}
+                //     onDelete={commentDeleteHandler}
+                // />
+
+                <ConfirmationModal
+                    isOpen={showDeleteModal}
                     onClose={() => setShowDeleteModal(false)}
-                    onDelete={commentDeleteHandler}
+                    onConfirm={commentDeleteHandler}
+                    message={<>Are you sure you want to delete this comment <strong>"{comment.text}"</strong></>}
+                    confirmText="Delete"
+                    cancelText="Cancel"
                 />
             )}
         </div>

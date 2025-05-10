@@ -53,7 +53,7 @@ const AdminArticlesTable = async ({ searchParams: { pageNumber } }: AdminArticle
                                 >
                                     Edit
                                 </Link>
-                                <DeleteArticleButton articleId={article.id} />
+                                <DeleteArticleButton articleTitle={article?.title} articleId={article?.id} />
                             </td>
                             <td className="hidden lg:inline-block p-3">
                                 <Link

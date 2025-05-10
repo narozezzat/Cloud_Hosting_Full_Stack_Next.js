@@ -37,7 +37,7 @@ const AdminCommentsTable = async () => {
                                 {new Date(comment.createdAt).toDateString()}
                             </td>
                             <td>
-                                <DeleteCommentButton commentId={comment.id} />
+                                <DeleteCommentButton commentText={comment.text} commentId={comment.id} />
                             </td>
                         </tr>
                     ))}

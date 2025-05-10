@@ -1,5 +1,7 @@
 "use client";
 import { DOMAIN } from '@/utils/constants';
+import { Button, Form, Input } from 'antd';
+import TextArea from 'antd/es/input/TextArea';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
@@ -10,13 +12,14 @@ const AddArticleForm = () => {
 
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const formSubmitHandler = async (e: React.FormEvent) => {
-        e.preventDefault();
         if (title === "") return toast.error("Title is required");
         if (description === "") return toast.error("Description is required");
 
         try {
+            setLoading(true);
             await axios.post(`${DOMAIN}/api/articles`, { title, description });
             setTitle("");
             setDescription("");
@@ -24,30 +27,36 @@ const AddArticleForm = () => {
             router.refresh();
         } catch (error: any) {
             toast.error(error?.response?.data.message);
-            console.log(error);
+        } finally {
+            setLoading(false);
         }
     }
 
     return (
-        <form onSubmit={formSubmitHandler} className="flex flex-col">
-            <input
+        <Form onFinish={formSubmitHandler} className="flex flex-col">
+            <Input
                 className="mb-4 border rounded p-2 text-xl"
                 type="text"
                 placeholder="Enter Article Title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
             />
-            <textarea
+            <TextArea
                 className='mb-4 p-2 lg:text-xl rounded resize-none'
                 rows={5}
                 placeholder='Enter Article Description'
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-            ></textarea>
-            <button type="submit" className="text-2xl text-white bg-blue-700 hover:bg-blue-900 p-2 rounded-lg font-bold">
+            ></TextArea>
+            <Button
+                loading={loading}
+                disabled={loading}
+                htmlType="submit"
+                className="text-2xl text-white bg-blue-700 hover:!bg-blue-900 hover:border-none hover:!text-white p-6 rounded-lg font-bold"
+            >
                 Add
-            </button>
-        </form>
+            </Button>
+        </Form>
     )
 }
 
