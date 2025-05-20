@@ -25,20 +25,18 @@ const Header = () => {
             <Link
               href="/login"
             >
-              <Button
-                type='text'
-                className='border rounded-none border-[#0059d6] text-[#0059d6] hover:!bg-[#0059d6] hover:!text-white py-2 px-4 sm:px-8'
+              <button
+                className='border rounded-none border-[#0059d6] text-[#0059d6] hover:bg-[#0059d6] hover:text-white py-1.5 px-4 sm:px-8'
               >
                 Login
-              </Button>
+              </button>
             </Link>
             <Link href="/register">
-              <Button
-                type='text'
-                className='rounded-none border bg-[#0059d6] text-white py-2 hover:!bg-[#2419be] hover:!text-white px-4 sm:px-8'
+              <button
+                className='rounded-none border border-[#0059d6] bg-[#0059d6] text-white py-1.5 hover:bg-[#2419be] px-4 sm:px-8'
               >
                 Register
-              </Button>
+              </button>
             </Link>
           </>
         )}
