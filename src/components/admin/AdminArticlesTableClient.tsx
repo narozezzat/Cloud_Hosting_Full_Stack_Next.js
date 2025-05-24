@@ -37,7 +37,7 @@ const AdminArticlesTableClient = ({
     {
       title: "Title",
       dataIndex: "title",
-      width: "25%",
+      width: "40%",
       key: "title",
       align: "center",
       render: (text: string) => <span className="text-gray-700">{text}</span>,
@@ -46,7 +46,7 @@ const AdminArticlesTableClient = ({
       title: "Created At",
       dataIndex: "createdAt",
       key: "createdAt",
-      width: "30%",
+      width: "40%",
       align: "center",
       render: (date: string) => (
         <span className="text-gray-700">{formatDate(date)}</span>
@@ -55,7 +55,7 @@ const AdminArticlesTableClient = ({
     {
       title: "Actions",
       key: "actions",
-      width: "45%",
+      width: "20%",
       align: "center",
       render: (_: any, article: Article) => {
         const items = [
