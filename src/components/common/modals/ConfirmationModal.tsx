@@ -82,12 +82,11 @@ const ConfirmationModal = ({
           onClose={onClose}
           open={isOpen}
           width="100%"
+          closable={false}
+          height={"auto"}
           footer={footerContent}
-          styles={{ body: { padding: "0px" } }}
-          className={`
-                        rounded-t-2xl
-                        [&>.ant-drawer-header>div]:flex-row-reverse
-                      `}
+          styles={{ body: { padding: "16px" } }}
+          className={`rounded-t-2xl`}
         >
           {modalContent}
         </Drawer>
