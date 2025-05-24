@@ -40,18 +40,18 @@ export async function DELETE(request: NextRequest, { params }: Props) {
       });
       return NextResponse.json(
         { message: "your profile (account) has been deleted" },
-        { status: 200 }
+        { status: 200 },
       );
     }
 
     return NextResponse.json(
       { message: "only user himself can delete his profile, forbidden" },
-      { status: 403 } // forbidden
+      { status: 403 }, // forbidden
     );
   } catch (error) {
     return NextResponse.json(
       { message: "internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -83,7 +83,7 @@ export async function GET(request: NextRequest, { params }: Props) {
     if (userFromToken === null || userFromToken.id !== user.id) {
       return NextResponse.json(
         { message: "you are not allowed, access denied" },
-        { status: 403 }
+        { status: 403 },
       );
     }
 
@@ -91,7 +91,7 @@ export async function GET(request: NextRequest, { params }: Props) {
   } catch (error) {
     return NextResponse.json(
       { message: "internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -115,7 +115,7 @@ export async function PUT(request: NextRequest, { params }: Props) {
     if (userFromToken === null || userFromToken.id !== user.id) {
       return NextResponse.json(
         { message: "you are not allowed, access denied" },
-        { status: 403 }
+        { status: 403 },
       );
     }
 
@@ -125,7 +125,7 @@ export async function PUT(request: NextRequest, { params }: Props) {
     if (!validation.success) {
       return NextResponse.json(
         { message: validation.error.errors[0].message },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -147,7 +147,7 @@ export async function PUT(request: NextRequest, { params }: Props) {
   } catch (error) {
     return NextResponse.json(
       { message: "internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

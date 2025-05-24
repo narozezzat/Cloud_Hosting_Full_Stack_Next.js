@@ -8,7 +8,7 @@ export function middleware(request: NextRequest) {
     if (request.nextUrl.pathname.startsWith("/api/users/profile/")) {
       return NextResponse.json(
         { message: "no token provided, access denied" },
-        { status: 401 } // Unauthorized
+        { status: 401 }, // Unauthorized
       );
     }
   } else {

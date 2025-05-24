@@ -1,4 +1,4 @@
-import RegisterForm from "./RegisterForm"
+import RegisterForm from "./RegisterForm";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 
@@ -15,7 +15,7 @@ const RegisterPage = () => {
         <RegisterForm />
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default RegisterPage
+export default RegisterPage;

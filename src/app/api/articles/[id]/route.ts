@@ -36,7 +36,7 @@ export async function GET(request: NextRequest, { params }: Props) {
     if (!article) {
       return NextResponse.json(
         { message: "article not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -44,7 +44,7 @@ export async function GET(request: NextRequest, { params }: Props) {
   } catch (error) {
     return NextResponse.json(
       { message: "internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -62,7 +62,7 @@ export async function PUT(request: NextRequest, { params }: Props) {
     if (user === null || user.isAdmin === false) {
       return NextResponse.json(
         { message: "only admin, access denied" },
-        { status: 403 }
+        { status: 403 },
       );
     }
     const article = await prisma.article.findUnique({
@@ -72,7 +72,7 @@ export async function PUT(request: NextRequest, { params }: Props) {
     if (!article) {
       return NextResponse.json(
         { message: "article not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -89,7 +89,7 @@ export async function PUT(request: NextRequest, { params }: Props) {
   } catch (error) {
     return NextResponse.json(
       { message: "internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -106,7 +106,7 @@ export async function DELETE(request: NextRequest, { params }: Props) {
     if (user === null || user.isAdmin === false) {
       return NextResponse.json(
         { message: "only admin, access denied" },
-        { status: 403 }
+        { status: 403 },
       );
     }
     const article = await prisma.article.findUnique({
@@ -116,7 +116,7 @@ export async function DELETE(request: NextRequest, { params }: Props) {
     if (!article) {
       return NextResponse.json(
         { message: "article not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -132,7 +132,7 @@ export async function DELETE(request: NextRequest, { params }: Props) {
   } catch (error) {
     return NextResponse.json(
       { message: "internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

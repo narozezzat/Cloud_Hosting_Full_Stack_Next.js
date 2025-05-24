@@ -1,89 +1,95 @@
-"use client"
-import { DOMAIN } from '@/utils/constants';
-import { CommentWithUser } from '@/utils/types';
-import axios from 'axios';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { FaEdit, FaTrash } from 'react-icons/fa';
-import { toast } from 'react-toastify';
-import UpdateCommentModal from './UpdateCommentModal';
-import DeleteCommentModal from './DeleteCommentModal';
-import ConfirmationModal from '../common/modals/ConfirmationModal';
-import useLoading from '@/hooks/useLoading';
+"use client";
+import { DOMAIN } from "@/utils/constants";
+import { CommentWithUser } from "@/utils/types";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { FaEdit, FaTrash } from "react-icons/fa";
+import { toast } from "react-toastify";
+import UpdateCommentModal from "./UpdateCommentModal";
+import DeleteCommentModal from "./DeleteCommentModal";
+import ConfirmationModal from "../common/modals/ConfirmationModal";
+import useLoading from "@/hooks/useLoading";
 
 interface CommentItemProps {
-    comment: CommentWithUser;
-    userId: number | undefined;
+  comment: CommentWithUser;
+  userId: number | undefined;
 }
-
 
 const CommentItem = ({ comment, userId }: CommentItemProps) => {
-    const [open, setOpen] = useState(false);
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
-    const router = useRouter();
+  const [open, setOpen] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const router = useRouter();
 
-    const { loading, withLoading } = useLoading();
+  const { loading, withLoading } = useLoading();
 
-
-    const commentDeleteHandler = async () => {
-        try {
-            await withLoading(async () => {
-                await axios.delete(`${DOMAIN}/api/comments/${comment.id}`);
-                router.refresh();
-                setShowDeleteModal(false);
-            });
-        } catch (error: any) {
-            toast.error(error?.response?.data.message);
-        }
+  const commentDeleteHandler = async () => {
+    try {
+      await withLoading(async () => {
+        await axios.delete(`${DOMAIN}/api/comments/${comment.id}`);
+        router.refresh();
+        setShowDeleteModal(false);
+      });
+    } catch (error: any) {
+      toast.error(error?.response?.data.message);
     }
+  };
 
-    return (
-        <div className='mb-5 rounded-lg p-3 bg-gray-200 border-2 border-gray-300'>
-            <div className='flex items-center justify-between mb-2'>
-                <strong className='text-gray-800 uppercase'>
-                    {comment.user.username}
-                </strong>
-                <span className='bg-yellow-700 px-1 rounded-lg text-white'>
-                    {new Date(comment.createdAt).toDateString()}
-
-                </span>
-            </div>
-            <p className='text-gray-800 mb-2'>
-                {comment.text}
-            </p>
-            {userId && userId === comment.userId && (
-                <div className='flex justify-end items-center'>
-                    <FaEdit onClick={() => setOpen(true)} className='text-green-600 text-xl cursor-pointer me-3' />
-                    <FaTrash onClick={() => setShowDeleteModal(true)} className='text-red-600 text-xl cursor-pointer' />
-                </div>
-            )}
-            {open &&
-                <UpdateCommentModal
-                    setOpen={setOpen}
-                    text={comment.text}
-                    commentId={comment.id}
-                    commentUserName={comment.user.username}
-                />
-            }
-            {showDeleteModal && (
-                // <DeleteCommentModal
-                //     text={comment.text}
-                //     onClose={() => setShowDeleteModal(false)}
-                //     onDelete={commentDeleteHandler}
-                // />
-
-                <ConfirmationModal
-                    isOpen={showDeleteModal}
-                    onClose={() => setShowDeleteModal(false)}
-                    onConfirm={commentDeleteHandler}
-                    message={<>Are you sure you want to delete this comment <strong>"{comment.text}"</strong></>}
-                    confirmText="Delete"
-                    cancelText="Cancel"
-                    isLoading={loading}
-                />
-            )}
+  return (
+    <div className="mb-5 rounded-lg p-3 bg-gray-200 border-2 border-gray-300">
+      <div className="flex items-center justify-between mb-2">
+        <strong className="text-gray-800 uppercase">
+          {comment.user.username}
+        </strong>
+        <span className="bg-yellow-700 px-1 rounded-lg text-white">
+          {new Date(comment.createdAt).toDateString()}
+        </span>
+      </div>
+      <p className="text-gray-800 mb-2">{comment.text}</p>
+      {userId && userId === comment.userId && (
+        <div className="flex justify-end items-center">
+          <FaEdit
+            onClick={() => setOpen(true)}
+            className="text-green-600 text-xl cursor-pointer me-3"
+          />
+          <FaTrash
+            onClick={() => setShowDeleteModal(true)}
+            className="text-red-600 text-xl cursor-pointer"
+          />
         </div>
-    )
-}
+      )}
+      {open && (
+        <UpdateCommentModal
+          setOpen={setOpen}
+          text={comment.text}
+          commentId={comment.id}
+          commentUserName={comment.user.username}
+        />
+      )}
+      {showDeleteModal && (
+        // <DeleteCommentModal
+        //     text={comment.text}
+        //     onClose={() => setShowDeleteModal(false)}
+        //     onDelete={commentDeleteHandler}
+        // />
 
-export default CommentItem
+        <ConfirmationModal
+          isOpen={showDeleteModal}
+          onClose={() => setShowDeleteModal(false)}
+          onConfirm={commentDeleteHandler}
+          message={
+            <>
+              Are you sure you want to delete this comment{" "}
+              <strong>"{comment.text}"</strong>
+            </>
+          }
+          confirmText="Delete"
+          cancelText="Cancel"
+          isLoading={loading}
+        />
+      )}
+    </div>
+  );
+};
+
+export default CommentItem;

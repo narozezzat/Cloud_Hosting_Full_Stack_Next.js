@@ -21,7 +21,7 @@ const ArticleItem = ({ article }: ArticleItemProps) => {
         Read More
       </Link>
     </div>
-  )
-}
+  );
+};
 
-export default ArticleItem
+export default ArticleItem;

@@ -1,11 +1,11 @@
 "use client";
-import { Dropdown } from 'antd';
-import type { MenuProps } from 'antd';
+import { Dropdown } from "antd";
+import type { MenuProps } from "antd";
 import axios from "axios";
-import { DOMAIN } from '@/utils/constants';
+import { DOMAIN } from "@/utils/constants";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import { AiOutlineLogout } from 'react-icons/ai';
+import { AiOutlineLogout } from "react-icons/ai";
 
 interface UserDropdownProps {
   username: string;
@@ -24,9 +24,9 @@ const UserDropdown = ({ username }: UserDropdownProps) => {
     }
   };
 
-  const items: MenuProps['items'] = [
+  const items: MenuProps["items"] = [
     {
-      key: '1',
+      key: "1",
       label: <span onClick={handleLogout}>Logout</span>,
       icon: <AiOutlineLogout />,
     },

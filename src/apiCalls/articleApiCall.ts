@@ -4,11 +4,11 @@ import { SingleArticle } from "@/utils/types";
 
 // Get articles based on pageNumber
 export async function getArticles(
-  pageNumber: string | undefined
+  pageNumber: string | undefined,
 ): Promise<Article[]> {
   const response = await fetch(
     `${DOMAIN}/api/articles?pageNumber=${pageNumber}`,
-    { cache: "no-store" }
+    { cache: "no-store" },
   );
 
   if (!response.ok) {
@@ -34,10 +34,10 @@ export async function getArticlesCount(): Promise<number> {
 
 // Get articles based on searchText
 export async function getArticlesBasedOnSearch(
-  searchText: string
+  searchText: string,
 ): Promise<Article[]> {
   const response = await fetch(
-    `${DOMAIN}/api/articles/search?searchText=${searchText}`
+    `${DOMAIN}/api/articles/search?searchText=${searchText}`,
   );
 
   if (!response.ok) {
@@ -49,7 +49,7 @@ export async function getArticlesBasedOnSearch(
 
 // Get single article by id
 export async function getSingleArticle(
-  articleId: string
+  articleId: string,
 ): Promise<SingleArticle> {
   const response = await fetch(`${DOMAIN}/api/articles/${articleId}`, {
     cache: "no-store",

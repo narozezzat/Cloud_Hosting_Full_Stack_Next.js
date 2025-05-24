@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     if (!validation.success) {
       return NextResponse.json(
         { message: validation.error.errors[0].message },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
     if (user) {
       return NextResponse.json(
         { message: "this user already registered" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -56,12 +56,12 @@ export async function POST(request: NextRequest) {
       {
         status: 201,
         headers: { "Set-Cookie": cookie },
-      }
+      },
     );
   } catch (error) {
     return NextResponse.json(
       { message: "internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

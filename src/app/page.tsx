@@ -14,7 +14,7 @@ const HomePage = () => {
         <WebHostingPlan />
       </div>
     </section>
-  )
-}
+  );
+};
 
 export default HomePage;

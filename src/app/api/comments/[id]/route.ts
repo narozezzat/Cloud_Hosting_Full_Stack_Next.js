@@ -21,7 +21,7 @@ export async function PUT(request: NextRequest, { params }: Props) {
     if (!comment) {
       return NextResponse.json(
         { message: "comment not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -29,7 +29,7 @@ export async function PUT(request: NextRequest, { params }: Props) {
     if (user === null || user.id !== comment.userId) {
       return NextResponse.json(
         { message: "you are not allowed, access denied" },
-        { status: 403 }
+        { status: 403 },
       );
     }
 
@@ -43,7 +43,7 @@ export async function PUT(request: NextRequest, { params }: Props) {
   } catch (error) {
     return NextResponse.json(
       { message: "internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -62,7 +62,7 @@ export async function DELETE(request: NextRequest, { params }: Props) {
     if (!comment) {
       return NextResponse.json(
         { message: "comment not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -70,7 +70,7 @@ export async function DELETE(request: NextRequest, { params }: Props) {
     if (user === null) {
       return NextResponse.json(
         { message: "no token provided, access denied" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -81,12 +81,12 @@ export async function DELETE(request: NextRequest, { params }: Props) {
 
     return NextResponse.json(
       { message: "you are not allowed, access denied" },
-      { status: 403 }
+      { status: 403 },
     );
   } catch (error) {
     return NextResponse.json(
       { message: "internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
