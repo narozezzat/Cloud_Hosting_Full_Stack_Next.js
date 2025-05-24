@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { useState } from "react";
 import ConfirmationModal from "@/components/common/modals/ConfirmationModal";
+import { Button } from "antd";
 
 interface DeleteArticleButtonProps {
     articleId: number;
@@ -41,9 +42,9 @@ const DeleteArticleButton = ({ articleId, articleTitle }: DeleteArticleButtonPro
 
     return (
         <>
-            <div onClick={showModal} className="bg-red-600 text-white rounded-lg cursor-pointer inline-block text-center py-1 px-2 hover:bg-red-800 transition">
+            <button className="text-red-500" onClick={showModal}>
                 Delete
-            </div>
+            </button>
 
             <ConfirmationModal
                 isOpen={isModalOpen}
