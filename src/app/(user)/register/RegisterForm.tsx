@@ -82,8 +82,7 @@ const RegisterForm = () => {
                 loading={loading}
                 disabled={loading}
                 htmlType='submit'
-                type="primary"
-                className="w-full h-[48px] mt-1 rounded text-xl text-white hover:text-white font-bold bg-[#0059d6] hover:!bg-[#2419be]"
+                className="w-full text-white h-[48px] mt-2 text-xl font-bold bg-[#0059d6] hover:bg-[#2419be]"
             >
                 Register
             </Button>

@@ -1,12 +1,13 @@
 "use client";
-import { Modal, Button } from "antd";
+import { Modal, Button, Grid } from "antd";
 import { TiWarningOutline } from "react-icons/ti";
+
+const { useBreakpoint } = Grid;
 
 interface ConfirmationModalProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
-  title?: string;
   message: React.ReactNode;
   confirmText?: string;
   cancelText?: string;
@@ -17,12 +18,13 @@ const ConfirmationModal = ({
   isOpen,
   onClose,
   onConfirm,
-  title = "Confirmation",
   message,
   confirmText = "Delete",
   cancelText = "Cancel",
   isLoading = false
 }: ConfirmationModalProps) => {
+  const screens = useBreakpoint();
+
   return (
     <Modal
       open={isOpen}
@@ -44,14 +46,16 @@ const ConfirmationModal = ({
             onClick={onClose}
             className="w-1/2 h-12 text-lg border-gray-300"
             disabled={isLoading}
+            size={screens.xs ? "middle" : "large"}
           >
             {cancelText}
           </Button>
           <Button
             onClick={onConfirm}
-            className="w-1/2 h-12 text-lg text-white bg-red-600 hover:!bg-red-700 hover:!text-white !border-red-600"
+            className="w-1/2 h-12 text-lg text-white bg-error-light-1 hover:bg-red-700 border-red-600"
             loading={isLoading}
             disabled={isLoading}
+            size={screens.xs ? "middle" : "large"}
           >
             {confirmText}
           </Button>

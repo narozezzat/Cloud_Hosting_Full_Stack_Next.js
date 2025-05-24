@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { Article } from '@/generated/prisma';
 import useLoading from '@/hooks/useLoading';
 import { Button, Form, Input, Modal } from 'antd';
+import { EditOutlined } from '@ant-design/icons';
 
 const { TextArea } = Input;
 
@@ -53,11 +54,11 @@ const EditArticleModal = ({ article }: EditArticleFormProps) => {
 
     return (
         <>
-            <button onClick={openEditModal}>
+            <Button className='w-full flex justify-start p-2.5' icon={<EditOutlined />} type='text' onClick={openEditModal}>
                 Edit
-            </button>
+            </Button>
             <Modal
-                title={`Edit Article: ${article?.title}`}
+                title={`Edit Article`}
                 open={isEditModalVisible}
                 onCancel={closeEditModal}
                 footer={null}
@@ -92,7 +93,7 @@ const EditArticleModal = ({ article }: EditArticleFormProps) => {
                         loading={loading}
                         htmlType="submit"
                         size="large"
-                        className="text-2xl text-white bg-blue-700 hover:!bg-blue-900 p-6 hover:!border-blue-800 hover:!text-white font-bold"
+                        className="text-2xl text-white bg-blue-700 hover:bg-blue-900 p-6 hover:border-blue-800 hover:text-white font-bold"
                     >
                         Edit
                     </Button>

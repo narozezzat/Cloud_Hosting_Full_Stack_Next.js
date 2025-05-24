@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { useState } from "react";
 import ConfirmationModal from "@/components/common/modals/ConfirmationModal";
 import { Button } from "antd";
+import { DeleteOutlined } from "@ant-design/icons";
 
 interface DeleteArticleButtonProps {
     articleId: number;
@@ -42,9 +43,10 @@ const DeleteArticleButton = ({ articleId, articleTitle }: DeleteArticleButtonPro
 
     return (
         <>
-            <button className="text-red-500" onClick={showModal}>
+            <Button type="text" icon={<DeleteOutlined />}
+                className="text-red-500 p-2.5 flex justify-start w-full" onClick={showModal}>
                 Delete
-            </button>
+            </Button>
 
             <ConfirmationModal
                 isOpen={isModalOpen}

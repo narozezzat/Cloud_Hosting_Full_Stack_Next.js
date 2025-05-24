@@ -53,14 +53,14 @@ const AdminArticlesTableClient = ({ articles, pages, currentPage }: AdminArticle
                 const items = [
                     {
                         key: "edit",
-                        icon: <EditOutlined />,
+                        className: "p-0",
                         label: (
                             <EditArticleForm article={article} />
                         ),
                     },
                     {
                         key: "delete",
-                        icon: <DeleteOutlined className='text-red-500' />,
+                        className: "p-0",
                         label: (
                             <DeleteArticleButton
                                 articleTitle={article.title}

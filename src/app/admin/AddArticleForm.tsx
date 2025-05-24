@@ -53,7 +53,7 @@ const AddArticleForm = () => {
                 disabled={loading}
                 htmlType="submit"
                 size='large'
-                className="text-2xl !text-white !bg-blue-700 hover:!bg-blue-900 hover:border-none hover:!text-white rounded-lg font-bold"
+                className="text-2xl text-white bg-blue-700 hover:bg-blue-900 hover:border-none font-bold"
             >
                 Add
             </Button>

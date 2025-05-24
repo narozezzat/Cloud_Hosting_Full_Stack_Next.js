@@ -31,7 +31,7 @@ const LoginForm = () => {
     }
 
     return (
-        <Form onFinish={formSubmitHandler} className="flex gap-6 flex-col">
+        <Form onFinish={formSubmitHandler} className="flex gap-4 flex-col">
             <Form.Item noStyle>
                 <FloatInput
                     type="email"
@@ -59,9 +59,8 @@ const LoginForm = () => {
             <Button
                 loading={loading}
                 disabled={loading}
-                type="primary"
                 htmlType="submit"
-                className="w-full h-[48px] rounded text-xl text-white hover:text-white mb-4 font-bold bg-[#0059d6] hover:!bg-[#2419be]"
+                className="w-full text-white h-[48px] mt-2 text-xl mb-4 font-bold bg-[#0059d6] hover:bg-[#2419be]"
             >
                 Log In
             </Button>

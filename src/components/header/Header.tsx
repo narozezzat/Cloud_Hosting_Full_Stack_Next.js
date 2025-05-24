@@ -3,7 +3,6 @@ import styles from "./header.module.css";
 import Navbar from './Navbar';
 import { cookies } from 'next/headers';
 import { verifyTokenForPage } from '@/utils/verifyToken';
-import { Button } from 'antd';
 import UserDropdown from './UserDropdown';
 
 const Header = () => {

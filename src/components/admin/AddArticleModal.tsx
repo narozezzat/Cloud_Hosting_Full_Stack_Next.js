@@ -47,8 +47,7 @@ const AddArticleModal = () => {
     return (
         <>
             <Button
-                className='bg-blue-700 hover:!bg-blue-900 hover:border-blue-900 !text-white'
-                type='primary'
+                className='bg-blue-700 text-white hover:bg-blue-900 hover:border-blue-900'
                 onClick={openAddModal}
             >
                 Add Article
@@ -60,7 +59,7 @@ const AddArticleModal = () => {
                 onCancel={closeAddModal}
                 footer={null}
             >
-                <Form onFinish={formSubmitHandler} className="flex flex-col">
+                <Form onFinish={formSubmitHandler} className="flex gap-4 flex-col">
                     <Input
                         className="mb-4 border rounded p-2 text-xl"
                         type="text"
@@ -79,7 +78,7 @@ const AddArticleModal = () => {
                         loading={loading}
                         disabled={loading}
                         htmlType="submit"
-                        className="text-2xl text-white bg-blue-700 hover:!bg-blue-900 hover:!border-blue-800 hover:!text-white p-6 rounded-lg font-bold"
+                        className="text-2xl text-white bg-blue-700 hover:bg-blue-900 hover:border-blue-800 p-6 rounded-lg font-bold"
                     >
                         Add
                     </Button>

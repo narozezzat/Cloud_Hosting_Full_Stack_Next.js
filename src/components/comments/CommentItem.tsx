@@ -62,6 +62,7 @@ const CommentItem = ({ comment, userId }: CommentItemProps) => {
                     setOpen={setOpen}
                     text={comment.text}
                     commentId={comment.id}
+                    commentUserName={comment.user.username}
                 />
             }
             {showDeleteModal && (
