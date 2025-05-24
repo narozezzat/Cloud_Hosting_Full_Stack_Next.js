@@ -1,5 +1,6 @@
 "use client";
 import FloatInput from '@/app/common/float-input/FloatInput';
+import useLoading from '@/hooks/useLoading';
 import { DOMAIN } from '@/utils/constants';
 import { Button, Form } from 'antd';
 import axios from 'axios';
@@ -13,7 +14,7 @@ const RegisterForm = () => {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [loading, setLoading] = useState(false);
+    const { loading, withLoading } = useLoading();
 
     const formSubmitHandler = async (e: React.FormEvent) => {
 
@@ -22,15 +23,13 @@ const RegisterForm = () => {
         if (password === "") return toast.error("Password is required");
 
         try {
-            setLoading(true);
-            await axios.post(`${DOMAIN}/api/users/register`, { email, password, username });
-            router.replace('/');
-            setLoading(false);
-            router.refresh();
+            await withLoading(async () => {
+                await axios.post(`${DOMAIN}/api/users/register`, { email, password, username });
+                router.replace('/');
+                router.refresh();
+            });
         } catch (error: any) {
             toast.error(error?.response?.data.message);
-            console.log(error);
-            setLoading(false);
         }
 
     }

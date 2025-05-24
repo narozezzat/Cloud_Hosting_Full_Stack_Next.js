@@ -34,7 +34,7 @@ const UserDropdown = ({ username }: UserDropdownProps) => {
 
   return (
     <Dropdown menu={{ items }} placement="bottomRight">
-      <div className="w-9 h-9 rounded-full bg-[#0059d6] flex items-center justify-center text-white font-bold cursor-pointer">
+      <div className=" flex items-center justify-center w-8 h-8 rounded-full border border-[#0059d6] text-[#0059d6] hover:text-white hover:bg-[#0059d6] font-bold cursor-pointer">
         {username?.charAt(0).toUpperCase()}
       </div>
     </Dropdown>

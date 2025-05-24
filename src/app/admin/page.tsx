@@ -1,7 +1,7 @@
-import AddArticleForm from "./AddArticleForm";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { verifyTokenForPage } from "@/utils/verifyToken";
+import AddArticleForm from "./AddArticleForm";
 
 const AdminPage = () => {
   const token = cookies().get("jwtToken")?.value;

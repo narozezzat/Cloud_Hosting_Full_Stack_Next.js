@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 import UpdateCommentModal from './UpdateCommentModal';
 import DeleteCommentModal from './DeleteCommentModal';
 import ConfirmationModal from '../common/modals/ConfirmationModal';
+import useLoading from '@/hooks/useLoading';
 
 interface CommentItemProps {
     comment: CommentWithUser;
@@ -21,11 +22,16 @@ const CommentItem = ({ comment, userId }: CommentItemProps) => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const router = useRouter();
 
+    const { loading, withLoading } = useLoading();
+
+
     const commentDeleteHandler = async () => {
         try {
-            await axios.delete(`${DOMAIN}/api/comments/${comment.id}`);
-            router.refresh();
-            setShowDeleteModal(false);
+            await withLoading(async () => {
+                await axios.delete(`${DOMAIN}/api/comments/${comment.id}`);
+                router.refresh();
+                setShowDeleteModal(false);
+            });
         } catch (error: any) {
             toast.error(error?.response?.data.message);
         }
@@ -72,6 +78,7 @@ const CommentItem = ({ comment, userId }: CommentItemProps) => {
                     message={<>Are you sure you want to delete this comment <strong>"{comment.text}"</strong></>}
                     confirmText="Delete"
                     cancelText="Cancel"
+                    isLoading={loading}
                 />
             )}
         </div>

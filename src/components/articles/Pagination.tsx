@@ -5,9 +5,10 @@ import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 interface PaginationProps {
     pages: number;
     pageNumber: number;
-    route: string;
+    route?: string;
+    className?: string;
 }
-const Pagination = ({ pages, pageNumber, route }: PaginationProps) => {
+const Pagination = ({ pages, pageNumber, className, route }: PaginationProps) => {
     let pagesArray: number[] = [];
     for (let i = 1; i <= pages; i++) pagesArray.push(i);
 
@@ -15,7 +16,7 @@ const Pagination = ({ pages, pageNumber, route }: PaginationProps) => {
     const next = pageNumber + 1;
 
     return (
-        <div className='flex items-center justify-center mt-6 pb-20'>
+        <div className={`flex items-center justify-center mt-6 pb-20 ${className}`}>
             <Link
                 href={pageNumber !== 1 ? `${route}?pageNumber=${prev}` : '#'}
                 className={`py-2 px-3 font-bold text-xl ${pageNumber === 1

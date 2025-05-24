@@ -33,16 +33,16 @@ const AddArticleForm = () => {
     }
 
     return (
-        <Form onFinish={formSubmitHandler} className="flex flex-col">
+        <Form onFinish={formSubmitHandler} className="flex gap-2 flex-col">
             <Input
-                className="mb-4 border rounded p-2 text-xl"
+                className="mb-4 border rounded !p-2 text-xl"
                 type="text"
                 placeholder="Enter Article Title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
             />
             <TextArea
-                className='mb-4 p-2 lg:text-xl rounded resize-none'
+                className='mb-4 lg:text-xl rounded resize-none'
                 rows={5}
                 placeholder='Enter Article Description'
                 value={description}
@@ -52,7 +52,8 @@ const AddArticleForm = () => {
                 loading={loading}
                 disabled={loading}
                 htmlType="submit"
-                className="text-2xl text-white bg-blue-700 hover:!bg-blue-900 hover:border-none hover:!text-white p-6 rounded-lg font-bold"
+                size='large'
+                className="text-2xl !text-white !bg-blue-700 hover:!bg-blue-900 hover:border-none hover:!text-white rounded-lg font-bold"
             >
                 Add
             </Button>

@@ -5,6 +5,8 @@ import Header from '@/components/header/Header'
 import Footer from '@/components/Footer'
 import { ToastContainer } from 'react-toastify'
 import AntThemeProvider from './common/themes/MainThem'
+import AntdStyledComponentsRegistry from '@/components/common/AntdStyledComponentsRegistry'
+// import 'antd/dist/reset.css';
 
 
 const inter = Inter({ subsets: ['latin'] })
@@ -22,14 +24,19 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <AntThemeProvider>
-          <Header />
-          <ToastContainer theme='colored' position='top-center' />
-          <main>
-            {children}
-          </main>
-          <Footer />
-        </AntThemeProvider>
+        {/* <AntdRegistry> */}
+        <AntdStyledComponentsRegistry>
+          <AntThemeProvider>
+            <Header />
+            <ToastContainer theme='colored' position='top-center' />
+            <main>
+              {children}
+            </main>
+            <Footer />
+          </AntThemeProvider>
+        </AntdStyledComponentsRegistry>
+
+        {/* </AntdRegistry> */}
       </body>
     </html>
   )
