@@ -47,7 +47,11 @@ const UpdateCommentModal = ({
 
   const formContent = useMemo(
     () => (
-      <Form id="update-comment-form" onFinish={formSubmitHandler}>
+      <Form
+        layout="vertical"
+        id="update-comment-form"
+        onFinish={formSubmitHandler}
+      >
         <Form.Item label={"Description"}>
           <Input
             type="text"

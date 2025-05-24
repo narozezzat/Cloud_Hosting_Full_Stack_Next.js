@@ -113,7 +113,7 @@ const AddArticleModal = () => {
           title="Add New Article"
           open={isAddModalVisible}
           onCancel={closeAddModal}
-          footer={null}
+          footer={footerContent}
         >
           {formContent}
         </Modal>
