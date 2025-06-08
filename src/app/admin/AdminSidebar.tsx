@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { CgMenuGridR } from "react-icons/cg";
 import { MdOutlineArticle } from "react-icons/md";
-import { FaRegComments } from "react-icons/fa";
+import { FaRegComments, FaChartBar } from "react-icons/fa"; // Import chart icon
 
 const AdminSidebar = () => {
   return (
@@ -27,6 +27,13 @@ const AdminSidebar = () => {
         >
           <FaRegComments className="me-1" />
           <span className="hidden lg:block">Comments</span>
+        </Link>
+        <Link
+          className="flex items-center text-xl mb-5 lg:border-b border-gray-300 hover:border-yellow-200 hover:text-yellow-200 transition"
+          href="/admin/analytics"
+        >
+          <FaChartBar className="me-1" />
+          <span className="hidden lg:block">Analytics</span>
         </Link>
       </ul>
     </>
