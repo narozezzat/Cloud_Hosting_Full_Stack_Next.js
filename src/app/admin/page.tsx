@@ -6,7 +6,7 @@ import {
   Activity,
   ArrowUpRight,
   BarChart3,
-  Sparkles,
+  LayoutDashboard,
 } from "lucide-react";
 import { getAnalytics } from "@/lib/analytics";
 import { StatCard } from "@/components/ui/StatCard";
@@ -58,7 +58,7 @@ export default async function AdminDashboardPage() {
         <div className="relative flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div className="space-y-2">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-card/80 px-3 py-1 text-xs font-semibold text-brand-600 ring-1 ring-brand-500/20 dark:text-brand-300">
-              <Sparkles className="h-3.5 w-3.5" />
+              <LayoutDashboard className="h-3.5 w-3.5" />
               Overview
             </span>
             <h1 className="font-display text-2xl font-extrabold tracking-tight text-balance sm:text-3xl lg:text-4xl">

@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles, Shield, Gauge } from "lucide-react";
+import { ArrowRight, Zap, Shield, Gauge } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { GradientBlob } from "@/components/ui/GradientBlob";
@@ -34,7 +34,7 @@ const Hero = () => {
         >
           <motion.div variants={fadeUp} transition={{ duration: 0.5 }}>
             <Badge variant="default" className="gap-1.5">
-              <Sparkles className="h-3 w-3" />
+              <Zap className="h-3 w-3" />
               New — Faster edge network
             </Badge>
           </motion.div>

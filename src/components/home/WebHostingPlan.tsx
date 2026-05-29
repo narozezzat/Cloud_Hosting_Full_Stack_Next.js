@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Check, Sparkles } from "lucide-react";
+import { Check, Star } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
@@ -111,13 +111,10 @@ function PlanCard({ plan, index }: PlanCardProps) {
         )}
       >
         {plan.popular && (
-          <Badge
-            variant="accent"
-            className="absolute -top-3 left-1/2 -translate-x-1/2 gap-1 px-3 py-1 shadow-md"
-          >
-            <Sparkles className="h-3 w-3" />
+          <span className="absolute -top-3 left-1/2 z-10 -translate-x-1/2 inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-brand-500 to-accent-500 px-3.5 py-1 text-xs font-semibold uppercase tracking-wide text-white shadow-lg ring-1 ring-white/20">
+            <Star className="h-3 w-3 fill-current" strokeWidth={0} />
             Most popular
-          </Badge>
+          </span>
         )}
 
         <div className="space-y-2">
