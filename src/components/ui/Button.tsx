@@ -59,19 +59,40 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref,
   ) => {
-    const Comp = asChild ? Slot : "button";
+    const classes = cn(buttonVariants({ variant, size }), className);
+
+    // Radix Slot requires exactly ONE child element — when asChild is true we
+    // can't inject a sibling spinner, so we render the spinner inside the
+    // child element itself by cloning it.
+    if (asChild) {
+      return (
+        <Slot ref={ref} className={classes} {...props}>
+          {React.isValidElement(children)
+            ? React.cloneElement(
+                children as React.ReactElement,
+                undefined,
+                <>
+                  {loading ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : null}
+                  {(children as React.ReactElement).props.children}
+                </>,
+              )
+            : children}
+        </Slot>
+      );
+    }
+
     return (
-      <Comp
+      <button
         ref={ref}
-        className={cn(buttonVariants({ variant, size }), className)}
+        className={classes}
         disabled={disabled || loading}
         {...props}
       >
-        {loading ? (
-          <Loader2 className="h-4 w-4 animate-spin" />
-        ) : null}
+        {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
         {children}
-      </Comp>
+      </button>
     );
   },
 );
