@@ -39,12 +39,12 @@ export default function AdminShell({ username, children }: AdminShellProps) {
   }, [mobileOpen]);
 
   return (
-    <div className="flex h-full bg-background">
-      <aside className="sticky top-0 z-40 hidden h-screen w-20 shrink-0 border-r border-border bg-card md:block lg:w-64">
+    <div className="flex h-screen overflow-hidden bg-background">
+      <aside className="z-40 hidden h-full w-20 shrink-0 border-r border-border bg-card md:block lg:w-64">
         <AdminSidebar username={username} />
       </aside>
 
-      <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
         <AdminTopbar
           username={username}
           onOpenMobileNav={() => setMobileOpen(true)}

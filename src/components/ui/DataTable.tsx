@@ -121,7 +121,7 @@ export function DataTable<TData, TValue>({
                   <TableHead
                     key={header.id}
                     style={{
-                      width: header.getSize() !== 150 ? header.getSize() : undefined,
+                      minWidth: header.getSize() !== 150 ? header.getSize() : undefined,
                     }}
                     className={cn(
                       align === "right" && "text-right",
@@ -170,9 +170,29 @@ export function DataTable<TData, TValue>({
                 className={getRowClassName?.(row.original)}
               >
                 {row.getVisibleCells().map((cell) => {
+                  const columnDef = cell.column.columnDef;
                   const align =
-                    (cell.column.columnDef.meta as { align?: "left" | "right" | "center" } | undefined)
+                    (columnDef.meta as { align?: "left" | "right" | "center" } | undefined)
                       ?.align ?? "left";
+                  const hasEllipsis = (columnDef as { ellipsis?: boolean }).ellipsis;
+                  const size = cell.column.getSize();
+
+                  let cellContent = flexRender(columnDef.cell, cell.getContext());
+
+                  if (hasEllipsis) {
+                    const rawValue = cell.getValue();
+                    const titleText = typeof rawValue === "string" ? rawValue : undefined;
+                    cellContent = (
+                      <div
+                        className="truncate"
+                        style={{ maxWidth: size }}
+                        title={titleText}
+                      >
+                        {cellContent}
+                      </div>
+                    );
+                  }
+
                   return (
                     <TableCell
                       key={cell.id}
@@ -181,7 +201,7 @@ export function DataTable<TData, TValue>({
                         align === "center" && "text-center",
                       )}
                     >
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {cellContent}
                     </TableCell>
                   );
                 })}

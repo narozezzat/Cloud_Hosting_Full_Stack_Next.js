@@ -26,6 +26,7 @@ export default function AdminArticlesTableClient({
       {
         accessorKey: "title",
         header: "Title",
+        ellipsis: true,
         size: 400,
         cell: ({ row }) => (
           <Link
@@ -39,14 +40,14 @@ export default function AdminArticlesTableClient({
       {
         id: "status",
         header: "Status",
-        size: 150,
+        size: 160,
         enableSorting: false,
         cell: () => <Badge variant="success">Published</Badge>,
       },
       {
         accessorKey: "createdAt",
         header: "Created",
-        size: 200,
+        size: 140,
         cell: ({ row }) => (
           <span className="text-sm text-muted-foreground">
             {formatDate(String(row.original.createdAt))}
@@ -56,7 +57,7 @@ export default function AdminArticlesTableClient({
       {
         id: "actions",
         header: "Actions",
-        size: 100,
+        size: 120,
         enableSorting: false,
         meta: { align: "right" },
         cell: ({ row }) => <RowActions article={row.original} />,

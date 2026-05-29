@@ -43,7 +43,7 @@ export default function AdminTopbar({
   const current = crumbs[crumbs.length - 1];
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center gap-2 border-b border-border bg-background/80 px-3 backdrop-blur-md sm:gap-3 sm:px-4 lg:px-8">
+    <header className="z-30 flex h-16 shrink-0 items-center gap-2 border-b border-border bg-background/80 px-3 backdrop-blur-md sm:gap-3 sm:px-4 lg:px-8">
       <button
         type="button"
         onClick={onOpenMobileNav}
