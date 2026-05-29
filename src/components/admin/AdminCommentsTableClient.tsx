@@ -3,7 +3,7 @@
 import * as React from "react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Comment } from "@/generated/prisma";
-import DeleteCommentButton from "@/app/admin/comments-table/DeleteCommentButton";
+import CommentRowActions from "./CommentRowActions";
 import { formatDate } from "@/utils/formatDate";
 import { DataTable } from "@/components/ui/DataTable";
 
@@ -37,12 +37,7 @@ export default function AdminCommentsTableClient({
         header: "Actions",
         enableSorting: false,
         meta: { align: "right" },
-        cell: ({ row }) => (
-          <DeleteCommentButton
-            commentText={row.original.text}
-            commentId={row.original.id}
-          />
-        ),
+        cell: ({ row }) => <CommentRowActions comment={row.original} />,
       },
     ],
     [],

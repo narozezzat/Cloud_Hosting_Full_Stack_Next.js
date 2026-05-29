@@ -2,83 +2,18 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { MoreHorizontal, ExternalLink, Pencil, Trash2 } from "lucide-react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Article } from "@/generated/prisma";
-import EditArticleModal from "./EditArticleModal";
-import DeleteArticleButton from "./DeleteArticleButton";
+import RowActions from "./RowActions";
 import Pagination from "@/components/articles/Pagination";
 import { formatDate } from "@/utils/formatDate";
 import { Badge } from "@/components/ui/Badge";
 import { DataTable } from "@/components/ui/DataTable";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 
 interface AdminArticlesTableClientProps {
   articles: Article[];
   pages: number;
   currentPage: number;
-}
-
-function RowActions({ article }: { article: Article }) {
-  const [editOpen, setEditOpen] = React.useState(false);
-  const [deleteOpen, setDeleteOpen] = React.useState(false);
-
-  return (
-    <>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <button
-            type="button"
-            className="inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            aria-label="Row actions"
-          >
-            <MoreHorizontal className="h-4 w-4" />
-          </button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuItem onSelect={() => setEditOpen(true)}>
-            <Pencil className="h-4 w-4 text-muted-foreground" />
-            Edit
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link href={`/articles/${article.id}`}>
-              <ExternalLink className="h-4 w-4 text-muted-foreground" />
-              View article
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            destructive
-            onSelect={(e) => {
-              e.preventDefault();
-              setDeleteOpen(true);
-            }}
-          >
-            <Trash2 className="h-4 w-4" />
-            Delete
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-
-      <EditArticleModal
-        article={article}
-        open={editOpen}
-        onOpenChange={setEditOpen}
-      />
-      <DeleteArticleButton
-        articleId={article.id}
-        articleTitle={article.title}
-        open={deleteOpen}
-        onOpenChange={setDeleteOpen}
-      />
-    </>
-  );
 }
 
 export default function AdminArticlesTableClient({

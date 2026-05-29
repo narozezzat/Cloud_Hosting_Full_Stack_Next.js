@@ -59,7 +59,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
                   id="app-scroll"
                   className="flex flex-1 flex-col overflow-y-auto"
                 >
-                  <main className="flex min-h-0 flex-1 flex-col">
+                  <main className="flex-1 flex flex-col">
                     {children}
                   </main>
                   <Footer />
