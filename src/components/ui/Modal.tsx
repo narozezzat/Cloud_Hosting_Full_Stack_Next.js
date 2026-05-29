@@ -56,7 +56,27 @@ function HeaderContent({
   description?: React.ReactNode;
   layout: "dialog" | "drawer";
 }) {
-  if (!title && !description && !icon) return null;
+  const hasVisibleHeader = Boolean(title || description || icon);
+  // Radix requires a Title + Description (or explicit opt-out). When a
+  // consumer doesn't pass one, we still render an sr-only element so
+  // screen readers get context and Radix stops warning.
+  const TitleEl = layout === "dialog" ? DialogTitle : DrawerTitle;
+  const DescriptionEl =
+    layout === "dialog" ? DialogDescription : DrawerDescription;
+  const fallbackText =
+    (typeof title === "string" && title) ||
+    (typeof description === "string" && description) ||
+    "Dialog";
+
+  if (!hasVisibleHeader) {
+    return (
+      <>
+        <TitleEl className="sr-only">{fallbackText}</TitleEl>
+        <DescriptionEl className="sr-only">{fallbackText}</DescriptionEl>
+      </>
+    );
+  }
+
   return (
     <div className="flex items-start gap-3 pr-8">
       {icon && (
@@ -65,18 +85,16 @@ function HeaderContent({
         </div>
       )}
       <div className="min-w-0 flex-1">
-        {title &&
-          (layout === "dialog" ? (
-            <DialogTitle>{title}</DialogTitle>
-          ) : (
-            <DrawerTitle>{title}</DrawerTitle>
-          ))}
-        {description &&
-          (layout === "dialog" ? (
-            <DialogDescription className="mt-1">{description}</DialogDescription>
-          ) : (
-            <DrawerDescription className="mt-1">{description}</DrawerDescription>
-          ))}
+        {title ? (
+          <TitleEl>{title}</TitleEl>
+        ) : (
+          <TitleEl className="sr-only">{fallbackText}</TitleEl>
+        )}
+        {description ? (
+          <DescriptionEl className="mt-1">{description}</DescriptionEl>
+        ) : (
+          <DescriptionEl className="sr-only">{fallbackText}</DescriptionEl>
+        )}
       </div>
     </div>
   );

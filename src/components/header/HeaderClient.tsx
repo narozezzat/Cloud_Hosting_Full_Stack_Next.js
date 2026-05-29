@@ -16,6 +16,7 @@ import {
   SheetBody,
   SheetFooter,
   SheetTitle,
+  SheetDescription,
 } from "@/components/ui/sheet";
 import UserDropdown from "./UserDropdown";
 
@@ -141,6 +142,9 @@ export default function HeaderClient({ isAdmin, username }: HeaderClientProps) {
             >
               <SheetHeader>
                 <SheetTitle className="sr-only">Navigation menu</SheetTitle>
+                <SheetDescription className="sr-only">
+                  Primary site navigation links and account actions.
+                </SheetDescription>
                 <Logo />
               </SheetHeader>
 
