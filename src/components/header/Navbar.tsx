@@ -47,7 +47,7 @@ const Navbar = ({ isAdmin }: NavbarProps) => {
           </Link>
           <Link
             onClick={() => setToggle(false)}
-            className={`${styles.navLink} ${pathname.startsWith("/articles") ? styles.activeLink : ""}`}
+            className={`${styles.navLink} ${pathname?.startsWith("/articles") ? styles.activeLink : ""}`}
             href="/articles?pageNumber=1"
           >
             Articles
