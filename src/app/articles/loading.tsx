@@ -4,13 +4,13 @@ export default function ArticlesLoading() {
   return (
     <>
       {/* Heading */}
-      <section className="container py-16 lg:py-20">
+      <section className="container pt-12 pb-8 lg:pt-16 lg:pb-10">
         <div className="mx-auto max-w-3xl space-y-4 text-center">
           <Skeleton shape="pill" className="mx-auto h-6 w-16" />
           <Skeleton className="mx-auto h-12 w-3/4" />
           <Skeleton className="mx-auto h-5 w-1/2" />
         </div>
-        <div className="mx-auto mt-10 flex max-w-2xl gap-2">
+        <div className="mx-auto mt-8 flex max-w-2xl gap-2">
           <Skeleton className="h-11 flex-1" />
           <Skeleton className="h-11 w-24" />
         </div>

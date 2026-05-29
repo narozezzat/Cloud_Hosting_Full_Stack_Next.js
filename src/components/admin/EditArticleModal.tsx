@@ -1,138 +1,142 @@
 "use client";
-import React, { useMemo, useState } from "react";
+
+import * as React from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { DOMAIN } from "@/utils/constants";
 import { useRouter } from "next/navigation";
+import { Pencil } from "lucide-react";
+import { DOMAIN } from "@/utils/constants";
 import { Article } from "@/generated/prisma";
-import useLoading from "@/hooks/useLoading";
-import { Button, Form, Input, Modal, Drawer, Grid } from "antd";
-import { EditOutlined } from "@ant-design/icons";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
+import { Textarea } from "@/components/ui/Textarea";
+import { Modal } from "@/components/ui/Modal";
 
-const { TextArea } = Input;
-const { useBreakpoint } = Grid;
-
-interface EditArticleFormProps {
+interface EditArticleModalProps {
   article: Article;
+  /** Optional custom trigger. Defaults to a full-width menu-item style button. */
+  trigger?: React.ReactElement;
 }
 
-const EditArticleModal = ({ article }: EditArticleFormProps) => {
+const EditArticleModal = ({ article, trigger }: EditArticleModalProps) => {
   const router = useRouter();
-  const { loading, withLoading } = useLoading();
-  const [isVisible, setIsVisible] = useState(false);
-  const screens = useBreakpoint(); // Get screen size breakpoints
+  const [open, setOpen] = React.useState(false);
+  const [title, setTitle] = React.useState(article.title);
+  const [description, setDescription] = React.useState(article.description);
+  const [loading, setLoading] = React.useState(false);
 
-  const open = () => {
-    setIsVisible(true);
+  React.useEffect(() => {
+    if (open) {
+      setTitle(article.title);
+      setDescription(article.description);
+    }
+  }, [open, article]);
+
+  const handleClose = () => {
+    if (loading) return;
+    setOpen(false);
   };
 
-  const close = () => {
-    setIsVisible(false);
-  };
-
-  const formSubmitHandler = async (values: {
-    title: string;
-    description: string;
-  }) => {
-    const { title, description } = values;
-
-    if (title === "") return toast.error("Title is required");
-    if (description === "") return toast.error("Description is required");
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!title.trim()) return toast.error("Title is required");
+    if (!description.trim()) return toast.error("Description is required");
 
     try {
-      await withLoading(async () => {
-        await axios.put(`${DOMAIN}/api/articles/${article.id}`, {
-          title,
-          description,
-        });
-        toast.success("Article updated");
-        router.refresh();
-        close();
+      setLoading(true);
+      await axios.put(`${DOMAIN}/api/articles/${article.id}`, {
+        title,
+        description,
       });
+      toast.success("Article updated");
+      setOpen(false);
+      router.refresh();
     } catch (error: any) {
-      toast.error(error?.response?.data.message);
+      toast.error(error?.response?.data?.message ?? "Something went wrong");
+    } finally {
+      setLoading(false);
     }
   };
 
-  const initialValues = {
-    title: article.title,
-    description: article.description,
-  };
+  const openModal = () => setOpen(true);
 
-  const FormContent = useMemo(
-    () => (
-      <Form
-        onFinish={formSubmitHandler}
-        className="flex flex-col"
-        layout="vertical"
-        initialValues={initialValues}
-        id="update-article-form"
-      >
-        <Form.Item name="title" label="Title" className="mb-4">
-          <Input className="border rounded p-2 text-xl" type="text" />
-        </Form.Item>
-        <Form.Item name="description" label="Description" className="mb-4">
-          <TextArea className="p-2 lg:text-xl rounded resize-none" rows={5} />
-        </Form.Item>
-      </Form>
-    ),
-    [formSubmitHandler, initialValues],
-  );
-
-  const footerContent = useMemo(
-    () => (
-      <Button
-        form="update-article-form"
-        loading={loading}
-        htmlType="submit"
-        size="large"
-        className="text-2xl w-full text-white bg-blue-700 hover:bg-blue-900 p-6 hover:border-blue-800 hover:text-white font-bold"
-      >
-        Edit
-      </Button>
-    ),
-    [loading],
+  const triggerEl = trigger ? (
+    React.cloneElement(trigger, {
+      onClick: (e: React.MouseEvent) => {
+        trigger.props.onClick?.(e);
+        if (!e.defaultPrevented) openModal();
+      },
+    })
+  ) : (
+    <button
+      type="button"
+      onClick={openModal}
+      className="flex w-full items-center gap-2 rounded-md px-2 py-2 text-sm text-foreground transition-colors hover:bg-secondary"
+    >
+      <Pencil className="h-4 w-4 text-muted-foreground" />
+      Edit
+    </button>
   );
 
   return (
     <>
-      <Button
-        className="w-full flex justify-start p-2.5"
-        icon={<EditOutlined />}
-        type="text"
-        onClick={open}
+      {triggerEl}
+      <Modal
+        open={open}
+        onClose={handleClose}
+        size="xl"
+        icon={<Pencil className="h-5 w-5" />}
+        title="Edit article"
+        description="Update the title or description, then save your changes."
+        footer={
+          <>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleClose}
+              disabled={loading}
+            >
+              Cancel
+            </Button>
+            <Button form="edit-article-form" type="submit" loading={loading}>
+              Save changes
+            </Button>
+          </>
+        }
       >
-        Edit
-      </Button>
-
-      {screens.md ? (
-        <Modal
-          title="Edit Article"
-          open={isVisible}
-          onCancel={close}
-          footer={footerContent}
+        <form
+          id="edit-article-form"
+          onSubmit={handleSubmit}
+          className="space-y-4"
+          noValidate
         >
-          {FormContent}
-        </Modal>
-      ) : (
-        <Drawer
-          title="Edit Article"
-          placement="bottom"
-          onClose={close}
-          open={isVisible}
-          width="100%"
-          footer={footerContent}
-          styles={{ body: { padding: "16px" } }}
-          className={`
-                        rounded-t-2xl
-                        [&>.ant-drawer-wrapper-body]:h-min
-                        [&>.ant-drawer-wrapper-body_.ant-drawer-body]:py-6
-                        [&>.ant-drawer-header>div]:flex-row-reverse
-                    `}
-        >
-          {FormContent}
-        </Drawer>
-      )}
+          <div className="space-y-1.5">
+            <label htmlFor="edit-article-title" className="text-sm font-medium">
+              Title
+            </label>
+            <Input
+              id="edit-article-title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              autoFocus
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label
+              htmlFor="edit-article-description"
+              className="text-sm font-medium"
+            >
+              Description
+            </label>
+            <Textarea
+              id="edit-article-description"
+              rows={6}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </div>
+        </form>
+      </Modal>
     </>
   );
 };

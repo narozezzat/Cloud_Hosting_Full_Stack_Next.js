@@ -1,142 +1,134 @@
 "use client";
-import useLoading from "@/hooks/useLoading";
-import { DOMAIN } from "@/utils/constants";
-import { Button, Drawer, Form, Grid, Input, Modal } from "antd";
-import TextArea from "antd/es/input/TextArea";
+
+import * as React from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import React, { useMemo, useState } from "react";
 import { toast } from "react-toastify";
+import { Plus, FileText } from "lucide-react";
+import { DOMAIN } from "@/utils/constants";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
+import { Textarea } from "@/components/ui/Textarea";
+import { Modal } from "@/components/ui/Modal";
 
-const { useBreakpoint } = Grid;
+interface AddArticleModalProps {
+  /** Optional custom trigger. If omitted, a primary "New article" button is rendered. */
+  trigger?: React.ReactElement;
+}
 
-const AddArticleModal = () => {
+const AddArticleModal = ({ trigger }: AddArticleModalProps) => {
   const router = useRouter();
+  const [open, setOpen] = React.useState(false);
+  const [title, setTitle] = React.useState("");
+  const [description, setDescription] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
 
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const { loading, withLoading } = useLoading();
-  const [isAddModalVisible, setIsAddModalVisible] = useState(false);
-  const screens = useBreakpoint(); // Get screen size breakpoints
-
-  const openAddModal = () => {
-    setIsAddModalVisible(true);
+  const reset = () => {
+    setTitle("");
+    setDescription("");
   };
 
-  const closeAddModal = () => {
-    setIsAddModalVisible(false);
+  const handleClose = () => {
+    if (loading) return;
+    setOpen(false);
   };
 
-  const formSubmitHandler = async () => {
-    if (title === "") return toast.error("Title is required");
-    if (description === "") return toast.error("Description is required");
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!title.trim()) return toast.error("Title is required");
+    if (!description.trim()) return toast.error("Description is required");
 
     try {
-      await withLoading(async () => {
-        await axios.post(`${DOMAIN}/api/articles`, { title, description });
-        setTitle("");
-        setDescription("");
-        toast.success("New article added");
-        router.refresh();
-        closeAddModal();
-      });
+      setLoading(true);
+      await axios.post(`${DOMAIN}/api/articles`, { title, description });
+      toast.success("Article published");
+      reset();
+      setOpen(false);
+      router.refresh();
     } catch (error: any) {
-      toast.error(error?.response?.data.message);
+      toast.error(error?.response?.data?.message ?? "Something went wrong");
+    } finally {
+      setLoading(false);
     }
   };
 
-  const formContent = useMemo(
-    () => (
-      <Form
-        id="add-article-form"
-        onFinish={formSubmitHandler}
-        className="flex gap-4 flex-col"
-        layout="vertical"
-      >
-        <Form.Item
-          label="Title"
-          name="title"
-          className="mb-2"
-          rules={[{ required: true, message: "Title is required" }]}
-        >
-          <Input
-            className="border rounded p-2 text-xl"
-            type="text"
-            placeholder="Enter Article Title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-        </Form.Item>
-        <Form.Item
-          name={"description"}
-          label={"Description"}
-          rules={[{ required: true, message: "Description is required" }]}
-        >
-          <TextArea
-            className="p-2 lg:text-xl rounded resize-none"
-            rows={5}
-            placeholder="Enter Article Description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </Form.Item>
-      </Form>
-    ),
-    [title, description],
-  );
+  const openModal = () => setOpen(true);
 
-  const footerContent = useMemo(
-    () => (
-      <Button
-        form="add-article-form"
-        loading={loading}
-        disabled={loading}
-        htmlType="submit"
-        className="w-full text-2xl text-white bg-blue-700 hover:bg-blue-900 hover:border-blue-800 p-6 rounded-lg font-bold"
-      >
-        Add
-      </Button>
-    ),
-    [loading],
+  const triggerEl = trigger ? (
+    React.cloneElement(trigger, {
+      onClick: (e: React.MouseEvent) => {
+        trigger.props.onClick?.(e);
+        if (!e.defaultPrevented) openModal();
+      },
+    })
+  ) : (
+    <Button onClick={openModal} className="gap-1.5">
+      <Plus className="h-4 w-4" />
+      New article
+    </Button>
   );
 
   return (
     <>
-      <Button
-        type="primary"
-        className="!bg-gradient-to-br !from-brand-500 !to-accent-500 !text-white !border-0 !font-semibold hover:!brightness-105"
-        onClick={openAddModal}
+      {triggerEl}
+      <Modal
+        open={open}
+        onClose={handleClose}
+        size="xl"
+        icon={<FileText className="h-5 w-5" />}
+        title="Publish a new article"
+        description="A clear title and a short description go a long way."
+        footer={
+          <>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleClose}
+              disabled={loading}
+            >
+              Cancel
+            </Button>
+            <Button form="add-article-form" type="submit" loading={loading}>
+              Publish article
+            </Button>
+          </>
+        }
       >
-        + New article
-      </Button>
-      {screens.md ? (
-        <Modal
-          title="Add New Article"
-          open={isAddModalVisible}
-          onCancel={closeAddModal}
-          footer={footerContent}
+        <form
+          id="add-article-form"
+          onSubmit={handleSubmit}
+          className="space-y-4"
+          noValidate
         >
-          {formContent}
-        </Modal>
-      ) : (
-        <Drawer
-          title="Add New Article"
-          placement="bottom"
-          onClose={closeAddModal}
-          open={isAddModalVisible}
-          width="100%"
-          footer={footerContent}
-          styles={{ body: { padding: "16px" } }}
-          className={`
-                                rounded-t-2xl
-                                [&>.ant-drawer-wrapper-body]:h-min
-                                [&>.ant-drawer-wrapper-body_.ant-drawer-body]:py-6
-                                [&>.ant-drawer-header>div]:flex-row-reverse
-                                `}
-        >
-          {formContent}
-        </Drawer>
-      )}
+          <div className="space-y-1.5">
+            <label htmlFor="add-article-title" className="text-sm font-medium">
+              Title
+            </label>
+            <Input
+              id="add-article-title"
+              placeholder="e.g. Why edge functions matter"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              autoFocus
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label
+              htmlFor="add-article-description"
+              className="text-sm font-medium"
+            >
+              Description
+            </label>
+            <Textarea
+              id="add-article-description"
+              rows={6}
+              placeholder="Tell us what this article is about…"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </div>
+        </form>
+      </Modal>
     </>
   );
 };

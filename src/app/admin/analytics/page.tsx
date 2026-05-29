@@ -1,180 +1,90 @@
-"use client";
-import * as React from "react";
-import { Line } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Filler,
-  Tooltip,
-  Legend,
-} from "chart.js";
-import { useTheme } from "next-themes";
 import {
   Users,
   FileText,
   MessageSquare,
-  TrendingUp,
+  Activity,
 } from "lucide-react";
-import { Card } from "@/components/ui/Card";
+import { getAnalytics } from "@/lib/analytics";
 import { StatCard } from "@/components/ui/StatCard";
+import { Card } from "@/components/ui/Card";
+import { AnalyticsChart } from "@/components/admin/AnalyticsChart";
+import { TopArticlesList } from "@/components/admin/TopArticlesList";
+import { ActivityFeed } from "@/components/admin/ActivityFeed";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Filler,
-  Tooltip,
-  Legend,
-);
+export const dynamic = "force-dynamic";
 
-const labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"];
-
-export default function AnalyticsPage() {
-  const { resolvedTheme } = useTheme();
-  const [mounted, setMounted] = React.useState(false);
-  React.useEffect(() => setMounted(true), []);
-  const isDark = mounted && resolvedTheme === "dark";
-
-  const buildGradient = (ctx: CanvasRenderingContext2D) => {
-    const g = ctx.createLinearGradient(0, 0, 0, 280);
-    g.addColorStop(0, "rgba(59, 111, 232, 0.45)");
-    g.addColorStop(1, "rgba(124, 92, 255, 0)");
-    return g;
-  };
-
-  const data = {
-    labels,
-    datasets: [
-      {
-        label: "Users",
-        data: [50, 95, 140, 200, 260, 300, 380],
-        borderColor: isDark ? "#608EF6" : "#3B6FE8",
-        backgroundColor: (context: any) => {
-          const chart = context.chart;
-          const { ctx, chartArea } = chart;
-          if (!chartArea) return "rgba(59, 111, 232, 0.2)";
-          return buildGradient(ctx);
-        },
-        fill: true,
-        tension: 0.4,
-        borderWidth: 2.5,
-        pointRadius: 0,
-        pointHoverRadius: 5,
-        pointHoverBackgroundColor: isDark ? "#608EF6" : "#3B6FE8",
-      },
-    ],
-  };
-
-  const options = {
-    responsive: true,
-    maintainAspectRatio: false,
-    interaction: { mode: "index" as const, intersect: false },
-    plugins: {
-      legend: { display: false },
-      tooltip: {
-        backgroundColor: isDark ? "#111827" : "#0B1220",
-        titleColor: "#fff",
-        bodyColor: "#cbd5e1",
-        padding: 12,
-        cornerRadius: 8,
-        displayColors: false,
-      },
-    },
-    scales: {
-      x: {
-        grid: { display: false },
-        ticks: { color: isDark ? "#94A3B8" : "#64748B" },
-        border: { display: false },
-      },
-      y: {
-        grid: { color: isDark ? "rgba(255,255,255,0.06)" : "rgba(15,23,42,0.06)" },
-        ticks: { color: isDark ? "#94A3B8" : "#64748B" },
-        border: { display: false },
-      },
-    },
-  };
+export default async function AnalyticsPage() {
+  const analytics = await getAnalytics();
+  const { totals, deltas, series, topArticles, recentActivity } = analytics;
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       <div>
-        <h1 className="font-display text-3xl font-extrabold tracking-tight">
+        <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
           Analytics
         </h1>
-        <p className="text-sm text-muted-foreground">
-          Growth, engagement, and what's trending.
+        <p className="mt-1 text-sm text-muted-foreground">
+          Growth, engagement, and what&apos;s trending.
         </p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-3 grid-cols-2 sm:gap-4 lg:grid-cols-4">
         <StatCard
           label="Total users"
-          value="380"
+          value={totals.users}
           icon={<Users className="h-5 w-5" />}
-          delta={{ value: 26, label: "vs. last month" }}
+          delta={{ value: deltas.users, label: "vs. last 30d" }}
         />
         <StatCard
           label="Articles"
-          value="42"
+          value={totals.articles}
           icon={<FileText className="h-5 w-5" />}
-          delta={{ value: 12 }}
+          delta={{ value: deltas.articles, label: "vs. last 30d" }}
         />
         <StatCard
           label="Comments"
-          value="186"
+          value={totals.comments}
           icon={<MessageSquare className="h-5 w-5" />}
-          delta={{ value: 48 }}
+          delta={{ value: deltas.comments, label: "vs. last 30d" }}
         />
         <StatCard
-          label="Avg. engagement"
-          value="4.4 min"
-          icon={<TrendingUp className="h-5 w-5" />}
-          delta={{ value: -3, label: "WoW" }}
+          label="Active users"
+          value={totals.activeUsers}
+          icon={<Activity className="h-5 w-5" />}
+          delta={{ value: deltas.activeUsers, label: "vs. last 30d" }}
         />
       </div>
 
       {/* Bento grid */}
-      <div className="grid gap-4 lg:grid-cols-3">
-        <Card variant="elevated" className="p-6 lg:col-span-2">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="font-display text-xl font-semibold">User growth</h2>
-              <p className="text-sm text-muted-foreground">Last 7 months</p>
-            </div>
-          </div>
-          <div className="mt-6 h-72">
-            <Line data={data} options={options} />
-          </div>
+      <div className="grid gap-4 lg:grid-cols-3 lg:gap-6">
+        <Card variant="elevated" className="p-5 sm:p-6 lg:col-span-2">
+          <AnalyticsChart series={series} />
         </Card>
 
-        <Card variant="elevated" className="p-6">
-          <h2 className="font-display text-xl font-semibold">Top sources</h2>
-          <ul className="mt-4 space-y-3">
-            {[
-              { name: "Organic search", value: 48 },
-              { name: "Direct", value: 24 },
-              { name: "Referral", value: 18 },
-              { name: "Social", value: 10 },
-            ].map((s) => (
-              <li key={s.name}>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="font-medium">{s.name}</span>
-                  <span className="text-muted-foreground">{s.value}%</span>
-                </div>
-                <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-secondary">
-                  <div
-                    className="h-full rounded-full bg-gradient-to-r from-brand-500 to-accent-500"
-                    style={{ width: `${s.value}%` }}
-                  />
-                </div>
-              </li>
-            ))}
-          </ul>
+        <Card variant="elevated" className="p-5 sm:p-6">
+          <h2 className="font-display text-lg font-semibold sm:text-xl">
+            Top articles
+          </h2>
+          <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
+            Most-discussed pieces right now.
+          </p>
+          <div className="mt-4 sm:mt-5">
+            <TopArticlesList articles={topArticles} />
+          </div>
         </Card>
       </div>
+
+      <Card variant="elevated" className="p-5 sm:p-6">
+        <h2 className="font-display text-lg font-semibold sm:text-xl">
+          Recent activity
+        </h2>
+        <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
+          Latest signals across the platform.
+        </p>
+        <div className="mt-4 sm:mt-5">
+          <ActivityFeed items={recentActivity} />
+        </div>
+      </Card>
     </div>
   );
 }

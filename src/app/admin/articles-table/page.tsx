@@ -21,14 +21,16 @@ export default async function AdminArticlesTable({
     <div className="space-y-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="font-display text-3xl font-extrabold tracking-tight">
+          <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
             Articles
           </h1>
-          <p className="text-sm text-muted-foreground">
+          <p className="mt-1 text-sm text-muted-foreground">
             {count} {count === 1 ? "article" : "articles"} total
           </p>
         </div>
-        <AddArticleModal />
+        <div className="flex-shrink-0">
+          <AddArticleModal />
+        </div>
       </div>
       <Card variant="elevated" className="overflow-hidden p-0">
         <AdminArticlesTableClient

@@ -1,97 +1,78 @@
 "use client";
-import { Modal, Button, Grid, Drawer } from "antd";
-import { useMemo } from "react";
-import { TiWarningOutline } from "react-icons/ti";
 
-const { useBreakpoint } = Grid;
+import * as React from "react";
+import { AlertTriangle } from "lucide-react";
+import { Modal } from "@/components/ui/Modal";
+import { Button } from "@/components/ui/Button";
 
 interface ConfirmationModalProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
+  title?: React.ReactNode;
   message: React.ReactNode;
   confirmText?: string;
   cancelText?: string;
   isLoading?: boolean;
+  /** Visual tone for the confirm action. Defaults to "danger". */
+  tone?: "danger" | "primary";
 }
 
 const ConfirmationModal = ({
   isOpen,
   onClose,
   onConfirm,
+  title = "Are you sure?",
   message,
   confirmText = "Delete",
   cancelText = "Cancel",
   isLoading = false,
+  tone = "danger",
 }: ConfirmationModalProps) => {
-  const screens = useBreakpoint();
-
-  const modalContent = useMemo(
-    () => (
-      <div className="text-center mt-8">
-        <div className="bg-gray-100 rounded-full w-14 h-14 flex items-center justify-center mx-auto mb-4">
-          <TiWarningOutline className="text-3xl text-gray-800" />
-        </div>
-        <h3 className="text-xl font-normal">{message}</h3>
-      </div>
-    ),
-    [message],
-  );
-
-  const footerContent = useMemo(
-    () => (
-      <div className="flex gap-4">
-        <Button
-          onClick={onClose}
-          className="w-1/2 h-12 text-lg border-gray-300"
-          disabled={isLoading}
-          size={screens.xs ? "middle" : "large"}
-        >
-          {cancelText}
-        </Button>
-        <Button
-          onClick={onConfirm}
-          className="w-1/2 h-12 text-lg text-white bg-error-light-1 hover:bg-red-700 border-red-600"
-          loading={isLoading}
-          disabled={isLoading}
-          size={screens.xs ? "middle" : "large"}
-        >
-          {confirmText}
-        </Button>
-      </div>
-    ),
-    [cancelText, confirmText, isLoading, onClose, onConfirm, screens.xs],
-  );
+  const handleClose = () => {
+    if (isLoading) return;
+    onClose();
+  };
 
   return (
-    <>
-      {screens.md ? (
-        <Modal
-          open={isOpen}
-          onCancel={onClose}
-          footer={footerContent}
-          centered
-          closable={false}
-          className="confirmation-modal"
-        >
-          {modalContent}
-        </Modal>
-      ) : (
-        <Drawer
-          placement="bottom"
-          onClose={onClose}
-          open={isOpen}
-          width="100%"
-          closable={false}
-          height={"auto"}
-          footer={footerContent}
-          styles={{ body: { padding: "16px" } }}
-          className={`rounded-t-2xl`}
-        >
-          {modalContent}
-        </Drawer>
-      )}
-    </>
+    <Modal
+      open={isOpen}
+      onClose={handleClose}
+      size="sm"
+      variant="center"
+      icon={
+        <AlertTriangle
+          className={
+            tone === "danger"
+              ? "h-5 w-5 text-destructive"
+              : "h-5 w-5 text-brand-500"
+          }
+        />
+      }
+      title={title}
+      footer={
+        <>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handleClose}
+            disabled={isLoading}
+          >
+            {cancelText}
+          </Button>
+          <Button
+            type="button"
+            variant={tone === "danger" ? "danger" : "primary"}
+            onClick={onConfirm}
+            loading={isLoading}
+          >
+            {confirmText}
+          </Button>
+        </>
+      }
+    >
+      <div className="text-sm text-muted-foreground">{message}</div>
+    </Modal>
   );
 };
 

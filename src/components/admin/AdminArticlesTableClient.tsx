@@ -69,9 +69,15 @@ export default function AdminArticlesTableClient({
           },
           {
             key: "read-more",
-            icon: <ExternalLink size={14} />,
+            className: "p-0",
             label: (
-              <Link href={`/articles/${article.id}`}>View article</Link>
+              <Link
+                href={`/articles/${article.id}`}
+                className="flex w-full items-center gap-2 rounded-md px-2 py-2 text-sm text-foreground transition-colors hover:bg-secondary"
+              >
+                <ExternalLink className="h-4 w-4 text-muted-foreground" />
+                View article
+              </Link>
             ),
           },
           { type: "divider" as const },
