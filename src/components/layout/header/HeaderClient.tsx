@@ -39,8 +39,10 @@ export default function HeaderClient({ isAdmin, username }: HeaderClientProps) {
   return (
     <header
       className={cn(
-        "shrink-0 z-50 w-full transition-all duration-enter",
-        scrolled ? "glass shadow-sm" : "bg-background",
+        "shrink-0 z-50 w-full border-b duration-enter transition-[background-color,border-color,box-shadow,backdrop-filter]",
+        scrolled
+          ? "glass shadow-sm"
+          : "bg-background border-transparent shadow-none",
       )}
     >
       <div className="container flex h-16 items-center justify-between gap-4">
