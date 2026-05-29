@@ -103,10 +103,11 @@ const AddArticleModal = () => {
   return (
     <>
       <Button
-        className="bg-blue-700 text-white hover:bg-blue-900 hover:border-blue-900"
+        type="primary"
+        className="!bg-gradient-to-br !from-brand-500 !to-accent-500 !text-white !border-0 !font-semibold hover:!brightness-105"
         onClick={openAddModal}
       >
-        Add Article
+        + New article
       </Button>
       {screens.md ? (
         <Modal

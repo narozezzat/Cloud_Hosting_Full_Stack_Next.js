@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
-import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { cn } from "@/lib/cn";
 
 interface PaginationProps {
   pages: number;
@@ -8,52 +9,81 @@ interface PaginationProps {
   route?: string;
   className?: string;
 }
+
 const Pagination = ({
   pages,
   pageNumber,
   className,
-  route,
+  route = "",
 }: PaginationProps) => {
-  let pagesArray: number[] = [];
-  for (let i = 1; i <= pages; i++) pagesArray.push(i);
+  if (!pages || pages < 1) return null;
 
+  const pagesArray = Array.from({ length: pages }, (_, i) => i + 1);
   const prev = pageNumber - 1;
   const next = pageNumber + 1;
+  const atStart = pageNumber <= 1;
+  const atEnd = pageNumber >= pages;
+
+  const linkClass =
+    "inline-flex h-9 min-w-9 items-center justify-center rounded-md px-3 text-sm font-medium transition-colors duration-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
 
   return (
-    <div className={`flex items-center justify-center mt-6 pb-20 ${className}`}>
+    <nav
+      aria-label="Pagination"
+      className={cn(
+        "mt-10 flex items-center justify-center gap-1 rounded-full border border-border bg-card p-1 mx-auto w-fit",
+        className,
+      )}
+    >
       <Link
-        href={pageNumber !== 1 ? `${route}?pageNumber=${prev}` : "#"}
-        className={`py-2 px-3 font-bold text-xl ${
-          pageNumber === 1
-            ? "border border-gray-400 bg-gray-200 text-gray-400 cursor-not-allowed"
-            : "border border-gray-700 text-gray-700 cursor-pointer hover:bg-gray-200 transition"
-        }`}
-        onClick={(e) => pageNumber === 1 && e.preventDefault()}
+        href={atStart ? "#" : `${route}?pageNumber=${prev}`}
+        aria-label="Previous page"
+        aria-disabled={atStart}
+        onClick={(e) => atStart && e.preventDefault()}
+        className={cn(
+          linkClass,
+          atStart
+            ? "pointer-events-none text-muted-foreground/50"
+            : "text-muted-foreground hover:bg-secondary hover:text-foreground",
+        )}
       >
-        <IoIosArrowBack />
+        <ChevronLeft className="h-4 w-4" />
       </Link>
-      {pagesArray.map((page) => (
-        <Link
-          href={`${route}?pageNumber=${page}`}
-          className={`${pageNumber === page ? "bg-gray-400" : ""} border border-gray-700 text-gray-700 py-1 px-3 font-bold text-xl cursor-pointer hover:bg-gray-200 transition`}
-          key={page}
-        >
-          {page}
-        </Link>
-      ))}
+
+      {pagesArray.map((page) => {
+        const active = pageNumber === page;
+        return (
+          <Link
+            key={page}
+            href={`${route}?pageNumber=${page}`}
+            aria-current={active ? "page" : undefined}
+            className={cn(
+              linkClass,
+              active
+                ? "bg-gradient-to-br from-brand-500 to-accent-500 text-white shadow-sm"
+                : "text-muted-foreground hover:bg-secondary hover:text-foreground",
+            )}
+          >
+            {page}
+          </Link>
+        );
+      })}
+
       <Link
-        href={pageNumber !== pages ? `${route}?pageNumber=${next}` : "#"}
-        className={`py-2 px-3 font-bold text-xl ${
-          pageNumber === pages
-            ? "border border-gray-400 bg-gray-200 text-gray-400 cursor-not-allowed"
-            : "border border-gray-700 text-gray-700 cursor-pointer hover:bg-gray-200 transition"
-        }`}
-        onClick={(e) => pageNumber === pages && e.preventDefault()}
+        href={atEnd ? "#" : `${route}?pageNumber=${next}`}
+        aria-label="Next page"
+        aria-disabled={atEnd}
+        onClick={(e) => atEnd && e.preventDefault()}
+        className={cn(
+          linkClass,
+          atEnd
+            ? "pointer-events-none text-muted-foreground/50"
+            : "text-muted-foreground hover:bg-secondary hover:text-foreground",
+        )}
       >
-        <IoIosArrowForward />
+        <ChevronRight className="h-4 w-4" />
       </Link>
-    </div>
+    </nav>
   );
 };
 

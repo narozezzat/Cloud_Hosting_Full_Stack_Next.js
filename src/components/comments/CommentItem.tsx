@@ -36,28 +36,43 @@ const CommentItem = ({ comment, userId }: CommentItemProps) => {
   };
 
   return (
-    <div className="mb-5 rounded-lg p-3 bg-gray-200 border-2 border-gray-300">
-      <div className="flex items-center justify-between mb-2">
-        <strong className="text-gray-800 uppercase">
-          {comment.user.username}
-        </strong>
-        <span className="bg-yellow-700 px-1 rounded-lg text-white">
-          {new Date(comment.createdAt).toDateString()}
-        </span>
-      </div>
-      <p className="text-gray-800 mb-2">{comment.text}</p>
-      {userId && userId === comment.userId && (
-        <div className="flex justify-end items-center">
-          <FaEdit
-            onClick={() => setOpen(true)}
-            className="text-green-600 text-xl cursor-pointer me-3"
-          />
-          <FaTrash
-            onClick={() => setShowDeleteModal(true)}
-            className="text-red-600 text-xl cursor-pointer"
-          />
+    <div className="rounded-xl border border-border bg-card p-5 shadow-xs">
+      <div className="mb-3 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-accent-500 text-sm font-bold text-white">
+            {comment.user.username.charAt(0).toUpperCase()}
+          </div>
+          <div>
+            <p className="text-sm font-semibold text-foreground">
+              {comment.user.username}
+            </p>
+            <p className="text-xs text-muted-foreground">
+              {new Date(comment.createdAt).toDateString()}
+            </p>
+          </div>
         </div>
-      )}
+        {userId && userId === comment.userId && (
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              onClick={() => setOpen(true)}
+              aria-label="Edit comment"
+              className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+            >
+              <FaEdit className="h-3.5 w-3.5" />
+            </button>
+            <button
+              type="button"
+              onClick={() => setShowDeleteModal(true)}
+              aria-label="Delete comment"
+              className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
+            >
+              <FaTrash className="h-3.5 w-3.5" />
+            </button>
+          </div>
+        )}
+      </div>
+      <p className="text-sm text-foreground/90">{comment.text}</p>
       {open && (
         <UpdateCommentModal
           setOpen={setOpen}
