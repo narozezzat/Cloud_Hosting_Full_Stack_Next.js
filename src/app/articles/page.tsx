@@ -30,7 +30,7 @@ export default async function ArticlesPage({ searchParams }: ArticlesPageProps) 
     <>
       <section className="relative overflow-hidden">
         <GradientBlob position="top-right" size="lg" />
-        <div className="container py-16 lg:py-20">
+        <div className="container pt-12 pb-8 lg:pt-16 lg:pb-10">
           <div className="mx-auto max-w-3xl space-y-4 text-center">
             <Badge>Blog</Badge>
             <h1 className="font-display text-display-md font-extrabold tracking-tight text-balance sm:text-display-lg">
@@ -41,13 +41,13 @@ export default async function ArticlesPage({ searchParams }: ArticlesPageProps) 
               great software.
             </p>
           </div>
-          <div className="mt-10">
+          <div className="mt-8">
             <SearchArticleInput />
           </div>
         </div>
       </section>
 
-      <Section className="!py-0 pb-20">
+      <section className="container pb-20">
         {articles.length === 0 ? (
           <EmptyState
             title="No articles yet"
@@ -65,7 +65,7 @@ export default async function ArticlesPage({ searchParams }: ArticlesPageProps) 
           route="/articles"
           pages={pages}
         />
-      </Section>
+      </section>
     </>
   );
 }
