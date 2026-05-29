@@ -1,9 +1,9 @@
 import AddCommentForm from "@/components/comments/AddCommentForm";
 import CommentItem from "@/components/comments/CommentItem";
-import { SingleArticle } from "@/utils/types";
-import { verifyTokenForPage } from "@/utils/verifyToken";
+import { SingleArticle } from "@/lib/types";
+import { verifyTokenForPage } from "@/lib/auth/verifyToken";
 import { cookies } from "next/headers";
-import prisma from "@/utils/db";
+import prisma from "@/lib/db";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Calendar, Clock, MessageCircle } from "lucide-react";
@@ -11,7 +11,7 @@ import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { ShareStrip } from "@/components/articles/ShareStrip";
-import { formatDate } from "@/utils/formatDate";
+import { formatDate } from "@/lib/formatDate";
 
 interface SingleArticlePageProps {
   params: { id: string };

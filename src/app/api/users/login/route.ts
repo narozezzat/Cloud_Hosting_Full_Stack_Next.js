@@ -1,9 +1,9 @@
-import { LoginUserDto } from "@/utils/dtos";
+import { LoginUserDto } from "@/lib/validation/dtos";
 import { NextResponse, NextRequest } from "next/server";
-import { loginSchema } from "@/utils/validationSchema";
-import prisma from "@/utils/db";
+import { loginSchema } from "@/lib/validation/validationSchema";
+import prisma from "@/lib/db";
 import bcrypt from "bcryptjs";
-import { setCookie } from "@/utils/generateToken";
+import { setCookie } from "@/lib/auth/generateToken";
 /**
  *  @method  POST
  *  @route   ~/api/users/login

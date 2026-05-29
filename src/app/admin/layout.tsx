@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { verifyTokenForPage } from "@/utils/verifyToken";
+import { verifyTokenForPage } from "@/lib/auth/verifyToken";
 import AdminShell from "./AdminShell";
 
 export const metadata: Metadata = {

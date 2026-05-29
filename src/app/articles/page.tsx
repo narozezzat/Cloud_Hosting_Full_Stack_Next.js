@@ -1,19 +1,19 @@
 import { cookies } from "next/headers";
 import { Plus } from "lucide-react";
-import { getArticles } from "@/apiCalls/articleApiCall";
+import { getArticles } from "@/lib/api/articleApiCall";
 import ArticleItem from "@/components/articles/ArticleItem";
 import Pagination from "@/components/ui/Pagination";
 import SearchArticleInput from "@/components/articles/SearchArticleInput";
 import { Article } from "@/generated/prisma";
-import { ARTICLE_PER_PAGE } from "@/utils/constants";
+import { ARTICLE_PER_PAGE } from "@/lib/constants";
 import { Metadata } from "next";
-import prisma from "@/utils/db";
+import prisma from "@/lib/db";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { GradientBlob } from "@/components/ui/GradientBlob";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import AddArticleModal from "@/components/admin/AddArticleModal";
-import { verifyTokenForPage } from "@/utils/verifyToken";
+import { verifyTokenForPage } from "@/lib/auth/verifyToken";
 
 export const metadata: Metadata = {
   title: "Articles — Cloud Hosting",

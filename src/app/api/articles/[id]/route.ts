@@ -1,6 +1,6 @@
-import prisma from "@/utils/db";
-import { UpdateArticleDto } from "@/utils/dtos";
-import { verifyToken } from "@/utils/verifyToken";
+import prisma from "@/lib/db";
+import { UpdateArticleDto } from "@/lib/validation/dtos";
+import { verifyToken } from "@/lib/auth/verifyToken";
 import { NextRequest, NextResponse } from "next/server";
 
 interface Props {

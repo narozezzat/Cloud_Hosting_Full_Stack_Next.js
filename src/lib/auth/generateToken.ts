@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { JWTPayload } from "./types";
+import { JWTPayload } from "@/lib/types";
 import { serialize } from "cookie";
 
 export function generateJWT(jwtPayload: JWTPayload): string {

@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/utils/db";
-import { verifyToken } from "@/utils/verifyToken";
-import { CreateCommentDto } from "@/utils/dtos";
-import { createCommentSchema } from "@/utils/validationSchema";
-import { COMMENT_PER_PAGE } from "@/utils/constants";
+import prisma from "@/lib/db";
+import { verifyToken } from "@/lib/auth/verifyToken";
+import { CreateCommentDto } from "@/lib/validation/dtos";
+import { createCommentSchema } from "@/lib/validation/validationSchema";
+import { COMMENT_PER_PAGE } from "@/lib/constants";
 
 /**
  *  @method  POST

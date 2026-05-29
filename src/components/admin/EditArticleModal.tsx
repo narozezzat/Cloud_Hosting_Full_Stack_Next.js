@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { Pencil } from "lucide-react";
-import { DOMAIN } from "@/utils/constants";
+import { DOMAIN } from "@/lib/constants";
 import { Article } from "@/generated/prisma";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";

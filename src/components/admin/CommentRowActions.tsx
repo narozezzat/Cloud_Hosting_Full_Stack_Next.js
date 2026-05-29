@@ -7,7 +7,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { MoreHorizontal, ExternalLink, Trash2 } from "lucide-react";
 import { Comment } from "@/generated/prisma";
-import { DOMAIN } from "@/utils/constants";
+import { DOMAIN } from "@/lib/constants";
 import ConfirmationModal from "@/components/common/modals/ConfirmationModal";
 import { Button } from "@/components/ui/Button";
 import {

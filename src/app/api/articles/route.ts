@@ -1,10 +1,10 @@
-import prisma from "@/utils/db";
-import { CreateArticleDto } from "@/utils/dtos";
+import prisma from "@/lib/db";
+import { CreateArticleDto } from "@/lib/validation/dtos";
 import { Article } from "../../../generated/prisma";
-import { createArticleSchema } from "@/utils/validationSchema";
+import { createArticleSchema } from "@/lib/validation/validationSchema";
 import { NextRequest, NextResponse } from "next/server";
-import { ARTICLE_PER_PAGE } from "@/utils/constants";
-import { verifyToken } from "@/utils/verifyToken";
+import { ARTICLE_PER_PAGE } from "@/lib/constants";
+import { verifyToken } from "@/lib/auth/verifyToken";
 
 /**
  *  @method  GET

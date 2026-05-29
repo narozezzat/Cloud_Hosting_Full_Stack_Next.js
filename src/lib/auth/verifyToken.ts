@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import { NextRequest } from "next/server";
-import { JWTPayload } from "@/utils/types";
+import { JWTPayload } from "@/lib/types";
 
 // Verify Token For API End Point
 export function verifyToken(request: NextRequest): JWTPayload | null {

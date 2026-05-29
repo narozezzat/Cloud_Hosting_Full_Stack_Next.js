@@ -1,7 +1,7 @@
 import { Article } from "@/generated/prisma";
-import { getArticles } from "@/apiCalls/articleApiCall";
-import { ARTICLE_PER_PAGE } from "@/utils/constants";
-import prisma from "@/utils/db";
+import { getArticles } from "@/lib/api/articleApiCall";
+import { ARTICLE_PER_PAGE } from "@/lib/constants";
+import prisma from "@/lib/db";
 import AdminArticlesTableClient from "@/components/admin/AdminArticlesTableClient";
 import AddArticleModal from "@/components/admin/AddArticleModal";
 import { Card } from "@/components/ui/Card";

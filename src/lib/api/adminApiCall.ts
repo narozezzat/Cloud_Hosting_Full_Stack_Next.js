@@ -1,5 +1,5 @@
 import { Comment } from "@/generated/prisma";
-import { DOMAIN } from "@/utils/constants";
+import { DOMAIN } from "@/lib/constants";
 
 interface PaginatedComments {
   comments: Comment[];

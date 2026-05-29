@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { getArticlesBasedOnSearch } from "@/apiCalls/articleApiCall";
+import { getArticlesBasedOnSearch } from "@/lib/api/articleApiCall";
 import ArticleItem from "@/components/articles/ArticleItem";
 import { Article } from "@/generated/prisma";
 import { Section } from "@/components/ui/Section";

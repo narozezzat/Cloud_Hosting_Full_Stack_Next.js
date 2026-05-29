@@ -1,6 +1,6 @@
 "use client";
 import useLoading from "@/hooks/useLoading";
-import { DOMAIN } from "@/utils/constants";
+import { DOMAIN } from "@/lib/constants";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import * as React from "react";

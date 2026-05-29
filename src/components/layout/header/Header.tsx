@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { verifyTokenForPage } from "@/utils/verifyToken";
+import { verifyTokenForPage } from "@/lib/auth/verifyToken";
 import HeaderClient from "./HeaderClient";
 
 const Header = () => {

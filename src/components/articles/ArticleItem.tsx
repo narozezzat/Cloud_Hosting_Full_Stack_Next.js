@@ -4,7 +4,7 @@ import { ArrowRight, Clock } from "lucide-react";
 import { Article } from "@/generated/prisma";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
-import { formatDate } from "@/utils/formatDate";
+import { formatDate } from "@/lib/formatDate";
 
 interface ArticleItemProps {
   article: Article;

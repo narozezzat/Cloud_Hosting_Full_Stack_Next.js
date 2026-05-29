@@ -6,7 +6,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { Article } from "@/generated/prisma";
 import RowActions from "./RowActions";
 import Pagination from "@/components/ui/Pagination";
-import { formatDate } from "@/utils/formatDate";
+import { formatDate } from "@/lib/formatDate";
 import { Badge } from "@/components/ui/Badge";
 import { DataTable } from "@/components/ui/DataTable";
 

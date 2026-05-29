@@ -1,6 +1,6 @@
-import { DOMAIN } from "@/utils/constants";
-import { Article } from "../generated/prisma";
-import { SingleArticle } from "@/utils/types";
+import { DOMAIN } from "@/lib/constants";
+import { Article } from "@/generated/prisma";
+import { SingleArticle } from "@/lib/types";
 
 // Get articles based on pageNumber
 export async function getArticles(

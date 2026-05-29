@@ -1,5 +1,5 @@
 import "server-only";
-import prisma from "@/utils/db";
+import prisma from "@/lib/db";
 
 const MONTHS_BACK = 7;
 const MS_IN_DAY = 86_400_000;

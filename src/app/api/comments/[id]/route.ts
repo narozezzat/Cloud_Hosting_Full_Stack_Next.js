@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/utils/db";
-import { verifyToken } from "@/utils/verifyToken";
-import { UpdateCommentDto } from "@/utils/dtos";
+import prisma from "@/lib/db";
+import { verifyToken } from "@/lib/auth/verifyToken";
+import { UpdateCommentDto } from "@/lib/validation/dtos";
 
 interface Props {
   params: { id: string };

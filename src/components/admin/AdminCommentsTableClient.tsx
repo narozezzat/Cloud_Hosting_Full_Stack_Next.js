@@ -5,7 +5,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { Comment } from "@/generated/prisma";
 import CommentRowActions from "./CommentRowActions";
 import Pagination from "@/components/ui/Pagination";
-import { formatDate } from "@/utils/formatDate";
+import { formatDate } from "@/lib/formatDate";
 import { DataTable } from "@/components/ui/DataTable";
 
 interface AdminCommentsTableClientProps {

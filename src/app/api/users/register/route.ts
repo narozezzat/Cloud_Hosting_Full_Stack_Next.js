@@ -1,9 +1,9 @@
-import { RegisterUserDto } from "@/utils/dtos";
-import { registerSchema } from "@/utils/validationSchema";
+import { RegisterUserDto } from "@/lib/validation/dtos";
+import { registerSchema } from "@/lib/validation/validationSchema";
 import { NextResponse, NextRequest } from "next/server";
-import prisma from "@/utils/db";
+import prisma from "@/lib/db";
 import bcrypt from "bcryptjs";
-import { setCookie } from "@/utils/generateToken";
+import { setCookie } from "@/lib/auth/generateToken";
 
 /**
  *  @method  POST

@@ -1,6 +1,6 @@
 "use client";
 import axios from "axios";
-import { DOMAIN } from "@/utils/constants";
+import { DOMAIN } from "@/lib/constants";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { Button } from "antd";

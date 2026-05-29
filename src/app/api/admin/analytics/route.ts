@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { verifyToken } from "@/utils/verifyToken";
+import { verifyToken } from "@/lib/auth/verifyToken";
 import { getAnalytics } from "@/lib/analytics";
 
 /**

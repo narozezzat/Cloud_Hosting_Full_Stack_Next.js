@@ -1,5 +1,5 @@
-import { getAllComments } from "@/apiCalls/adminApiCall";
-import { COMMENT_PER_PAGE } from "@/utils/constants";
+import { getAllComments } from "@/lib/api/adminApiCall";
+import { COMMENT_PER_PAGE } from "@/lib/constants";
 import { cookies } from "next/headers";
 import { Card } from "@/components/ui/Card";
 import AdminCommentsTableClient from "@/components/admin/AdminCommentsTableClient";

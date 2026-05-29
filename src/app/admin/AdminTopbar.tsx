@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { Bell, ChevronRight, Home, Menu, Search } from "lucide-react";
 import { Input } from "@/components/ui/Input";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
-import UserDropdown from "@/components/header/UserDropdown";
+import UserDropdown from "@/components/layout/header/UserDropdown";
 
 const TITLES: Record<string, string> = {
   "/admin": "Overview",

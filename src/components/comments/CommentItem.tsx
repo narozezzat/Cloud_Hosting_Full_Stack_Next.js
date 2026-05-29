@@ -1,6 +1,6 @@
 "use client";
-import { DOMAIN } from "@/utils/constants";
-import { CommentWithUser } from "@/utils/types";
+import { DOMAIN } from "@/lib/constants";
+import { CommentWithUser } from "@/lib/types";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

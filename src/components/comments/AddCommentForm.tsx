@@ -1,5 +1,5 @@
 "use client";
-import { DOMAIN } from "@/utils/constants";
+import { DOMAIN } from "@/lib/constants";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";

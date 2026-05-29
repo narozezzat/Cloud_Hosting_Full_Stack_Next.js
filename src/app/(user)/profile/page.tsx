@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { verifyTokenForPage } from "@/utils/verifyToken";
+import { verifyTokenForPage } from "@/lib/auth/verifyToken";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Section } from "@/components/ui/Section";

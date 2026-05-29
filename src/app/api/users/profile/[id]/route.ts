@@ -1,9 +1,9 @@
 import { NextResponse, NextRequest } from "next/server";
-import prisma from "@/utils/db";
-import { verifyToken } from "@/utils/verifyToken";
-import { UpdateUserDto } from "@/utils/dtos";
+import prisma from "@/lib/db";
+import { verifyToken } from "@/lib/auth/verifyToken";
+import { UpdateUserDto } from "@/lib/validation/dtos";
 import bcrypt from "bcryptjs";
-import { updateUserSchema } from "@/utils/validationSchema";
+import { updateUserSchema } from "@/lib/validation/validationSchema";
 
 interface Props {
   params: { id: string };
