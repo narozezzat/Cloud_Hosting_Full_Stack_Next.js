@@ -50,13 +50,13 @@ export function ActivityFeed({ items }: ActivityFeedProps) {
         const Icon = ICONS[item.type];
         const tint = TINTS[item.type];
         const row = (
-          <div className="flex items-start gap-3 py-3 first:pt-0 last:pb-0">
+          <div className="flex items-start gap-3 px-3 py-4">
             <span
-              className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${tint}`}
+              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${tint}`}
             >
               <Icon className="h-4 w-4" />
             </span>
-            <div className="min-w-0 flex-1">
+            <div className="min-w-0 flex-1 space-y-0.5">
               <p className="truncate text-sm font-medium text-foreground">
                 {item.title}
               </p>
@@ -64,7 +64,7 @@ export function ActivityFeed({ items }: ActivityFeedProps) {
                 {item.subtitle}
               </p>
             </div>
-            <span className="shrink-0 text-xs text-muted-foreground">
+            <span className="shrink-0 pt-0.5 text-xs text-muted-foreground">
               {relativeTime(item.createdAt)}
             </span>
           </div>
@@ -74,12 +74,12 @@ export function ActivityFeed({ items }: ActivityFeedProps) {
             {item.href ? (
               <Link
                 href={item.href}
-                className="block rounded-md transition-colors hover:bg-secondary/40 px-2 -mx-2"
+                className="-mx-3 block rounded-lg transition-colors hover:bg-secondary/50"
               >
                 {row}
               </Link>
             ) : (
-              <div className="px-2 -mx-2">{row}</div>
+              <div className="-mx-3">{row}</div>
             )}
           </li>
         );
