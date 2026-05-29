@@ -5,6 +5,7 @@ import prisma from "@/utils/db";
 import AdminArticlesTableClient from "@/components/admin/AdminArticlesTableClient";
 import AddArticleModal from "@/components/admin/AddArticleModal";
 import { Card } from "@/components/ui/Card";
+import AdminPageHeader from "@/components/admin/AdminPageHeader";
 
 interface AdminArticlesTableProps {
   searchParams: { pageNumber: string };
@@ -19,19 +20,12 @@ export default async function AdminArticlesTable({
 
   return (
     <div className="flex flex-1 flex-col gap-6 min-h-0">
-      <div className="flex gap-3 flex-row items-end justify-between">
-        <div>
-          <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
-            Articles
-          </h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {count} {count === 1 ? "article" : "articles"} total
-          </p>
-        </div>
-        <div className="flex-shrink-0">
-          <AddArticleModal />
-        </div>
-      </div>
+      <AdminPageHeader
+        title="Articles"
+        badgeText={`${count} ${count === 1 ? "article" : "articles"}`}
+        description="Manage, edit, and publish articles on your platform."
+        action={<AddArticleModal />}
+      />
       <Card className="flex rounded-md min-h-0 flex-1 flex-col overflow-hidden p-0">
         <AdminArticlesTableClient
           articles={articles}

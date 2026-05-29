@@ -19,6 +19,7 @@ export default function AdminCommentsTableClient({
       {
         accessorKey: "text",
         header: "Comment",
+        ellipsis: true,
         cell: ({ row }) => (
           <span className="text-foreground">{row.original.text}</span>
         ),

@@ -64,7 +64,7 @@ const AddArticleModal = ({ trigger }: AddArticleModalProps) => {
   ) : (
     <Button onClick={openModal} className="gap-1.5">
       <Plus className="h-4 w-4" />
-      New article
+      <span className="hidden sm:inline">New Article</span>
     </Button>
   );
 

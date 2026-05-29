@@ -10,6 +10,7 @@ import { Card } from "@/components/ui/Card";
 import { AnalyticsChart } from "@/components/admin/AnalyticsChart";
 import { TopArticlesList } from "@/components/admin/TopArticlesList";
 import { ActivityFeed } from "@/components/admin/ActivityFeed";
+import AdminPageHeader from "@/components/admin/AdminPageHeader";
 
 export const dynamic = "force-dynamic";
 
@@ -19,14 +20,10 @@ export default async function AnalyticsPage() {
 
   return (
     <div className="space-y-6 sm:space-y-8">
-      <div>
-        <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
-          Analytics
-        </h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Growth, engagement, and what&apos;s trending.
-        </p>
-      </div>
+      <AdminPageHeader
+        title="Analytics"
+        description="Track growth, engagement metrics, and what's trending."
+      />
 
       <div className="grid gap-3 grid-cols-2 sm:gap-4 lg:grid-cols-4">
         <StatCard
