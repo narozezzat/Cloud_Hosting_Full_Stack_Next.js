@@ -49,8 +49,10 @@ export default function AdminShell({ username, children }: AdminShellProps) {
           username={username}
           onOpenMobileNav={() => setMobileOpen(true)}
         />
-        <main className="flex min-h-0 flex-1 flex-col overflow-y-auto px-3 py-6 sm:px-4 sm:py-6 lg:px-8 lg:py-8">
-          {children}
+        <main className="flex min-h-0 flex-1 flex-col overflow-y-auto">
+          <div className="flex flex-1 flex-col px-3 py-6 pb-[calc(2rem+env(safe-area-inset-bottom))] sm:px-4 lg:px-8 lg:py-8 lg:pb-[calc(2.5rem+env(safe-area-inset-bottom))]">
+            {children}
+          </div>
         </main>
       </div>
 
