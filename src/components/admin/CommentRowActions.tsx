@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { MoreHorizontal, ExternalLink, Trash2 } from "lucide-react";
 import { Comment } from "@/generated/prisma";
 import { DOMAIN } from "@/lib/constants";
+import { getErrorMessage } from "@/lib/getErrorMessage";
 import ConfirmationModal from "@/components/common/modals/ConfirmationModal";
 import { Button } from "@/components/ui/Button";
 import {
@@ -37,12 +38,7 @@ export default function CommentRowActions({
       setIsModalOpen(false);
       router.refresh();
     } catch (error) {
-      const msg = axios.isAxiosError(error)
-        ? error.response?.data?.message
-        : error instanceof Error
-        ? error.message
-        : null;
-      toast.error(msg ?? "Something went wrong");
+      toast.error(getErrorMessage(error));
     } finally {
       setIsLoading(false);
     }

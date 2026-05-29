@@ -2,19 +2,21 @@
 
 import useLoading from "@/hooks/useLoading";
 import { DOMAIN } from "@/lib/constants";
+import { getErrorMessage } from "@/lib/getErrorMessage";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import * as React from "react";
 import { toast } from "react-toastify";
-import { Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { Mail } from "lucide-react";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
+import { FormField } from "@/components/ui/FormField";
+import { PasswordInput } from "@/components/ui/PasswordInput";
 
 const LoginForm = () => {
   const router = useRouter();
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const [showPassword, setShowPassword] = React.useState(false);
   const { loading, withLoading } = useLoading();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -28,14 +30,14 @@ const LoginForm = () => {
         router.replace("/");
         router.refresh();
       });
-    } catch (error: any) {
-      toast.error(error?.response?.data.message ?? "Something went wrong");
+    } catch (error) {
+      toast.error(getErrorMessage(error));
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-      <Field label="Email" htmlFor="email">
+      <FormField label="Email" htmlFor="email">
         <Input
           id="email"
           type="email"
@@ -46,34 +48,18 @@ const LoginForm = () => {
           leftIcon={<Mail className="h-4 w-4" />}
           required
         />
-      </Field>
+      </FormField>
 
-      <Field label="Password" htmlFor="password">
-        <Input
+      <FormField label="Password" htmlFor="password">
+        <PasswordInput
           id="password"
-          type={showPassword ? "text" : "password"}
           autoComplete="current-password"
           placeholder="••••••••"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          leftIcon={<Lock className="h-4 w-4" />}
-          rightIcon={
-            <button
-              type="button"
-              onClick={() => setShowPassword((v) => !v)}
-              aria-label={showPassword ? "Hide password" : "Show password"}
-              className="cursor-pointer hover:text-foreground"
-            >
-              {showPassword ? (
-                <EyeOff className="h-4 w-4" />
-              ) : (
-                <Eye className="h-4 w-4" />
-              )}
-            </button>
-          }
           required
         />
-      </Field>
+      </FormField>
 
       <Button type="submit" loading={loading} size="lg" className="w-full">
         Log in
@@ -81,24 +67,5 @@ const LoginForm = () => {
     </form>
   );
 };
-
-function Field({
-  label,
-  htmlFor,
-  children,
-}: {
-  label: string;
-  htmlFor: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="space-y-1.5">
-      <label htmlFor={htmlFor} className="text-sm font-medium text-foreground">
-        {label}
-      </label>
-      {children}
-    </div>
-  );
-}
 
 export default LoginForm;

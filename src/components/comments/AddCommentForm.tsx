@@ -1,5 +1,6 @@
 "use client";
 import { DOMAIN } from "@/lib/constants";
+import { getErrorMessage } from "@/lib/getErrorMessage";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
@@ -26,8 +27,8 @@ const AddCommentForm = ({ articleId }: AddCommentFormProps) => {
         await axios.post(`${DOMAIN}/api/comments`, { text, articleId });
         router.refresh();
         setText("");
-      } catch (error: any) {
-        toast.error(error?.response?.data.message);
+      } catch (error) {
+        toast.error(getErrorMessage(error));
       }
     });
   };

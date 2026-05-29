@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { Trash2 } from "lucide-react";
 import { DOMAIN } from "@/lib/constants";
+import { getErrorMessage } from "@/lib/getErrorMessage";
+import { useControllableState } from "@/hooks/useControllableState";
 import ConfirmationModal from "@/components/common/modals/ConfirmationModal";
 
 interface DeleteArticleButtonProps {
@@ -24,15 +26,10 @@ const DeleteArticleButton = ({
 }: DeleteArticleButtonProps) => {
   const router = useRouter();
   const isControlled = openProp !== undefined;
-  const [internalOpen, setInternalOpen] = React.useState(false);
-  const open = isControlled ? (openProp as boolean) : internalOpen;
-  const setOpen = React.useCallback(
-    (next: boolean) => {
-      if (!isControlled) setInternalOpen(next);
-      onOpenChange?.(next);
-    },
-    [isControlled, onOpenChange],
-  );
+  const [open, setOpen] = useControllableState({
+    prop: openProp,
+    onChange: onOpenChange,
+  });
 
   const [isLoading, setIsLoading] = React.useState(false);
 
@@ -43,8 +40,8 @@ const DeleteArticleButton = ({
       toast.success("Article deleted");
       setOpen(false);
       router.refresh();
-    } catch (error: any) {
-      toast.error(error?.response?.data?.message ?? "Something went wrong");
+    } catch (error) {
+      toast.error(getErrorMessage(error));
     } finally {
       setIsLoading(false);
     }

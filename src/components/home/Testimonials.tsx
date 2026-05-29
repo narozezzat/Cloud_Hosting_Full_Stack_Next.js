@@ -5,6 +5,8 @@ import { motion } from "framer-motion";
 import { Quote } from "lucide-react";
 import { Section } from "@/components/ui/Section";
 import { Card } from "@/components/ui/Card";
+import { Avatar } from "@/components/ui/Avatar";
+import { fadeInUp } from "@/lib/animations";
 
 const TESTIMONIALS = [
   {
@@ -37,10 +39,7 @@ export function Testimonials() {
         {TESTIMONIALS.map((t, i) => (
           <motion.div
             key={t.author}
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-40px" }}
-            transition={{ duration: 0.45, delay: i * 0.08 }}
+            {...fadeInUp({ delay: i * 0.08, margin: "-40px" })}
           >
             <Card variant="elevated" className="h-full p-6">
               <Quote className="h-6 w-6 text-brand-500/40" />
@@ -48,9 +47,7 @@ export function Testimonials() {
                 “{t.quote}”
               </p>
               <div className="mt-5 flex items-center gap-3">
-                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-accent-500 text-sm font-bold text-white">
-                  {t.author.charAt(0)}
-                </div>
+                <Avatar name={t.author} size="sm" />
                 <div>
                   <p className="text-sm font-semibold">{t.author}</p>
                   <p className="text-xs text-muted-foreground">{t.role}</p>

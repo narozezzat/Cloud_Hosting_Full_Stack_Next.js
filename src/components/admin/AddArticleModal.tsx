@@ -6,10 +6,10 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { Plus, FileText } from "lucide-react";
 import { DOMAIN } from "@/lib/constants";
+import { getErrorMessage } from "@/lib/getErrorMessage";
 import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
-import { Textarea } from "@/components/ui/Textarea";
 import { Modal } from "@/components/ui/Modal";
+import { ArticleFormFields } from "@/components/admin/ArticleFormFields";
 
 interface AddArticleModalProps {
   /** Optional custom trigger. If omitted, a primary "New article" button is rendered. */
@@ -45,8 +45,8 @@ const AddArticleModal = ({ trigger }: AddArticleModalProps) => {
       reset();
       setOpen(false);
       router.refresh();
-    } catch (error: any) {
-      toast.error(error?.response?.data?.message ?? "Something went wrong");
+    } catch (error) {
+      toast.error(getErrorMessage(error));
     } finally {
       setLoading(false);
     }
@@ -100,33 +100,15 @@ const AddArticleModal = ({ trigger }: AddArticleModalProps) => {
           className="space-y-4"
           noValidate
         >
-          <div className="space-y-1.5">
-            <label htmlFor="add-article-title" className="text-sm font-medium">
-              Title
-            </label>
-            <Input
-              id="add-article-title"
-              placeholder="e.g. Why edge functions matter"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              autoFocus
-            />
-          </div>
-          <div className="space-y-1.5">
-            <label
-              htmlFor="add-article-description"
-              className="text-sm font-medium"
-            >
-              Description
-            </label>
-            <Textarea
-              id="add-article-description"
-              rows={6}
-              placeholder="Tell us what this article is about…"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
-          </div>
+          <ArticleFormFields
+            idPrefix="add-article"
+            title={title}
+            description={description}
+            onTitleChange={setTitle}
+            onDescriptionChange={setDescription}
+            titlePlaceholder="e.g. Why edge functions matter"
+            descriptionPlaceholder="Tell us what this article is about…"
+          />
         </form>
       </Modal>
     </>

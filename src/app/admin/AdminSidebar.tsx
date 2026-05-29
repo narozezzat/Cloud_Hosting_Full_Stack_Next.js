@@ -11,6 +11,7 @@ import {
   BarChart3,
 } from "lucide-react";
 import { Logo, LogoMark } from "@/components/brand/Logo";
+import { Avatar } from "@/components/ui/Avatar";
 import { cn } from "@/lib/cn";
 
 interface AdminSidebarProps {
@@ -111,9 +112,7 @@ export default function AdminSidebar({
             expandedCls,
           )}
         >
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-accent-500 text-sm font-bold text-white">
-            {username.charAt(0).toUpperCase()}
-          </div>
+          <Avatar name={username} size="sm" />
           <div className="min-w-0 flex-1">
             <p className="truncate text-sm font-semibold">{username}</p>
             <p className="text-xs text-muted-foreground">Administrator</p>

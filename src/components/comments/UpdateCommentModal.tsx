@@ -11,9 +11,11 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { Pencil } from "lucide-react";
 import { DOMAIN } from "@/lib/constants";
+import { getErrorMessage } from "@/lib/getErrorMessage";
 import { Modal } from "@/components/ui/Modal";
 import { Button } from "@/components/ui/Button";
 import { Textarea } from "@/components/ui/Textarea";
+import { FormField } from "@/components/ui/FormField";
 
 interface UpdateCommentModalProps {
   setOpen: Dispatch<SetStateAction<boolean>>;
@@ -48,8 +50,8 @@ const UpdateCommentModal = ({
       toast.success("Comment updated");
       setOpen(false);
       router.refresh();
-    } catch (error: any) {
-      toast.error(error?.response?.data?.message ?? "Something went wrong");
+    } catch (error) {
+      toast.error(getErrorMessage(error));
     } finally {
       setLoading(false);
     }
@@ -83,17 +85,16 @@ const UpdateCommentModal = ({
         </>
       }
     >
-      <form id="update-comment-form" onSubmit={onSubmit} className="space-y-2">
-        <label htmlFor="update-comment-text" className="text-sm font-medium">
-          Comment
-        </label>
-        <Textarea
-          id="update-comment-text"
-          rows={4}
-          value={updatedText}
-          onChange={(e) => setUpdatedText(e.target.value)}
-          autoFocus
-        />
+      <form id="update-comment-form" onSubmit={onSubmit}>
+        <FormField label="Comment" htmlFor="update-comment-text">
+          <Textarea
+            id="update-comment-text"
+            rows={4}
+            value={updatedText}
+            onChange={(e) => setUpdatedText(e.target.value)}
+            autoFocus
+          />
+        </FormField>
       </form>
     </Modal>
   );

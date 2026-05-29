@@ -3,6 +3,7 @@
 import * as React from "react";
 import { motion } from "framer-motion";
 import { Section } from "@/components/ui/Section";
+import { fadeInUp } from "@/lib/animations";
 
 const STEPS = [
   {
@@ -38,10 +39,7 @@ export function Steps() {
         {STEPS.map((s, i) => (
           <motion.div
             key={s.n}
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-60px" }}
-            transition={{ duration: 0.45, delay: i * 0.1 }}
+            {...fadeInUp({ delay: i * 0.1 })}
             className="relative flex flex-col items-start gap-4 rounded-xl bg-card p-6 shadow-sm border border-border/60"
           >
             <span className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-accent-500 font-display text-base font-bold text-white shadow-md">

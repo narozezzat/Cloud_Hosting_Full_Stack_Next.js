@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Section } from "@/components/ui/Section";
 import { GradientBlob } from "@/components/ui/GradientBlob";
+import { Avatar } from "@/components/ui/Avatar";
 
 export default function ProfilePage() {
   const token = cookies().get("jwtToken")?.value || "";
@@ -17,9 +18,12 @@ export default function ProfilePage() {
         <GradientBlob position="top-right" size="md" />
         <div className="container py-16">
           <div className="flex items-center gap-5">
-            <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-500 to-accent-500 text-3xl font-bold text-white shadow-md">
-              {payload.username.charAt(0).toUpperCase()}
-            </div>
+            <Avatar
+              name={payload.username}
+              size="xl"
+              shape="square"
+              className="shadow-md"
+            />
             <div>
               <h1 className="font-display text-display-sm font-extrabold tracking-tight">
                 {payload.username}

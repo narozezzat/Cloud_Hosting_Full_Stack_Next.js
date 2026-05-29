@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { Section } from "@/components/ui/Section";
 import { Card } from "@/components/ui/Card";
+import { fadeInUp } from "@/lib/animations";
 
 const FEATURES = [
   {
@@ -57,10 +58,7 @@ export function Features() {
         {FEATURES.map((f, i) => (
           <motion.div
             key={f.title}
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-60px" }}
-            transition={{ duration: 0.4, delay: i * 0.05 }}
+            {...fadeInUp({ delay: i * 0.05, duration: 0.4 })}
           >
             <Card variant="elevated" className="h-full p-6">
               <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-lg bg-gradient-to-br from-brand-500/15 to-accent-500/15 text-brand-500">

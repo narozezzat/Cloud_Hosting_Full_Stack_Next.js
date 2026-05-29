@@ -6,11 +6,12 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { Pencil } from "lucide-react";
 import { DOMAIN } from "@/lib/constants";
+import { getErrorMessage } from "@/lib/getErrorMessage";
+import { useControllableState } from "@/hooks/useControllableState";
 import { Article } from "@/generated/prisma";
 import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
-import { Textarea } from "@/components/ui/Textarea";
 import { Modal } from "@/components/ui/Modal";
+import { ArticleFormFields } from "@/components/admin/ArticleFormFields";
 
 interface EditArticleModalProps {
   article: Article;
@@ -29,15 +30,10 @@ const EditArticleModal = ({
 }: EditArticleModalProps) => {
   const router = useRouter();
   const isControlled = openProp !== undefined;
-  const [internalOpen, setInternalOpen] = React.useState(false);
-  const open = isControlled ? (openProp as boolean) : internalOpen;
-  const setOpen = React.useCallback(
-    (next: boolean) => {
-      if (!isControlled) setInternalOpen(next);
-      onOpenChange?.(next);
-    },
-    [isControlled, onOpenChange],
-  );
+  const [open, setOpen] = useControllableState({
+    prop: openProp,
+    onChange: onOpenChange,
+  });
 
   const [title, setTitle] = React.useState(article.title);
   const [description, setDescription] = React.useState(article.description);
@@ -69,8 +65,8 @@ const EditArticleModal = ({
       toast.success("Article updated");
       setOpen(false);
       router.refresh();
-    } catch (error: any) {
-      toast.error(error?.response?.data?.message ?? "Something went wrong");
+    } catch (error) {
+      toast.error(getErrorMessage(error));
     } finally {
       setLoading(false);
     }
@@ -128,31 +124,13 @@ const EditArticleModal = ({
           className="space-y-4"
           noValidate
         >
-          <div className="space-y-1.5">
-            <label htmlFor="edit-article-title" className="text-sm font-medium">
-              Title
-            </label>
-            <Input
-              id="edit-article-title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              autoFocus
-            />
-          </div>
-          <div className="space-y-1.5">
-            <label
-              htmlFor="edit-article-description"
-              className="text-sm font-medium"
-            >
-              Description
-            </label>
-            <Textarea
-              id="edit-article-description"
-              rows={6}
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
-          </div>
+          <ArticleFormFields
+            idPrefix="edit-article"
+            title={title}
+            description={description}
+            onTitleChange={setTitle}
+            onDescriptionChange={setDescription}
+          />
         </form>
       </Modal>
     </>

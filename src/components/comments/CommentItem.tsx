@@ -1,5 +1,6 @@
 "use client";
 import { DOMAIN } from "@/lib/constants";
+import { getErrorMessage } from "@/lib/getErrorMessage";
 import { CommentWithUser } from "@/lib/types";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -8,6 +9,7 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import { toast } from "react-toastify";
 import UpdateCommentModal from "./UpdateCommentModal";
 import ConfirmationModal from "../common/modals/ConfirmationModal";
+import { Avatar } from "@/components/ui/Avatar";
 import useLoading from "@/hooks/useLoading";
 
 interface CommentItemProps {
@@ -29,8 +31,8 @@ const CommentItem = ({ comment, userId }: CommentItemProps) => {
         router.refresh();
         setShowDeleteModal(false);
       });
-    } catch (error: any) {
-      toast.error(error?.response?.data.message);
+    } catch (error) {
+      toast.error(getErrorMessage(error));
     }
   };
 
@@ -38,9 +40,7 @@ const CommentItem = ({ comment, userId }: CommentItemProps) => {
     <div className="rounded-xl border border-border bg-card p-5 shadow-xs">
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-accent-500 text-sm font-bold text-white">
-            {comment.user.username.charAt(0).toUpperCase()}
-          </div>
+          <Avatar name={comment.user.username} size="sm" />
           <div>
             <p className="text-sm font-semibold text-foreground">
               {comment.user.username}
