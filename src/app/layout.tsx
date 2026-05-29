@@ -59,14 +59,19 @@ export default function RootLayout({ children }: RootLayoutProps) {
                   id="app-scroll"
                   className="flex flex-1 flex-col overflow-y-auto"
                 >
-                  <main className="flex-1">{children}</main>
+                  <main className="flex min-h-0 flex-1 flex-col">
+                    {children}
+                  </main>
                   <Footer />
                 </div>
               </div>
               <ToastContainer
-                theme="colored"
+                theme="light"
                 position="top-center"
-                toastClassName="!rounded-xl"
+                hideProgressBar={false}
+                closeOnClick
+                pauseOnHover
+                draggable
               />
             </AntdThemeProvider>
           </AntdStyledComponentsRegistry>

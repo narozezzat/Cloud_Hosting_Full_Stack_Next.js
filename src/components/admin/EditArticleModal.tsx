@@ -14,13 +14,31 @@ import { Modal } from "@/components/ui/Modal";
 
 interface EditArticleModalProps {
   article: Article;
-  /** Optional custom trigger. Defaults to a full-width menu-item style button. */
+  /** Optional custom trigger. Defaults to a full-width menu-item style button. Ignored when `open` is controlled. */
   trigger?: React.ReactElement;
+  /** When provided, the modal is fully controlled and no internal trigger is rendered. */
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
-const EditArticleModal = ({ article, trigger }: EditArticleModalProps) => {
+const EditArticleModal = ({
+  article,
+  trigger,
+  open: openProp,
+  onOpenChange,
+}: EditArticleModalProps) => {
   const router = useRouter();
-  const [open, setOpen] = React.useState(false);
+  const isControlled = openProp !== undefined;
+  const [internalOpen, setInternalOpen] = React.useState(false);
+  const open = isControlled ? (openProp as boolean) : internalOpen;
+  const setOpen = React.useCallback(
+    (next: boolean) => {
+      if (!isControlled) setInternalOpen(next);
+      onOpenChange?.(next);
+    },
+    [isControlled, onOpenChange],
+  );
+
   const [title, setTitle] = React.useState(article.title);
   const [description, setDescription] = React.useState(article.description);
   const [loading, setLoading] = React.useState(false);
@@ -60,7 +78,7 @@ const EditArticleModal = ({ article, trigger }: EditArticleModalProps) => {
 
   const openModal = () => setOpen(true);
 
-  const triggerEl = trigger ? (
+  const triggerEl = isControlled ? null : trigger ? (
     React.cloneElement(trigger, {
       onClick: (e: React.MouseEvent) => {
         trigger.props.onClick?.(e);

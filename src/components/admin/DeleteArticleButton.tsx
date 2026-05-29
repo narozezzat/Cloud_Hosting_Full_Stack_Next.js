@@ -11,14 +11,29 @@ import ConfirmationModal from "@/components/common/modals/ConfirmationModal";
 interface DeleteArticleButtonProps {
   articleId: number;
   articleTitle: string;
+  /** When provided, the dialog is fully controlled and no internal trigger button is rendered. */
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 const DeleteArticleButton = ({
   articleId,
   articleTitle,
+  open: openProp,
+  onOpenChange,
 }: DeleteArticleButtonProps) => {
   const router = useRouter();
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const isControlled = openProp !== undefined;
+  const [internalOpen, setInternalOpen] = React.useState(false);
+  const open = isControlled ? (openProp as boolean) : internalOpen;
+  const setOpen = React.useCallback(
+    (next: boolean) => {
+      if (!isControlled) setInternalOpen(next);
+      onOpenChange?.(next);
+    },
+    [isControlled, onOpenChange],
+  );
+
   const [isLoading, setIsLoading] = React.useState(false);
 
   const deleteArticleHandler = async () => {
@@ -26,7 +41,7 @@ const DeleteArticleButton = ({
       setIsLoading(true);
       await axios.delete(`${DOMAIN}/api/articles/${articleId}`);
       toast.success("Article deleted");
-      setIsModalOpen(false);
+      setOpen(false);
       router.refresh();
     } catch (error: any) {
       toast.error(error?.response?.data?.message ?? "Something went wrong");
@@ -37,18 +52,20 @@ const DeleteArticleButton = ({
 
   return (
     <>
-      <button
-        type="button"
-        onClick={() => setIsModalOpen(true)}
-        className="flex w-full items-center gap-2 rounded-md px-2 py-2 text-sm text-destructive transition-colors hover:bg-destructive/10"
-      >
-        <Trash2 className="h-4 w-4" />
-        Delete
-      </button>
+      {!isControlled && (
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          className="flex w-full items-center gap-2 rounded-md px-2 py-2 text-sm text-destructive transition-colors hover:bg-destructive/10"
+        >
+          <Trash2 className="h-4 w-4" />
+          Delete
+        </button>
+      )}
 
       <ConfirmationModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        isOpen={open}
+        onClose={() => setOpen(false)}
         onConfirm={deleteArticleHandler}
         title="Delete this article?"
         message={
