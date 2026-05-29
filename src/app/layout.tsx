@@ -47,16 +47,21 @@ export default function RootLayout({ children }: RootLayoutProps) {
           sans.variable,
           display.variable,
           mono.variable,
-          "font-sans antialiased bg-background text-foreground min-h-screen",
+          "font-sans antialiased bg-background text-foreground h-screen overflow-hidden",
         )}
       >
         <ThemeProvider>
           <AntdStyledComponentsRegistry>
             <AntdThemeProvider>
-              <div className="relative flex min-h-screen flex-col">
+              <div className="relative flex h-screen flex-col">
                 <Header />
-                <main className="flex-1">{children}</main>
-                <Footer />
+                <div
+                  id="app-scroll"
+                  className="flex flex-1 flex-col overflow-y-auto"
+                >
+                  <main className="flex-1">{children}</main>
+                  <Footer />
+                </div>
               </div>
               <ToastContainer
                 theme="colored"

@@ -31,10 +31,12 @@ export default function HeaderClient({ isAdmin, username }: HeaderClientProps) {
   const onAdmin = pathname.startsWith("/admin");
 
   React.useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
+    const el = document.getElementById("app-scroll");
+    if (!el) return;
+    const onScroll = () => setScrolled(el.scrollTop > 8);
     onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    el.addEventListener("scroll", onScroll, { passive: true });
+    return () => el.removeEventListener("scroll", onScroll);
   }, []);
 
   // Close drawer on route change.
@@ -52,8 +54,8 @@ export default function HeaderClient({ isAdmin, username }: HeaderClientProps) {
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 w-full transition-all duration-enter",
-        scrolled ? "glass shadow-sm" : "bg-background/0",
+        "shrink-0 z-50 w-full transition-all duration-enter",
+        scrolled ? "glass shadow-sm" : "bg-background",
       )}
     >
       <div className="container flex h-16 items-center justify-between gap-4">
