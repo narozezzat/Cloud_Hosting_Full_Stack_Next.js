@@ -8,7 +8,7 @@ import { Card } from "@/components/ui/Card";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
 
 interface AdminArticlesTableProps {
-  searchParams: { pageNumber: string };
+  searchParams: { pageNumber?: string };
 }
 
 export default async function AdminArticlesTable({
@@ -30,7 +30,7 @@ export default async function AdminArticlesTable({
         <AdminArticlesTableClient
           articles={articles}
           pages={pages}
-          currentPage={parseInt(pageNumber) || 1}
+          currentPage={parseInt(pageNumber || "1") || 1}
         />
       </Card>
     </div>

@@ -6,7 +6,7 @@ import AdminCommentsTableClient from "@/components/admin/AdminCommentsTableClien
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
 
 interface AdminCommentsTableProps {
-  searchParams: { pageNumber: string };
+  searchParams: { pageNumber?: string };
 }
 
 export default async function AdminCommentsTable({
@@ -28,7 +28,7 @@ export default async function AdminCommentsTable({
         <AdminCommentsTableClient
           comments={comments}
           pages={pages}
-          currentPage={parseInt(pageNumber) || 1}
+          currentPage={parseInt(pageNumber || "1") || 1}
         />
       </Card>
     </div>

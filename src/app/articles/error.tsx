@@ -1,5 +1,16 @@
 "use client";
+
+import { AlertTriangle } from "lucide-react";
 import Link from "next/link";
+import { Button } from "@/components/ui/Button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/Card";
 
 interface ErrorPageProps {
   error: Error;
@@ -8,23 +19,32 @@ interface ErrorPageProps {
 
 const ArticlesErrorPage = ({ error, reset }: ErrorPageProps) => {
   return (
-    <div className="fix-height pt-7 text-center">
-      <p className="mb-2">This is custom error page for articles route/page</p>
-      <div className="text-3xl text-red-600 font-semibold">
-        Something went wrong
-      </div>
-      <h2 className="text-gray-700 my-3 text-xl">
-        Error Message: {error.message}
-      </h2>
-      <button
-        onClick={() => reset()}
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-      >
-        Try again
-      </button>
-      <Link className="text-xl underline text-blue-700 block mt-6" href="/">
-        Go to home page
-      </Link>
+    <div className="fix-height flex items-center justify-center bg-background px-4">
+      <Card className="w-full max-w-md text-center">
+        <CardHeader className="items-center gap-3">
+          <span
+            className="flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10 text-destructive"
+            aria-hidden="true"
+          >
+            <AlertTriangle className="h-6 w-6" />
+          </span>
+          <CardTitle>Something went wrong</CardTitle>
+          <CardDescription>
+            This is the custom error page for the articles route.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="text-sm text-muted-foreground">
+          Error message: {error.message}
+        </CardContent>
+        <CardFooter className="justify-center gap-3">
+          <Button variant="outline" onClick={() => reset()}>
+            Try again
+          </Button>
+          <Button asChild>
+            <Link href="/">Go to home page</Link>
+          </Button>
+        </CardFooter>
+      </Card>
     </div>
   );
 };

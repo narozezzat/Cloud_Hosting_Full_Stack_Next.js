@@ -9,6 +9,7 @@ import prisma from "@/lib/db";
 import { Section } from "@/components/ui/Section";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Badge } from "@/components/ui/Badge";
+import { notFound } from "next/navigation";
 
 interface SearchArticlePageProps {
   searchParams: { searchText?: string; categoryId?: string; sort?: string };
@@ -17,6 +18,8 @@ interface SearchArticlePageProps {
 const SearchArticlePage = async ({ searchParams }: SearchArticlePageProps) => {
   const searchText = searchParams.searchText || "";
   const { categoryId, sort } = searchParams;
+  // Guard the only param that feeds a DB filter; a non-numeric id can't match.
+  if (categoryId && Number.isNaN(parseInt(categoryId))) notFound();
 
   const [articles, categories] = await Promise.all([
     getArticlesBasedOnSearch(searchText, { categoryId, sort }) as Promise<

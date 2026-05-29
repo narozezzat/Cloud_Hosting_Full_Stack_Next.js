@@ -15,6 +15,7 @@ import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import AddArticleModal from "@/components/admin/AddArticleModal";
 import { verifyTokenForPage } from "@/lib/auth/verifyToken";
+import { notFound } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Articles — Cloud Hosting",
@@ -28,6 +29,9 @@ interface ArticlesPageProps {
 export default async function ArticlesPage({ searchParams }: ArticlesPageProps) {
   const pageNumber = searchParams.pageNumber || "1";
   const categoryId = searchParams.categoryId;
+  // A non-numeric categoryId would crash the Prisma filter — treat it as a
+  // bad resource reference and 404 instead of throwing a 500.
+  if (categoryId && Number.isNaN(parseInt(categoryId))) notFound();
 
   const [articles, count, categories] = await Promise.all([
     getArticles(pageNumber, categoryId) as Promise<ArticleWithCategory[]>,

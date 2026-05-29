@@ -4,7 +4,7 @@ import { SingleArticle, CommentWithReplies } from "@/lib/types";
 import { verifyTokenForPage } from "@/lib/auth/verifyToken";
 import { cookies } from "next/headers";
 import prisma from "@/lib/db";
-import { redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Calendar, Clock, MessageCircle } from "lucide-react";
 import { Card } from "@/components/ui/Card";
@@ -24,6 +24,8 @@ const SingleArticlePage = async ({ params }: SingleArticlePageProps) => {
   const payload = verifyTokenForPage(token);
 
   const articleId = parseInt(params.id);
+  if (Number.isNaN(articleId)) notFound();
+
   const article = (await prisma.article.findUnique({
     where: { id: articleId },
     include: {
@@ -48,7 +50,7 @@ const SingleArticlePage = async ({ params }: SingleArticlePageProps) => {
       })
     | null;
 
-  if (!article) redirect("/not-found");
+  if (!article) notFound();
 
   const totalComments = article._count.comments;
 
