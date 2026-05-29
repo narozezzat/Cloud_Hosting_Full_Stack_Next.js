@@ -7,7 +7,6 @@ import { useState } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { toast } from "react-toastify";
 import UpdateCommentModal from "./UpdateCommentModal";
-import DeleteCommentModal from "./DeleteCommentModal";
 import ConfirmationModal from "../common/modals/ConfirmationModal";
 import useLoading from "@/hooks/useLoading";
 

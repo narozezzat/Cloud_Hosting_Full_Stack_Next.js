@@ -11,7 +11,6 @@ import {
 import { getAnalytics } from "@/lib/analytics";
 import { StatCard } from "@/components/ui/StatCard";
 import { Card } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
 import { ActivityFeed } from "@/components/admin/ActivityFeed";
 import { TopArticlesList } from "@/components/admin/TopArticlesList";
 import AddArticleModal from "@/components/admin/AddArticleModal";

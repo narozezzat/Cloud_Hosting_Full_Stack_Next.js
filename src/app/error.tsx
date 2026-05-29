@@ -1,6 +1,5 @@
 "use client";
 import { Button, Result } from "antd";
-import Link from "next/link";
 
 interface ErrorPageProps {
   error: Error;
