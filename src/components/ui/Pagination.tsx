@@ -8,6 +8,8 @@ interface PaginationProps {
   pageNumber: number;
   route?: string;
   className?: string;
+  /** Extra query params (e.g. an active category filter) preserved on every link. */
+  query?: Record<string, string | undefined>;
 }
 
 const Pagination = ({
@@ -15,6 +17,7 @@ const Pagination = ({
   pageNumber,
   className,
   route = "",
+  query,
 }: PaginationProps) => {
   if (!pages || pages < 1) return null;
 
@@ -23,6 +26,17 @@ const Pagination = ({
   const next = pageNumber + 1;
   const atStart = pageNumber <= 1;
   const atEnd = pageNumber >= pages;
+
+  const hrefFor = (page: number) => {
+    const params = new URLSearchParams();
+    params.set("pageNumber", String(page));
+    if (query) {
+      for (const [key, value] of Object.entries(query)) {
+        if (value) params.set(key, value);
+      }
+    }
+    return `${route}?${params.toString()}`;
+  };
 
   const linkClass =
     "inline-flex h-9 min-w-9 items-center justify-center rounded-md px-3 text-sm font-medium transition-colors duration-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
@@ -36,7 +50,7 @@ const Pagination = ({
       )}
     >
       <Link
-        href={atStart ? "#" : `${route}?pageNumber=${prev}`}
+        href={atStart ? "#" : hrefFor(prev)}
         aria-label="Previous page"
         aria-disabled={atStart}
         onClick={(e) => atStart && e.preventDefault()}
@@ -55,7 +69,7 @@ const Pagination = ({
         return (
           <Link
             key={page}
-            href={`${route}?pageNumber=${page}`}
+            href={hrefFor(page)}
             aria-current={active ? "page" : undefined}
             className={cn(
               linkClass,
@@ -70,7 +84,7 @@ const Pagination = ({
       })}
 
       <Link
-        href={atEnd ? "#" : `${route}?pageNumber=${next}`}
+        href={atEnd ? "#" : hrefFor(next)}
         aria-label="Next page"
         aria-disabled={atEnd}
         onClick={(e) => atEnd && e.preventDefault()}

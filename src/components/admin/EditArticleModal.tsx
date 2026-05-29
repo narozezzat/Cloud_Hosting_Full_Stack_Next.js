@@ -12,6 +12,7 @@ import { Article } from "@/generated/prisma";
 import { Button } from "@/components/ui/Button";
 import { Modal } from "@/components/ui/Modal";
 import { ArticleFormFields } from "@/components/admin/ArticleFormFields";
+import { useCategories } from "@/hooks/useCategories";
 
 interface EditArticleModalProps {
   article: Article;
@@ -37,12 +38,17 @@ const EditArticleModal = ({
 
   const [title, setTitle] = React.useState(article.title);
   const [description, setDescription] = React.useState(article.description);
+  const [categoryId, setCategoryId] = React.useState<number | null>(
+    article.categoryId ?? null,
+  );
   const [loading, setLoading] = React.useState(false);
+  const { categories } = useCategories(Boolean(open));
 
   React.useEffect(() => {
     if (open) {
       setTitle(article.title);
       setDescription(article.description);
+      setCategoryId(article.categoryId ?? null);
     }
   }, [open, article]);
 
@@ -61,6 +67,7 @@ const EditArticleModal = ({
       await axios.put(`${DOMAIN}/api/articles/${article.id}`, {
         title,
         description,
+        categoryId,
       });
       toast.success("Article updated");
       setOpen(false);
@@ -130,6 +137,9 @@ const EditArticleModal = ({
             description={description}
             onTitleChange={setTitle}
             onDescriptionChange={setDescription}
+            categories={categories}
+            categoryId={categoryId}
+            onCategoryChange={setCategoryId}
           />
         </form>
       </Modal>

@@ -10,6 +10,7 @@ import { getErrorMessage } from "@/lib/getErrorMessage";
 import { Button } from "@/components/ui/Button";
 import { Modal } from "@/components/ui/Modal";
 import { ArticleFormFields } from "@/components/admin/ArticleFormFields";
+import { useCategories } from "@/hooks/useCategories";
 
 interface AddArticleModalProps {
   /** Optional custom trigger. If omitted, a primary "New article" button is rendered. */
@@ -21,11 +22,14 @@ const AddArticleModal = ({ trigger }: AddArticleModalProps) => {
   const [open, setOpen] = React.useState(false);
   const [title, setTitle] = React.useState("");
   const [description, setDescription] = React.useState("");
+  const [categoryId, setCategoryId] = React.useState<number | null>(null);
   const [loading, setLoading] = React.useState(false);
+  const { categories } = useCategories(open);
 
   const reset = () => {
     setTitle("");
     setDescription("");
+    setCategoryId(null);
   };
 
   const handleClose = () => {
@@ -40,7 +44,11 @@ const AddArticleModal = ({ trigger }: AddArticleModalProps) => {
 
     try {
       setLoading(true);
-      await axios.post(`${DOMAIN}/api/articles`, { title, description });
+      await axios.post(`${DOMAIN}/api/articles`, {
+        title,
+        description,
+        categoryId,
+      });
       toast.success("Article published");
       reset();
       setOpen(false);
@@ -108,6 +116,9 @@ const AddArticleModal = ({ trigger }: AddArticleModalProps) => {
             onDescriptionChange={setDescription}
             titlePlaceholder="e.g. Why edge functions matter"
             descriptionPlaceholder="Tell us what this article is about…"
+            categories={categories}
+            categoryId={categoryId}
+            onCategoryChange={setCategoryId}
           />
         </form>
       </Modal>

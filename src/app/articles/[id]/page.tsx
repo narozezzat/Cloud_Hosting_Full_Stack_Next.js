@@ -1,6 +1,6 @@
 import AddCommentForm from "@/components/comments/AddCommentForm";
 import CommentItem from "@/components/comments/CommentItem";
-import { SingleArticle } from "@/lib/types";
+import { SingleArticle, CommentWithReplies } from "@/lib/types";
 import { verifyTokenForPage } from "@/lib/auth/verifyToken";
 import { cookies } from "next/headers";
 import prisma from "@/lib/db";
@@ -11,6 +11,8 @@ import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { ShareStrip } from "@/components/articles/ShareStrip";
+import { LikeButton } from "@/components/articles/LikeButton";
+import { BookmarkButton } from "@/components/articles/BookmarkButton";
 import { formatDate } from "@/lib/formatDate";
 
 interface SingleArticlePageProps {
@@ -21,17 +23,46 @@ const SingleArticlePage = async ({ params }: SingleArticlePageProps) => {
   const token = cookies().get("jwtToken")?.value || "";
   const payload = verifyTokenForPage(token);
 
+  const articleId = parseInt(params.id);
   const article = (await prisma.article.findUnique({
-    where: { id: parseInt(params.id) },
+    where: { id: articleId },
     include: {
+      category: true,
       comments: {
-        include: { user: { select: { username: true } } },
+        where: { parentId: null },
+        include: {
+          user: { select: { username: true } },
+          replies: {
+            include: { user: { select: { username: true } } },
+            orderBy: { createdAt: "asc" },
+          },
+        },
         orderBy: { createdAt: "desc" },
       },
+      _count: { select: { likes: true, comments: true } },
     },
-  })) as SingleArticle;
+  })) as
+    | (Omit<SingleArticle, "comments"> & {
+        comments: CommentWithReplies[];
+        _count: { likes: number; comments: number };
+      })
+    | null;
 
   if (!article) redirect("/not-found");
+
+  const totalComments = article._count.comments;
+
+  // Has the current user liked / bookmarked this article?
+  const [userLike, userBookmark] = payload
+    ? await Promise.all([
+        prisma.like.findUnique({
+          where: { userId_articleId: { userId: payload.id, articleId } },
+        }),
+        prisma.bookmark.findUnique({
+          where: { userId_articleId: { userId: payload.id, articleId } },
+        }),
+      ])
+    : [null, null];
 
   const readMinutes = Math.max(
     1,
@@ -50,7 +81,7 @@ const SingleArticlePage = async ({ params }: SingleArticlePageProps) => {
 
       {/* Header */}
       <header className="space-y-5">
-        <Badge>Article</Badge>
+        <Badge>{article.category ? article.category.name : "Article"}</Badge>
         <h1 className="font-display text-display-md font-extrabold tracking-tight text-balance sm:text-display-lg">
           {article.title}
         </h1>
@@ -82,8 +113,7 @@ const SingleArticlePage = async ({ params }: SingleArticlePageProps) => {
               className="inline-flex items-center gap-1.5 transition-colors hover:text-foreground"
             >
               <MessageCircle className="h-3.5 w-3.5" />
-              {article.comments.length}{" "}
-              {article.comments.length === 1 ? "comment" : "comments"}
+              {totalComments} {totalComments === 1 ? "comment" : "comments"}
             </a>
           </div>
         </div>
@@ -94,6 +124,21 @@ const SingleArticlePage = async ({ params }: SingleArticlePageProps) => {
         {article.description}
       </article>
 
+      {/* Reactions */}
+      <div className="flex flex-wrap items-center gap-3">
+        <LikeButton
+          articleId={article.id}
+          initialLiked={Boolean(userLike)}
+          initialCount={article._count.likes}
+          isLoggedIn={Boolean(payload)}
+        />
+        <BookmarkButton
+          articleId={article.id}
+          initialBookmarked={Boolean(userBookmark)}
+          isLoggedIn={Boolean(payload)}
+        />
+      </div>
+
       {/* Share strip */}
       <ShareStrip title={article.title} />
 
@@ -103,8 +148,7 @@ const SingleArticlePage = async ({ params }: SingleArticlePageProps) => {
           <div>
             <h2 className="font-display text-2xl font-bold">Comments</h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              {article.comments.length}{" "}
-              {article.comments.length === 1 ? "reply" : "replies"} so far
+              {totalComments} {totalComments === 1 ? "reply" : "replies"} so far
             </p>
           </div>
         </div>
@@ -137,11 +181,13 @@ const SingleArticlePage = async ({ params }: SingleArticlePageProps) => {
               description="Be the first to share your thoughts."
             />
           ) : (
-            article.comments.map((comment) => (
+            article.comments.map((comment: CommentWithReplies) => (
               <CommentItem
                 key={comment.id}
                 comment={comment}
                 userId={payload?.id}
+                articleId={article.id}
+                isLoggedIn={Boolean(payload)}
               />
             ))
           )}

@@ -1,5 +1,6 @@
 import prisma from "@/lib/db";
 import { UpdateArticleDto } from "@/lib/validation/dtos";
+import { updateArticleSchema } from "@/lib/validation/validationSchema";
 import { verifyToken } from "@/lib/auth/verifyToken";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -19,6 +20,7 @@ export async function GET(request: NextRequest, { params }: Props) {
     const article = await prisma.article.findUnique({
       where: { id: parseInt(params.id) },
       include: {
+        category: true,
         comments: {
           include: {
             user: {
@@ -77,11 +79,20 @@ export async function PUT(request: NextRequest, { params }: Props) {
     }
 
     const body = (await request.json()) as UpdateArticleDto;
+    const validation = updateArticleSchema.safeParse(body);
+    if (!validation.success) {
+      return NextResponse.json(
+        { message: validation.error.errors[0].message },
+        { status: 400 },
+      );
+    }
+
     const updatedArticle = await prisma.article.update({
       where: { id: parseInt(params.id) },
       data: {
         title: body.title,
         description: body.description,
+        categoryId: body.categoryId === undefined ? undefined : body.categoryId,
       },
     });
 

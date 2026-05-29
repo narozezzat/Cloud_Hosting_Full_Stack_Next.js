@@ -1,16 +1,31 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { verifyTokenForPage } from "@/lib/auth/verifyToken";
+import prisma from "@/lib/db";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Section } from "@/components/ui/Section";
 import { GradientBlob } from "@/components/ui/GradientBlob";
 import { Avatar } from "@/components/ui/Avatar";
+import { EmptyState } from "@/components/ui/EmptyState";
+import ArticleItem from "@/components/articles/ArticleItem";
+import { ArticleWithCategory } from "@/lib/types";
 
-export default function ProfilePage() {
+export const dynamic = "force-dynamic";
+
+export default async function ProfilePage() {
   const token = cookies().get("jwtToken")?.value || "";
   const payload = verifyTokenForPage(token);
   if (!payload) redirect("/login");
+
+  const bookmarks = await prisma.bookmark.findMany({
+    where: { userId: payload.id },
+    orderBy: { createdAt: "desc" },
+    include: { article: { include: { category: true } } },
+  });
+  const savedArticles = bookmarks.map(
+    (b) => b.article,
+  ) as ArticleWithCategory[];
 
   return (
     <>
@@ -52,6 +67,26 @@ export default function ProfilePage() {
             </p>
           </Card>
         </div>
+      </Section>
+
+      <Section
+        align="left"
+        eyebrow="Library"
+        title="Saved articles"
+        subtitle="Articles you've bookmarked for later."
+      >
+        {savedArticles.length === 0 ? (
+          <EmptyState
+            title="No saved articles yet"
+            description="Tap “Save” on any article to bookmark it here."
+          />
+        ) : (
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {savedArticles.map((article) => (
+              <ArticleItem key={article.id} article={article} />
+            ))}
+          </div>
+        )}
       </Section>
     </>
   );

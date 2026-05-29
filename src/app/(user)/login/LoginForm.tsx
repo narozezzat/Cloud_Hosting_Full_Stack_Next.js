@@ -5,6 +5,7 @@ import { DOMAIN } from "@/lib/constants";
 import { getErrorMessage } from "@/lib/getErrorMessage";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import * as React from "react";
 import { toast } from "react-toastify";
 import { Mail } from "lucide-react";
@@ -60,6 +61,15 @@ const LoginForm = () => {
           required
         />
       </FormField>
+
+      <div className="-mt-1 text-right">
+        <Link
+          href="/forgot-password"
+          className="text-sm font-medium text-brand-500 hover:underline"
+        >
+          Forgot password?
+        </Link>
+      </div>
 
       <Button type="submit" loading={loading} size="lg" className="w-full">
         Log in

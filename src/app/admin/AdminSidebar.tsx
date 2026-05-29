@@ -9,6 +9,8 @@ import {
   FileText,
   MessageSquare,
   BarChart3,
+  Tag,
+  Users,
 } from "lucide-react";
 import { Logo, LogoMark } from "@/components/brand/Logo";
 import { Avatar } from "@/components/ui/Avatar";
@@ -34,6 +36,8 @@ const NAV = [
     match: "/admin/comments-table",
     icon: MessageSquare,
   },
+  { label: "Categories", href: "/admin/categories", icon: Tag },
+  { label: "Users", href: "/admin/users", icon: Users },
   { label: "Analytics", href: "/admin/analytics", icon: BarChart3 },
 ];
 

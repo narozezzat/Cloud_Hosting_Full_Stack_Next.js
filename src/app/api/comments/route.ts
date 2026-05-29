@@ -4,6 +4,7 @@ import { verifyToken } from "@/lib/auth/verifyToken";
 import { CreateCommentDto } from "@/lib/validation/dtos";
 import { createCommentSchema } from "@/lib/validation/validationSchema";
 import { COMMENT_PER_PAGE } from "@/lib/constants";
+import { checkRateLimit } from "@/lib/rateLimit";
 
 /**
  *  @method  POST
@@ -21,6 +22,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const limited = checkRateLimit(request, "comment", {
+      limit: 15,
+      windowMs: 60_000,
+    });
+    if (limited) return limited;
+
     const body = (await request.json()) as CreateCommentDto;
 
     const validation = createCommentSchema.safeParse(body);
@@ -31,11 +38,26 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // If this is a reply, make sure the parent exists on the same article
+    // (and is itself a top-level comment — we only support one level of nesting).
+    if (body.parentId) {
+      const parent = await prisma.comment.findUnique({
+        where: { id: body.parentId },
+      });
+      if (!parent || parent.articleId !== body.articleId) {
+        return NextResponse.json(
+          { message: "invalid parent comment" },
+          { status: 400 },
+        );
+      }
+    }
+
     const newComment = await prisma.comment.create({
       data: {
         text: body.text,
         articleId: body.articleId,
         userId: user.id,
+        parentId: body.parentId ?? null,
       },
     });
     return NextResponse.json(newComment, { status: 201 });

@@ -4,6 +4,7 @@ import { loginSchema } from "@/lib/validation/validationSchema";
 import prisma from "@/lib/db";
 import bcrypt from "bcryptjs";
 import { setCookie } from "@/lib/auth/generateToken";
+import { checkRateLimit } from "@/lib/rateLimit";
 /**
  *  @method  POST
  *  @route   ~/api/users/login
@@ -12,6 +13,12 @@ import { setCookie } from "@/lib/auth/generateToken";
  */
 export async function POST(request: NextRequest) {
   try {
+    const limited = checkRateLimit(request, "login", {
+      limit: 10,
+      windowMs: 60_000,
+    });
+    if (limited) return limited;
+
     const body = (await request.json()) as LoginUserDto;
     const validation = loginSchema.safeParse(body);
     if (!validation.success) {

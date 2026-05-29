@@ -15,10 +15,14 @@ import { verifyToken } from "@/lib/auth/verifyToken";
 export async function GET(request: NextRequest) {
   try {
     const pageNumber = request.nextUrl.searchParams.get("pageNumber") || "1";
+    const categoryId = request.nextUrl.searchParams.get("categoryId");
+    const where = categoryId ? { categoryId: parseInt(categoryId) } : {};
     const articles = await prisma.article.findMany({
+      where,
       skip: ARTICLE_PER_PAGE * (parseInt(pageNumber) - 1),
       take: ARTICLE_PER_PAGE,
       orderBy: { createdAt: "desc" },
+      include: { category: true },
     });
     return NextResponse.json(articles, { status: 200 });
   } catch (error) {
@@ -59,6 +63,7 @@ export async function POST(request: NextRequest) {
       data: {
         title: body.title,
         description: body.description,
+        categoryId: body.categoryId ?? null,
       },
     });
 

@@ -33,6 +33,19 @@ Next.js 14 **App Router** + TypeScript + Prisma (PostgreSQL). Path alias
 - Use the shared singleton: `import prisma from "@/lib/db"`. Never `new
   PrismaClient()` in app code.
 - After editing `prisma/schema.prisma`, run `npx prisma generate`.
+- **Models:** `User`, `Article`, `Comment` (self-relation `parent`/`replies`
+  for one level of threaded replies), `Category` (1‑N → `Article.categoryId`,
+  `onDelete: SetNull`), `Like` and `Bookmark` (both `@@unique([userId,
+  articleId])`, used as idempotent toggles), `PasswordResetToken` (sha256
+  `tokenHash`, 1‑hour `expiresAt`, `used`), and `Notification` (pre-existing
+  table, **not yet wired into the app** — modeled so the schema matches the DB).
+- **Migration drift:** the live DB has the `Notification` table outside the
+  migration history, so `prisma migrate dev` reports drift and wants a reset.
+  Use **`npx prisma db push`** to sync schema changes without dropping data
+  until the history is baselined.
+- Derive types from Prisma in `@/lib/types` (`ArticleWithCategory`,
+  `CommentWithReplies`, `CategoryWithCount`, `AdminUserRow`, …) rather than
+  hand-writing parallel interfaces.
 
 ### Auth (JWT in an httpOnly cookie)
 - Login/register set a `jwtToken` cookie via `setCookie`/`generateJWT`
@@ -56,6 +69,19 @@ with a zod schema via `.safeParse()`, and respond with
 generic message. Pagination uses `ARTICLE_PER_PAGE` / `COMMENT_PER_PAGE` from
 `@/lib/constants`.
 
+**Feature endpoints added on top of the originals:** `categories` (CRUD,
+admin-gated writes), `articles/search` (title **OR** description `contains` +
+`categoryId` + `sort`), `articles/[id]/like` and `/bookmark` (POST/DELETE
+idempotent toggles), `users` (admin list) and `users/[id]` (public GET safe
+fields; admin `PATCH` isAdmin / `DELETE`), and `users/forgot-password` +
+`users/reset-password`. Sensitive endpoints (login, register, forgot-password,
+comment POST) call `checkRateLimit(request, bucket, …)` from
+`@/lib/rateLimit` — an **in-memory, per-instance** sliding window (returns a
+`429`); swap for a shared store before scaling horizontally. Password-reset
+mail goes through `@/lib/email` (`sendEmail` uses `RESEND_API_KEY` if set,
+else logs the link to the server console). Security headers are set in
+`next.config.js` via `headers()`.
+
 ### Client-side data fetching
 Browser-side fetchers live in `@/lib/api/*` and build URLs from `DOMAIN`
 (`@/lib/constants`, switches on `NODE_ENV`). Mutations in components use `axios`
@@ -63,7 +89,8 @@ directly against `${DOMAIN}/api/...` then `router.refresh()`.
 
 ### `lib/` layout
 `@/lib` is the single home for non-component code: `db.ts`, `constants.ts`,
-`types.ts`, `formatDate.ts`, `analytics.ts`, `cn.ts`, plus `api/` (fetchers),
+`types.ts`, `formatDate.ts`, `analytics.ts`, `cn.ts`, `slugify.ts`, `email.ts`,
+`rateLimit.ts`, plus `api/` (fetchers — incl. `categoryApiCall.ts`),
 `auth/` (tokens), and `validation/` (zod schemas + DTOs).
 
 ### UI system

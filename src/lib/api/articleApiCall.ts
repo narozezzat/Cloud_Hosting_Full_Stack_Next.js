@@ -1,15 +1,17 @@
 import { DOMAIN } from "@/lib/constants";
-import { Article } from "@/generated/prisma";
-import { SingleArticle } from "@/lib/types";
+import { ArticleWithCategory, SingleArticle } from "@/lib/types";
 
-// Get articles based on pageNumber
+// Get articles based on pageNumber (optionally filtered by category)
 export async function getArticles(
   pageNumber: string | undefined,
-): Promise<Article[]> {
-  const response = await fetch(
-    `${DOMAIN}/api/articles?pageNumber=${pageNumber}`,
-    { cache: "no-store" },
-  );
+  categoryId?: string,
+): Promise<ArticleWithCategory[]> {
+  const params = new URLSearchParams({ pageNumber: pageNumber || "1" });
+  if (categoryId) params.set("categoryId", categoryId);
+
+  const response = await fetch(`${DOMAIN}/api/articles?${params.toString()}`, {
+    cache: "no-store",
+  });
 
   if (!response.ok) {
     throw new Error("Failed to fetch articles");
@@ -32,12 +34,18 @@ export async function getArticlesCount(): Promise<number> {
   return count;
 }
 
-// Get articles based on searchText
+// Get articles based on searchText (+ optional category / sort filters)
 export async function getArticlesBasedOnSearch(
   searchText: string,
-): Promise<Article[]> {
+  options?: { categoryId?: string; sort?: string },
+): Promise<ArticleWithCategory[]> {
+  const params = new URLSearchParams({ searchText });
+  if (options?.categoryId) params.set("categoryId", options.categoryId);
+  if (options?.sort) params.set("sort", options.sort);
+
   const response = await fetch(
-    `${DOMAIN}/api/articles/search?searchText=${searchText}`,
+    `${DOMAIN}/api/articles/search?${params.toString()}`,
+    { cache: "no-store" },
   );
 
   if (!response.ok) {

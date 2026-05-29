@@ -8,17 +8,22 @@ import { Button } from "@/components/ui/Button";
 
 interface SearchArticleInputProps {
   className?: string;
+  /** Prefill the box (e.g. on the search results page). */
+  defaultValue?: string;
 }
 
-const SearchArticleInput = ({ className }: SearchArticleInputProps) => {
+const SearchArticleInput = ({
+  className,
+  defaultValue = "",
+}: SearchArticleInputProps) => {
   const router = useRouter();
-  const [searchText, setSearchText] = React.useState("");
+  const [searchText, setSearchText] = React.useState(defaultValue);
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!searchText.trim()) return;
     router.push(
-      `/articles/search?searchText=${encodeURIComponent(searchText)}`,
+      `/articles/search?searchText=${encodeURIComponent(searchText.trim())}`,
     );
   };
 

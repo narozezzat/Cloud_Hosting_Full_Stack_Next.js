@@ -1,11 +1,21 @@
 export interface CreateArticleDto {
   title: string;
   description: string;
+  categoryId?: number | null;
 }
 
 export interface UpdateArticleDto {
   title?: string;
   description?: string;
+  categoryId?: number | null;
+}
+
+export interface CreateCategoryDto {
+  name: string;
+}
+
+export interface UpdateCategoryDto {
+  name: string;
 }
 
 export interface RegisterUserDto {
@@ -28,8 +38,18 @@ export interface UpdateUserDto {
 export interface CreateCommentDto {
   text: string;
   articleId: number;
+  parentId?: number | null;
 }
 
 export interface UpdateCommentDto {
   text: string;
+}
+
+export interface ForgotPasswordDto {
+  email: string;
+}
+
+export interface ResetPasswordDto {
+  token: string;
+  password: string;
 }

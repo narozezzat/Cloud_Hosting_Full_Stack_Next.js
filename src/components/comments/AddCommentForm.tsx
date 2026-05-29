@@ -11,9 +11,23 @@ import { Button } from "@/components/ui/Button";
 
 interface AddCommentFormProps {
   articleId: number;
+  /** When set, the comment is posted as a reply to this comment id. */
+  parentId?: number;
+  /** Called after a successful post (e.g. to collapse a reply box). */
+  onPosted?: () => void;
+  placeholder?: string;
+  submitLabel?: string;
+  autoFocus?: boolean;
 }
 
-const AddCommentForm = ({ articleId }: AddCommentFormProps) => {
+const AddCommentForm = ({
+  articleId,
+  parentId,
+  onPosted,
+  placeholder = "Share your thoughts…",
+  submitLabel = "Post comment",
+  autoFocus = false,
+}: AddCommentFormProps) => {
   const router = useRouter();
   const { loading, withLoading } = useLoading();
   const [text, setText] = useState("");
@@ -24,9 +38,14 @@ const AddCommentForm = ({ articleId }: AddCommentFormProps) => {
 
     await withLoading(async () => {
       try {
-        await axios.post(`${DOMAIN}/api/comments`, { text, articleId });
+        await axios.post(`${DOMAIN}/api/comments`, {
+          text,
+          articleId,
+          parentId: parentId ?? null,
+        });
         router.refresh();
         setText("");
+        onPosted?.();
       } catch (error) {
         toast.error(getErrorMessage(error));
       }
@@ -37,14 +56,15 @@ const AddCommentForm = ({ articleId }: AddCommentFormProps) => {
     <form onSubmit={formSubmitHandler} className="flex flex-col gap-3">
       <Input
         type="text"
-        placeholder="Share your thoughts…"
-        aria-label="Comment"
+        placeholder={placeholder}
+        aria-label={parentId ? "Reply" : "Comment"}
         value={text}
         onChange={(e) => setText(e.target.value)}
+        autoFocus={autoFocus}
       />
       <div className="flex justify-end">
         <Button type="submit" loading={loading}>
-          Post comment
+          {submitLabel}
         </Button>
       </div>
     </form>

@@ -4,6 +4,7 @@ import { NextResponse, NextRequest } from "next/server";
 import prisma from "@/lib/db";
 import bcrypt from "bcryptjs";
 import { setCookie } from "@/lib/auth/generateToken";
+import { checkRateLimit } from "@/lib/rateLimit";
 
 /**
  *  @method  POST
@@ -13,6 +14,12 @@ import { setCookie } from "@/lib/auth/generateToken";
  */
 export async function POST(request: NextRequest) {
   try {
+    const limited = checkRateLimit(request, "register", {
+      limit: 5,
+      windowMs: 60_000,
+    });
+    if (limited) return limited;
+
     const body = (await request.json()) as RegisterUserDto;
     const validation = registerSchema.safeParse(body);
     if (!validation.success) {

@@ -4,7 +4,8 @@ import { getArticles } from "@/lib/api/articleApiCall";
 import ArticleItem from "@/components/articles/ArticleItem";
 import Pagination from "@/components/ui/Pagination";
 import SearchArticleInput from "@/components/articles/SearchArticleInput";
-import { Article } from "@/generated/prisma";
+import { CategoryFilterBar } from "@/components/articles/CategoryFilterBar";
+import { ArticleWithCategory, CategoryWithCount } from "@/lib/types";
 import { ARTICLE_PER_PAGE } from "@/lib/constants";
 import { Metadata } from "next";
 import prisma from "@/lib/db";
@@ -21,13 +22,23 @@ export const metadata: Metadata = {
 };
 
 interface ArticlesPageProps {
-  searchParams: { pageNumber: string };
+  searchParams: { pageNumber?: string; categoryId?: string };
 }
 
 export default async function ArticlesPage({ searchParams }: ArticlesPageProps) {
   const pageNumber = searchParams.pageNumber || "1";
-  const articles: Article[] = await getArticles(pageNumber);
-  const count: number = await prisma.article.count();
+  const categoryId = searchParams.categoryId;
+
+  const [articles, count, categories] = await Promise.all([
+    getArticles(pageNumber, categoryId) as Promise<ArticleWithCategory[]>,
+    prisma.article.count({
+      where: categoryId ? { categoryId: parseInt(categoryId) } : {},
+    }),
+    prisma.category.findMany({
+      orderBy: { name: "asc" },
+      include: { _count: { select: { articles: true } } },
+    }) as Promise<CategoryWithCount[]>,
+  ]);
   const pages = Math.ceil(count / ARTICLE_PER_PAGE);
 
   const token = cookies().get("jwtToken")?.value || "";
@@ -71,6 +82,11 @@ export default async function ArticlesPage({ searchParams }: ArticlesPageProps) 
       </section>
 
       <section className="container pb-16 pt-2 sm:pb-20 sm:pt-4">
+        {categories.length > 0 && (
+          <div className="mb-8">
+            <CategoryFilterBar categories={categories} activeId={categoryId} />
+          </div>
+        )}
         {articles.length === 0 ? (
           <EmptyState
             title="No articles yet"
@@ -87,6 +103,7 @@ export default async function ArticlesPage({ searchParams }: ArticlesPageProps) 
           pageNumber={parseInt(pageNumber) || 1}
           route="/articles"
           pages={pages}
+          query={{ categoryId }}
         />
       </section>
     </>

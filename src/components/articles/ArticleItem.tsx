@@ -1,13 +1,13 @@
 import * as React from "react";
 import Link from "next/link";
 import { ArrowRight, Clock } from "lucide-react";
-import { Article } from "@/generated/prisma";
+import { ArticleWithCategory } from "@/lib/types";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { formatDate } from "@/lib/formatDate";
 
 interface ArticleItemProps {
-  article: Article;
+  article: ArticleWithCategory;
 }
 
 const ArticleItem = ({ article }: ArticleItemProps) => {
@@ -26,7 +26,9 @@ const ArticleItem = ({ article }: ArticleItemProps) => {
         className="flex h-full flex-col gap-4 p-6 group-focus-visible:ring-2 group-focus-visible:ring-ring"
       >
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
-          <Badge variant="default">Article</Badge>
+          <Badge variant="default">
+            {article.category ? article.category.name : "Article"}
+          </Badge>
           <span className="inline-flex items-center gap-1">
             <Clock className="h-3 w-3" />
             {readMinutes} min read
