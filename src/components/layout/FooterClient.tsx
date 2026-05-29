@@ -8,46 +8,63 @@ import { FaGithub, FaXTwitter, FaLinkedinIn } from "react-icons/fa6";
 import { Logo } from "@/components/brand/Logo";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
+import { cn } from "@/lib/cn";
+
+// Routes whose content already fills the viewport — the footer's top margin
+// would otherwise read as an empty gap above the footer.
+const FULL_BLEED_ROUTES = [
+  "/login",
+  "/register",
+  "/forgot-password",
+  "/reset-password",
+];
 
 const FOOTER_COLS: {
   title: string;
   links: { label: string; href: string }[];
 }[] = [
-  {
-    title: "Product",
-    links: [
-      { label: "Hosting Plans", href: "/#plans" },
-      { label: "Features", href: "/#features" },
-      { label: "Pricing", href: "/#plans" },
-      { label: "Articles", href: "/articles?pageNumber=1" },
-    ],
-  },
-  {
-    title: "Company",
-    links: [
-      { label: "About", href: "/about" },
-      { label: "Blog", href: "/articles?pageNumber=1" },
-      { label: "Contact", href: "#" },
-      { label: "Careers", href: "#" },
-    ],
-  },
-  {
-    title: "Resources",
-    links: [
-      { label: "Docs", href: "#" },
-      { label: "Status", href: "#" },
-      { label: "Support", href: "#" },
-      { label: "API", href: "#" },
-    ],
-  },
-];
+    {
+      title: "Product",
+      links: [
+        { label: "Hosting Plans", href: "/#plans" },
+        { label: "Features", href: "/#features" },
+        { label: "Pricing", href: "/#plans" },
+        { label: "Articles", href: "/articles?pageNumber=1" },
+      ],
+    },
+    {
+      title: "Company",
+      links: [
+        { label: "About", href: "/about" },
+        { label: "Blog", href: "/articles?pageNumber=1" },
+        { label: "Contact", href: "#" },
+        { label: "Careers", href: "#" },
+      ],
+    },
+    {
+      title: "Resources",
+      links: [
+        { label: "Docs", href: "#" },
+        { label: "Status", href: "#" },
+        { label: "Support", href: "#" },
+        { label: "API", href: "#" },
+      ],
+    },
+  ];
 
 export default function FooterClient() {
   const pathname = usePathname() || "/";
   if (pathname.startsWith("/admin")) return null;
 
+  const fullBleed = FULL_BLEED_ROUTES.includes(pathname);
+
   return (
-    <footer className="relative mt-24 border-t border-border bg-card/40">
+    <footer
+      className={cn(
+        "relative border-t border-border bg-card/40",
+        fullBleed ? "mt-0" : "mt-24",
+      )}
+    >
       {/* gradient top border */}
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand-500/60 to-transparent" />
 

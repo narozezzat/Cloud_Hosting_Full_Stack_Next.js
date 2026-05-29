@@ -39,9 +39,9 @@ export function AuthLayout({
   }, []);
 
   return (
-    <section className="grid min-h-[calc(100vh-4rem)] lg:grid-cols-2">
+    <section className="grid overflow-x-hidden lg:h-[calc(100dvh-4rem)] lg:grid-cols-2">
       {/* Left — form */}
-      <div className="relative flex items-center justify-center px-6 py-12 sm:px-10">
+      <div className="relative flex items-center justify-center overflow-hidden px-6 py-12 sm:px-10">
         <GradientBlob position="bottom-right" size="md" />
         <div className="relative w-full max-w-md space-y-8">
           <div className="space-y-2">

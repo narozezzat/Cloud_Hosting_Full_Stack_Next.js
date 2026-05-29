@@ -47,13 +47,13 @@ export default function RootLayout({ children }: RootLayoutProps) {
           sans.variable,
           display.variable,
           mono.variable,
-          "font-sans antialiased bg-background text-foreground h-screen overflow-hidden",
+          "font-sans antialiased bg-background text-foreground h-[100dvh] overflow-hidden",
         )}
       >
         <ThemeProvider>
           <AntdStyledComponentsRegistry>
             <AntdThemeProvider>
-              <div className="relative flex h-screen flex-col">
+              <div className="relative flex h-full flex-col">
                 <Header />
                 <div
                   id="app-scroll"

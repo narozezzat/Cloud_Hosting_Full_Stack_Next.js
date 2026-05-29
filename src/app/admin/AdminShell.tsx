@@ -39,7 +39,7 @@ export default function AdminShell({ username, children }: AdminShellProps) {
   }, [mobileOpen]);
 
   return (
-    <div className="flex h-screen overflow-hidden bg-background">
+    <div className="flex h-full overflow-hidden bg-background">
       <aside className="z-40 hidden h-full w-20 shrink-0 border-r border-border bg-card md:block lg:w-64">
         <AdminSidebar username={username} />
       </aside>
