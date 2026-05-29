@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Bell, ChevronRight, Home, Search } from "lucide-react";
+import { Bell, ChevronRight, Home, Menu, Search } from "lucide-react";
 import { Input } from "@/components/ui/Input";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import UserDropdown from "@/components/header/UserDropdown";
@@ -31,14 +31,34 @@ function getCrumbs(pathname: string) {
 
 interface AdminTopbarProps {
   username: string;
+  onOpenMobileNav?: () => void;
 }
 
-export default function AdminTopbar({ username }: AdminTopbarProps) {
+export default function AdminTopbar({
+  username,
+  onOpenMobileNav,
+}: AdminTopbarProps) {
   const pathname = usePathname() || "/admin";
   const crumbs = getCrumbs(pathname);
+  const current = crumbs[crumbs.length - 1];
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-border bg-background/80 px-4 backdrop-blur lg:px-8">
+    <header className="sticky top-0 z-30 flex h-16 items-center gap-2 border-b border-border bg-background/80 px-3 backdrop-blur-md sm:gap-3 sm:px-4 lg:px-8">
+      <button
+        type="button"
+        onClick={onOpenMobileNav}
+        aria-label="Open navigation"
+        className="inline-flex h-10 w-10 items-center justify-center rounded-md text-foreground/80 transition-colors hover:bg-secondary hover:text-foreground md:hidden"
+      >
+        <Menu className="h-5 w-5" />
+      </button>
+
+      {/* Mobile: just the current page title */}
+      <h1 className="font-display text-base font-semibold tracking-tight sm:hidden">
+        {current?.label ?? "Admin"}
+      </h1>
+
+      {/* Tablet/desktop breadcrumb */}
       <nav
         aria-label="Breadcrumb"
         className="hidden sm:flex items-center text-sm text-muted-foreground"
@@ -67,8 +87,8 @@ export default function AdminTopbar({ username }: AdminTopbarProps) {
         ))}
       </nav>
 
-      <div className="ml-auto flex items-center gap-2">
-        <div className="hidden md:block w-64">
+      <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
+        <div className="hidden lg:block lg:w-64">
           <Input
             type="search"
             placeholder="Search…"
@@ -78,13 +98,22 @@ export default function AdminTopbar({ username }: AdminTopbarProps) {
         </div>
         <button
           type="button"
+          aria-label="Search"
+          className="inline-flex h-10 w-10 items-center justify-center rounded-md text-foreground/80 transition-colors hover:bg-secondary hover:text-foreground lg:hidden"
+        >
+          <Search className="h-4 w-4" />
+        </button>
+        <button
+          type="button"
           aria-label="Notifications"
-          className="relative inline-flex h-10 w-10 items-center justify-center rounded-md border border-border bg-card text-foreground/80 hover:text-foreground hover:bg-secondary"
+          className="relative inline-flex h-10 w-10 items-center justify-center rounded-md border border-border bg-card text-foreground/80 transition-colors hover:bg-secondary hover:text-foreground"
         >
           <Bell className="h-4 w-4" />
           <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-accent-500 ring-2 ring-card" />
         </button>
-        <ThemeToggle />
+        <div className="hidden sm:block">
+          <ThemeToggle />
+        </div>
         <UserDropdown username={username} />
       </div>
     </header>

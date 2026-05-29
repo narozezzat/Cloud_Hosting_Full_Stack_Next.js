@@ -13,10 +13,10 @@ export default async function AdminCommentsTable() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-3xl font-extrabold tracking-tight">
+        <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
           Comments
         </h1>
-        <p className="text-sm text-muted-foreground">
+        <p className="mt-1 text-sm text-muted-foreground">
           {comments.length} {comments.length === 1 ? "comment" : "comments"}{" "}
           total
         </p>

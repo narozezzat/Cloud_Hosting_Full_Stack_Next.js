@@ -106,17 +106,19 @@ export function AnalyticsChart({ series }: AnalyticsChartProps) {
 
   return (
     <div>
-      <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
         <div>
-          <h2 className="font-display text-xl font-semibold">Growth</h2>
-          <p className="text-sm text-muted-foreground">
+          <h2 className="font-display text-lg font-semibold sm:text-xl">
+            Growth
+          </h2>
+          <p className="text-xs text-muted-foreground sm:text-sm">
             New {metric} over the last {series.length} months
           </p>
         </div>
         <div
           role="tablist"
           aria-label="Metric"
-          className="inline-flex items-center gap-1 rounded-md border border-border bg-card p-1"
+          className="inline-flex w-full items-center gap-1 rounded-md border border-border bg-card p-1 sm:w-auto"
         >
           {METRICS.map((m) => (
             <button
@@ -126,7 +128,7 @@ export function AnalyticsChart({ series }: AnalyticsChartProps) {
               aria-selected={metric === m.key}
               onClick={() => setMetric(m.key)}
               className={cn(
-                "rounded-sm px-3 py-1.5 text-xs font-medium transition-colors duration-hover",
+                "flex-1 rounded-sm px-3 py-1.5 text-xs font-medium transition-colors duration-hover sm:flex-initial",
                 metric === m.key
                   ? "bg-gradient-to-br from-brand-500 to-accent-500 text-white shadow-sm"
                   : "text-muted-foreground hover:text-foreground",
@@ -137,7 +139,7 @@ export function AnalyticsChart({ series }: AnalyticsChartProps) {
           ))}
         </div>
       </div>
-      <div className="mt-6 h-72">
+      <div className="mt-5 h-56 sm:mt-6 sm:h-72">
         <Line data={data} options={options} />
       </div>
     </div>

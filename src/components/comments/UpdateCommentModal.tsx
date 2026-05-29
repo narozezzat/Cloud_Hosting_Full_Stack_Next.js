@@ -1,13 +1,19 @@
 "use client";
-import { useState, Dispatch, SetStateAction, FormEvent, useMemo } from "react";
+
+import {
+  Dispatch,
+  FormEvent,
+  SetStateAction,
+  useState,
+} from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { Modal, Input, Button, Form, Grid, Drawer } from "antd";
+import { Pencil } from "lucide-react";
 import { DOMAIN } from "@/utils/constants";
-import useLoading from "@/hooks/useLoading";
-
-const { useBreakpoint } = Grid;
+import { Modal } from "@/components/ui/Modal";
+import { Button } from "@/components/ui/Button";
+import { Textarea } from "@/components/ui/Textarea";
 
 interface UpdateCommentModalProps {
   setOpen: Dispatch<SetStateAction<boolean>>;
@@ -22,99 +28,74 @@ const UpdateCommentModal = ({
   commentId,
   commentUserName,
 }: UpdateCommentModalProps) => {
-  const [updatedText, setUpdatedText] = useState(text);
   const router = useRouter();
-  const { loading, withLoading } = useLoading();
-  const screens = useBreakpoint();
+  const [updatedText, setUpdatedText] = useState(text);
+  const [loading, setLoading] = useState(false);
 
-  const formSubmitHandler = async () => {
-    if (updatedText === "") return toast.info("Please write something");
+  const close = () => {
+    if (loading) return;
+    setOpen(false);
+  };
 
+  const onSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!updatedText.trim()) return toast.info("Please write something");
     try {
-      await withLoading(async () => {
-        await axios.put(`${DOMAIN}/api/comments/${commentId}`, {
-          text: updatedText,
-        });
-        router.refresh();
-        setUpdatedText("");
-        setOpen(false);
+      setLoading(true);
+      await axios.put(`${DOMAIN}/api/comments/${commentId}`, {
+        text: updatedText,
       });
+      toast.success("Comment updated");
+      setOpen(false);
+      router.refresh();
     } catch (error: any) {
-      toast.error(error?.response?.data.message);
-      console.log(error);
+      toast.error(error?.response?.data?.message ?? "Something went wrong");
+    } finally {
+      setLoading(false);
     }
   };
 
-  const formContent = useMemo(
-    () => (
-      <Form
-        layout="vertical"
-        id="update-comment-form"
-        onFinish={formSubmitHandler}
-      >
-        <Form.Item label={"Description"}>
-          <Input
-            type="text"
-            placeholder="Edit Comment..."
-            value={updatedText}
-            onChange={(e) => setUpdatedText(e.target.value)}
-            className="mb-2"
-          />
-        </Form.Item>
-      </Form>
-    ),
-    [updatedText, formSubmitHandler],
-  );
-
-  const footerContent = useMemo(
-    () => (
-      <Button
-        htmlType="submit"
-        form="update-comment-form" // Link this button to the form by its id
-        size="large"
-        loading={loading}
-        className="bg-green-700 w-full text-white p-4 text-xl hover:bg-green-900 hover:border-none transition"
-      >
-        Edit
-      </Button>
-    ),
-    [loading],
-  );
-
   return (
-    <>
-      {screens.md ? (
-        <Modal
-          title={
-            <>
-              Edit Comment: <span className="uppercase">{commentUserName}</span>
-            </>
-          }
-          open={true}
-          onCancel={() => setOpen(false)}
-          footer={footerContent}
-        >
-          {formContent}
-        </Modal>
-      ) : (
-        <Drawer
-          title="Add New Article"
-          placement="bottom"
-          onClose={() => setOpen(false)}
-          open={true}
-          width="100%"
-          height={"auto"}
-          footer={footerContent}
-          styles={{ body: { padding: "28px 16px 0px 16px" } }}
-          className={`
-                                rounded-t-2xl
-                                [&>.ant-drawer-header>div]:flex-row-reverse
-                                `}
-        >
-          {formContent}
-        </Drawer>
-      )}
-    </>
+    <Modal
+      open
+      onClose={close}
+      size="md"
+      icon={<Pencil className="h-5 w-5" />}
+      title="Edit comment"
+      description={
+        <>
+          By <span className="font-medium text-foreground">@{commentUserName}</span>
+        </>
+      }
+      footer={
+        <>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={close}
+            disabled={loading}
+          >
+            Cancel
+          </Button>
+          <Button form="update-comment-form" type="submit" loading={loading}>
+            Save changes
+          </Button>
+        </>
+      }
+    >
+      <form id="update-comment-form" onSubmit={onSubmit} className="space-y-2">
+        <label htmlFor="update-comment-text" className="text-sm font-medium">
+          Comment
+        </label>
+        <Textarea
+          id="update-comment-text"
+          rows={4}
+          value={updatedText}
+          onChange={(e) => setUpdatedText(e.target.value)}
+          autoFocus
+        />
+      </form>
+    </Modal>
   );
 };
 

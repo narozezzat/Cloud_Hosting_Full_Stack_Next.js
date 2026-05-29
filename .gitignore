@@ -37,3 +37,6 @@ yarn-error.log*
 next-env.d.ts
 
 .vercel
+
+# internal docs — never push
+UI_UX_REDESIGN_PLAN.md

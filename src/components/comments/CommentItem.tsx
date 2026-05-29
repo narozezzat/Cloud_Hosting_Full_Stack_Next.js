@@ -82,25 +82,24 @@ const CommentItem = ({ comment, userId }: CommentItemProps) => {
         />
       )}
       {showDeleteModal && (
-        // <DeleteCommentModal
-        //     text={comment.text}
-        //     onClose={() => setShowDeleteModal(false)}
-        //     onDelete={commentDeleteHandler}
-        // />
-
         <ConfirmationModal
           isOpen={showDeleteModal}
           onClose={() => setShowDeleteModal(false)}
           onConfirm={commentDeleteHandler}
+          title="Delete this comment?"
           message={
-            <>
-              Are you sure you want to delete this comment{" "}
-              <strong>"{comment.text}"</strong>
-            </>
+            <span>
+              This action cannot be undone. The comment{" "}
+              <span className="font-semibold text-foreground">
+                &ldquo;{comment.text}&rdquo;
+              </span>{" "}
+              will be permanently removed.
+            </span>
           }
-          confirmText="Delete"
+          confirmText="Delete comment"
           cancelText="Cancel"
           isLoading={loading}
+          tone="danger"
         />
       )}
     </div>

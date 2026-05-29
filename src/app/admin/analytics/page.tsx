@@ -18,17 +18,17 @@ export default async function AnalyticsPage() {
   const { totals, deltas, series, topArticles, recentActivity } = analytics;
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       <div>
-        <h1 className="font-display text-3xl font-extrabold tracking-tight">
+        <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
           Analytics
         </h1>
-        <p className="text-sm text-muted-foreground">
-          Growth, engagement, and what's trending.
+        <p className="mt-1 text-sm text-muted-foreground">
+          Growth, engagement, and what&apos;s trending.
         </p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-3 grid-cols-2 sm:gap-4 lg:grid-cols-4">
         <StatCard
           label="Total users"
           value={totals.users}
@@ -56,28 +56,32 @@ export default async function AnalyticsPage() {
       </div>
 
       {/* Bento grid */}
-      <div className="grid gap-4 lg:grid-cols-3">
-        <Card variant="elevated" className="p-6 lg:col-span-2">
+      <div className="grid gap-4 lg:grid-cols-3 lg:gap-6">
+        <Card variant="elevated" className="p-5 sm:p-6 lg:col-span-2">
           <AnalyticsChart series={series} />
         </Card>
 
-        <Card variant="elevated" className="p-6">
-          <h2 className="font-display text-xl font-semibold">Top articles</h2>
-          <p className="mt-1 text-sm text-muted-foreground">
+        <Card variant="elevated" className="p-5 sm:p-6">
+          <h2 className="font-display text-lg font-semibold sm:text-xl">
+            Top articles
+          </h2>
+          <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
             Most-discussed pieces right now.
           </p>
-          <div className="mt-5">
+          <div className="mt-4 sm:mt-5">
             <TopArticlesList articles={topArticles} />
           </div>
         </Card>
       </div>
 
-      <Card variant="elevated" className="p-6">
-        <h2 className="font-display text-xl font-semibold">Recent activity</h2>
-        <p className="mt-1 text-sm text-muted-foreground">
+      <Card variant="elevated" className="p-5 sm:p-6">
+        <h2 className="font-display text-lg font-semibold sm:text-xl">
+          Recent activity
+        </h2>
+        <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
           Latest signals across the platform.
         </p>
-        <div className="mt-5">
+        <div className="mt-4 sm:mt-5">
           <ActivityFeed items={recentActivity} />
         </div>
       </Card>

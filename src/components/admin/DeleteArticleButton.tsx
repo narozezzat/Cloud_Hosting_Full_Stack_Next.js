@@ -1,12 +1,12 @@
 "use client";
-import { DOMAIN } from "@/utils/constants";
+
+import * as React from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import { useState } from "react";
+import { Trash2 } from "lucide-react";
+import { DOMAIN } from "@/utils/constants";
 import ConfirmationModal from "@/components/common/modals/ConfirmationModal";
-import { Button } from "antd";
-import { DeleteOutlined } from "@ant-design/icons";
 
 interface DeleteArticleButtonProps {
   articleId: number;
@@ -18,27 +18,18 @@ const DeleteArticleButton = ({
   articleTitle,
 }: DeleteArticleButtonProps) => {
   const router = useRouter();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const deleteArticleHandler = async () => {
     try {
       setIsLoading(true);
       await axios.delete(`${DOMAIN}/api/articles/${articleId}`);
-      router.refresh();
-      toast.success("article deleted");
+      toast.success("Article deleted");
       setIsModalOpen(false);
+      router.refresh();
     } catch (error: any) {
-      toast.error(error?.response?.data.message);
-      console.log(error);
+      toast.error(error?.response?.data?.message ?? "Something went wrong");
     } finally {
       setIsLoading(false);
     }
@@ -46,28 +37,33 @@ const DeleteArticleButton = ({
 
   return (
     <>
-      <Button
-        type="text"
-        icon={<DeleteOutlined />}
-        className="text-red-500 p-2.5 flex justify-start w-full"
-        onClick={showModal}
+      <button
+        type="button"
+        onClick={() => setIsModalOpen(true)}
+        className="flex w-full items-center gap-2 rounded-md px-2 py-2 text-sm text-destructive transition-colors hover:bg-destructive/10"
       >
+        <Trash2 className="h-4 w-4" />
         Delete
-      </Button>
+      </button>
 
       <ConfirmationModal
         isOpen={isModalOpen}
-        onClose={handleCancel}
+        onClose={() => setIsModalOpen(false)}
         onConfirm={deleteArticleHandler}
+        title="Delete this article?"
         message={
-          <>
-            Are you sure you want to delete this article?
-            <p className="font-bold">"{articleTitle}"</p>
-          </>
+          <span>
+            This action cannot be undone. The article{" "}
+            <span className="font-semibold text-foreground">
+              &ldquo;{articleTitle}&rdquo;
+            </span>{" "}
+            and its comments will be permanently removed.
+          </span>
         }
-        confirmText="Delete"
+        confirmText="Delete article"
         cancelText="Cancel"
         isLoading={isLoading}
+        tone="danger"
       />
     </>
   );
