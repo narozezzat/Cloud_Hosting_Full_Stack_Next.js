@@ -48,15 +48,28 @@ export default function AdminTopbar({
         type="button"
         onClick={onOpenMobileNav}
         aria-label="Open navigation"
-        className="inline-flex h-10 w-10 items-center justify-center rounded-md text-foreground/80 transition-colors hover:bg-secondary hover:text-foreground md:hidden"
+        className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md text-foreground/80 transition-colors hover:bg-secondary hover:text-foreground md:hidden"
       >
         <Menu className="h-5 w-5" />
       </button>
 
-      {/* Mobile: just the current page title */}
-      <h1 className="font-display text-base font-semibold tracking-tight sm:hidden">
-        {current?.label ?? "Admin"}
-      </h1>
+      {/* Mobile: Home → page breadcrumb, beside the hamburger */}
+      <nav
+        aria-label="Breadcrumb"
+        className="flex min-w-0 items-center gap-1.5 text-sm sm:hidden"
+      >
+        <Link
+          href="/"
+          aria-label="Back to home"
+          className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+        >
+          <Home className="h-3.5 w-3.5" />
+        </Link>
+        <ChevronRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground/60" />
+        <span className="truncate font-display text-sm font-semibold tracking-tight text-foreground">
+          {current?.label ?? "Admin"}
+        </span>
+      </nav>
 
       {/* Tablet/desktop breadcrumb */}
       <nav
