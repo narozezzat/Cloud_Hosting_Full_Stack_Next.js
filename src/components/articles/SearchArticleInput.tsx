@@ -40,12 +40,12 @@ const SearchArticleInput = ({ className }: SearchArticleInputProps) => {
       </div>
       <Button
         type="submit"
-        size="icon"
         aria-label="Search articles"
         title="Search"
-        className="h-11 w-11 shrink-0"
+        className="h-11 w-11 shrink-0 gap-1.5 p-0 sm:w-auto sm:px-5"
       >
         <Search className="h-4 w-4" />
+        <span className="hidden sm:inline">Search</span>
       </Button>
     </form>
   );
