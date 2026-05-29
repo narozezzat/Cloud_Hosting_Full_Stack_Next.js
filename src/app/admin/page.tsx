@@ -1,67 +1,60 @@
-import { FileText, MessageSquare, Users, TrendingUp } from "lucide-react";
-import prisma from "@/utils/db";
+import {
+  FileText,
+  MessageSquare,
+  Users,
+  Activity,
+} from "lucide-react";
+import { getAnalytics } from "@/lib/analytics";
 import { StatCard } from "@/components/ui/StatCard";
 import { Card } from "@/components/ui/Card";
-import { Badge } from "@/components/ui/Badge";
+import { ActivityFeed } from "@/components/admin/ActivityFeed";
 import AddArticleForm from "./AddArticleForm";
-import { formatDate } from "@/utils/formatDate";
+
+export const dynamic = "force-dynamic";
 
 export default async function AdminDashboardPage() {
-  const [articlesCount, commentsCount, usersCount, recentArticles] =
-    await Promise.all([
-      prisma.article.count(),
-      prisma.comment.count(),
-      prisma.user.count(),
-      prisma.article.findMany({
-        take: 5,
-        orderBy: { createdAt: "desc" },
-        select: { id: true, title: true, createdAt: true },
-      }),
-    ]);
+  const analytics = await getAnalytics();
+  const { totals, deltas, recentActivity } = analytics;
 
   return (
     <div className="space-y-8">
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <h1 className="font-display text-3xl font-extrabold tracking-tight">
-            Overview
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            A snapshot of your platform today.
-          </p>
-        </div>
+      <div>
+        <h1 className="font-display text-3xl font-extrabold tracking-tight">
+          Overview
+        </h1>
+        <p className="text-sm text-muted-foreground">
+          A snapshot of your platform today.
+        </p>
       </div>
 
-      {/* Stats */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard
           label="Users"
-          value={usersCount}
+          value={totals.users}
           icon={<Users className="h-5 w-5" />}
-          delta={{ value: 12, label: "vs. last month" }}
+          delta={{ value: deltas.users, label: "vs. last 30d" }}
         />
         <StatCard
           label="Articles"
-          value={articlesCount}
+          value={totals.articles}
           icon={<FileText className="h-5 w-5" />}
-          delta={{ value: 8 }}
+          delta={{ value: deltas.articles, label: "vs. last 30d" }}
         />
         <StatCard
           label="Comments"
-          value={commentsCount}
+          value={totals.comments}
           icon={<MessageSquare className="h-5 w-5" />}
-          delta={{ value: 24 }}
+          delta={{ value: deltas.comments, label: "vs. last 30d" }}
         />
         <StatCard
-          label="Growth"
-          value="+18%"
-          icon={<TrendingUp className="h-5 w-5" />}
-          delta={{ value: 3, label: "WoW" }}
+          label="Active users"
+          value={totals.activeUsers}
+          icon={<Activity className="h-5 w-5" />}
+          delta={{ value: deltas.activeUsers, label: "vs. last 30d" }}
         />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
-        {/* Quick action: add article */}
         <Card variant="elevated" className="p-6 lg:col-span-2">
           <h2 className="font-display text-xl font-semibold">
             Publish a new article
@@ -74,29 +67,14 @@ export default async function AdminDashboardPage() {
           </div>
         </Card>
 
-        {/* Recent activity */}
         <Card variant="elevated" className="p-6">
-          <h2 className="font-display text-xl font-semibold">Recent articles</h2>
-          <ul className="mt-4 space-y-3">
-            {recentArticles.length === 0 ? (
-              <li className="text-sm text-muted-foreground">No articles yet.</li>
-            ) : (
-              recentArticles.map((a) => (
-                <li
-                  key={a.id}
-                  className="flex items-start justify-between gap-3 border-b border-border/60 pb-3 last:border-0 last:pb-0"
-                >
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-medium">{a.title}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {formatDate(String(a.createdAt))}
-                    </p>
-                  </div>
-                  <Badge variant="neutral">#{a.id}</Badge>
-                </li>
-              ))
-            )}
-          </ul>
+          <h2 className="font-display text-xl font-semibold">Recent activity</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Latest signals across the platform.
+          </p>
+          <div className="mt-5">
+            <ActivityFeed items={recentActivity} />
+          </div>
         </Card>
       </div>
     </div>
