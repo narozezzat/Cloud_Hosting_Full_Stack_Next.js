@@ -1,19 +1,16 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import * as React from "react";
 import { Article } from "@/generated/prisma";
-import { Table, Button, Dropdown, Spin } from "antd";
+import { Table, Dropdown } from "antd";
 import Link from "next/link";
+import { MoreHorizontal, ExternalLink } from "lucide-react";
 import EditArticleForm from "./EditArticleModal";
 import DeleteArticleButton from "./DeleteArticleButton";
 import Pagination from "@/components/articles/Pagination";
 import { formatDate } from "@/utils/formatDate";
 import type { ColumnsType } from "antd/es/table";
-import {
-  DeleteOutlined,
-  EditOutlined,
-  MoreOutlined,
-  ReadOutlined,
-} from "@ant-design/icons";
+import { Badge } from "@/components/ui/Badge";
+import { EmptyState } from "@/components/ui/EmptyState";
 
 interface AdminArticlesTableClientProps {
   articles: Article[];
@@ -21,42 +18,48 @@ interface AdminArticlesTableClientProps {
   currentPage: number;
 }
 
-const AdminArticlesTableClient = ({
+export default function AdminArticlesTableClient({
   articles,
   pages,
   currentPage,
-}: AdminArticlesTableClientProps) => {
-  // const [mounted, setMounted] = useState(false);
-  // useEffect(() => {
-  //     setMounted(true);
-  // }, []);
-
-  // if (!mounted) return <Spin className="flex justify-center items-center h-[80%]" />;
-
+}: AdminArticlesTableClientProps) {
   const columns: ColumnsType<Article> = [
     {
       title: "Title",
       dataIndex: "title",
-      width: "40%",
+      width: "55%",
       key: "title",
-      align: "center",
-      render: (text: string) => <span className="text-gray-700">{text}</span>,
-    },
-    {
-      title: "Created At",
-      dataIndex: "createdAt",
-      key: "createdAt",
-      width: "40%",
-      align: "center",
-      render: (date: string) => (
-        <span className="text-gray-700">{formatDate(date)}</span>
+      render: (text: string, article) => (
+        <Link
+          href={`/articles/${article.id}`}
+          className="font-medium text-foreground transition-colors hover:text-brand-500"
+        >
+          {text}
+        </Link>
       ),
     },
     {
-      title: "Actions",
-      key: "actions",
+      title: "Status",
+      key: "status",
+      width: "12%",
+      render: () => <Badge variant="success">Published</Badge>,
+    },
+    {
+      title: "Created",
+      dataIndex: "createdAt",
+      key: "createdAt",
       width: "20%",
-      align: "center",
+      render: (date: string) => (
+        <span className="text-sm text-muted-foreground">
+          {formatDate(date)}
+        </span>
+      ),
+    },
+    {
+      title: "",
+      key: "actions",
+      width: "13%",
+      align: "right",
       render: (_: any, article: Article) => {
         const items = [
           {
@@ -64,6 +67,14 @@ const AdminArticlesTableClient = ({
             className: "p-0",
             label: <EditArticleForm article={article} />,
           },
+          {
+            key: "read-more",
+            icon: <ExternalLink size={14} />,
+            label: (
+              <Link href={`/articles/${article.id}`}>View article</Link>
+            ),
+          },
+          { type: "divider" as const },
           {
             key: "delete",
             className: "p-0",
@@ -74,49 +85,57 @@ const AdminArticlesTableClient = ({
               />
             ),
           },
-          {
-            key: "read-more",
-            icon: <ReadOutlined />,
-            label: <Link href={`/articles/${article.id}`}>Read More</Link>,
-          },
         ];
 
         return (
-          <Dropdown menu={{ items }} trigger={["click"]}>
-            <Button
-              icon={<MoreOutlined />}
-              className="text-gray-700 rounded-full hover:text-gray-900"
-            />
+          <Dropdown menu={{ items }} trigger={["click"]} placement="bottomRight">
+            <button
+              type="button"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              aria-label="Row actions"
+            >
+              <MoreHorizontal className="h-4 w-4" />
+            </button>
           </Dropdown>
         );
       },
     },
   ];
 
-  // Map articles to data source for the table
+  if (!articles.length) {
+    return (
+      <div className="p-6">
+        <EmptyState
+          title="No articles yet"
+          description="Add your first article from the dashboard."
+        />
+      </div>
+    );
+  }
+
   const dataSource = articles.map((article) => ({
     key: article.id,
     ...article,
   }));
 
   return (
-    <section className="p-5 pt-0">
+    <div>
       <Table<Article>
         dataSource={dataSource}
         columns={columns}
         pagination={false}
         tableLayout="fixed"
         scroll={{ x: 600 }}
+        className="[&_.ant-table]:bg-transparent"
       />
-
-      <Pagination
-        pageNumber={currentPage}
-        pages={pages}
-        route="/admin/articles-table"
-        className="pb-0"
-      />
-    </section>
+      <div className="border-t border-border p-4">
+        <Pagination
+          pageNumber={currentPage}
+          pages={pages}
+          route="/admin/articles-table"
+          className="mt-0"
+        />
+      </div>
+    </div>
   );
-};
-
-export default AdminArticlesTableClient;
+}

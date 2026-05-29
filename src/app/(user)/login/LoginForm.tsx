@@ -1,23 +1,26 @@
 "use client";
 
-import FloatInput from "@/app/common/float-input/FloatInput";
 import useLoading from "@/hooks/useLoading";
 import { DOMAIN } from "@/utils/constants";
-import { Button, Form, Input } from "antd";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import * as React from "react";
 import { toast } from "react-toastify";
+import { Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { Input } from "@/components/ui/Input";
+import { Button } from "@/components/ui/Button";
 
 const LoginForm = () => {
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [showPassword, setShowPassword] = React.useState(false);
   const { loading, withLoading } = useLoading();
 
-  const formSubmitHandler = async (e: React.FormEvent) => {
-    if (email === "") return toast.error("Email is required");
-    if (password === "") return toast.error("Password is required");
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return toast.error("Email is required");
+    if (!password) return toast.error("Password is required");
 
     try {
       await withLoading(async () => {
@@ -26,46 +29,76 @@ const LoginForm = () => {
         router.refresh();
       });
     } catch (error: any) {
-      toast.error(error?.response?.data.message);
+      toast.error(error?.response?.data.message ?? "Something went wrong");
     }
   };
 
   return (
-    <Form onFinish={formSubmitHandler} className="flex gap-4 flex-col">
-      <Form.Item noStyle>
-        <FloatInput
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <Field label="Email" htmlFor="email">
+        <Input
+          id="email"
           type="email"
-          label="Email"
-          name="email"
-          className="w-full rounded text-xl"
-          placeholder="Enter Your Email"
+          autoComplete="email"
+          placeholder="you@company.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          leftIcon={<Mail className="h-4 w-4" />}
           required
         />
-      </Form.Item>
-      <Form.Item noStyle>
-        <FloatInput
-          type="password"
-          label="Password"
-          name="password"
-          className="w-full rounded text-xl border"
-          placeholder="Enter Your Password"
+      </Field>
+
+      <Field label="Password" htmlFor="password">
+        <Input
+          id="password"
+          type={showPassword ? "text" : "password"}
+          autoComplete="current-password"
+          placeholder="••••••••"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          leftIcon={<Lock className="h-4 w-4" />}
+          rightIcon={
+            <button
+              type="button"
+              onClick={() => setShowPassword((v) => !v)}
+              aria-label={showPassword ? "Hide password" : "Show password"}
+              className="cursor-pointer hover:text-foreground"
+            >
+              {showPassword ? (
+                <EyeOff className="h-4 w-4" />
+              ) : (
+                <Eye className="h-4 w-4" />
+              )}
+            </button>
+          }
           required
         />
-      </Form.Item>
-      <Button
-        loading={loading}
-        disabled={loading}
-        htmlType="submit"
-        className="w-full text-white h-[48px] mt-2 text-xl mb-4 font-bold bg-[#0059d6] hover:bg-[#2419be]"
-      >
-        Log In
+      </Field>
+
+      <Button type="submit" loading={loading} size="lg" className="w-full">
+        Log in
       </Button>
-    </Form>
+    </form>
   );
 };
+
+function Field({
+  label,
+  htmlFor,
+  children,
+}: {
+  label: string;
+  htmlFor: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="space-y-1.5">
+      <label htmlFor={htmlFor} className="text-sm font-medium text-foreground">
+        {label}
+      </label>
+      {children}
+    </div>
+  );
+}
 
 export default LoginForm;

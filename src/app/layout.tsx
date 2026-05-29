@@ -1,18 +1,38 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import "react-toastify/dist/ReactToastify.css";
 import Header from "@/components/header/Header";
 import Footer from "@/components/Footer";
 import { ToastContainer } from "react-toastify";
-import AntThemeProvider from "./common/themes/MainThem";
 import AntdStyledComponentsRegistry from "@/components/common/AntdStyledComponentsRegistry";
-// import 'antd/dist/reset.css';
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import AntdThemeProvider from "@/components/providers/AntdThemeProvider";
+import { cn } from "@/lib/cn";
 
-const inter = Inter({ subsets: ["latin"] });
+const sans = Inter({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  display: "swap",
+});
+
+const display = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-display",
+  weight: ["500", "600", "700", "800"],
+  display: "swap",
+});
+
+const mono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
-  title: "Cloud Hosting",
-  description: "Cloud hosting project",
+  title: "Cloud Hosting — Premium hosting for builders",
+  description:
+    "Fast, secure, and reliable cloud hosting for developers and teams.",
 };
 
 interface RootLayoutProps {
@@ -21,19 +41,31 @@ interface RootLayoutProps {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        {/* <AntdRegistry> */}
-        <AntdStyledComponentsRegistry>
-          <AntThemeProvider>
-            <Header />
-            <ToastContainer theme="colored" position="top-center" />
-            <main>{children}</main>
-            <Footer />
-          </AntThemeProvider>
-        </AntdStyledComponentsRegistry>
-
-        {/* </AntdRegistry> */}
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={cn(
+          sans.variable,
+          display.variable,
+          mono.variable,
+          "font-sans antialiased bg-background text-foreground min-h-screen",
+        )}
+      >
+        <ThemeProvider>
+          <AntdStyledComponentsRegistry>
+            <AntdThemeProvider>
+              <div className="relative flex min-h-screen flex-col">
+                <Header />
+                <main className="flex-1">{children}</main>
+                <Footer />
+              </div>
+              <ToastContainer
+                theme="colored"
+                position="top-center"
+                toastClassName="!rounded-xl"
+              />
+            </AntdThemeProvider>
+          </AntdStyledComponentsRegistry>
+        </ThemeProvider>
       </body>
     </html>
   );

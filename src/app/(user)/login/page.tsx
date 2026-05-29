@@ -1,15 +1,27 @@
+import Link from "next/link";
 import LoginForm from "./LoginForm";
+import { AuthLayout } from "@/components/auth/AuthLayout";
 
 const LoginPage = () => {
   return (
-    <section className="fix-height container m-auto px-7 flex items-center justify-center">
-      <div className="m-auto bg-gray-50 rounded-lg p-5 w-full max-w-md shadow-lg">
-        <h1 className="text-center font-bold text-gray-800 mb-5 fluid-heading">
-          Log In
-        </h1>
-        <LoginForm />
-      </div>
-    </section>
+    <AuthLayout
+      eyebrow="Welcome back"
+      title="Log in to your account"
+      subtitle="Enter your credentials to continue to Cloud Hosting."
+      footer={
+        <>
+          Don't have an account?{" "}
+          <Link
+            href="/register"
+            className="font-semibold text-brand-500 hover:underline"
+          >
+            Create one
+          </Link>
+        </>
+      }
+    >
+      <LoginForm />
+    </AuthLayout>
   );
 };
 

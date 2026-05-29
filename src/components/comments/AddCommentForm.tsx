@@ -1,11 +1,12 @@
 "use client";
 import { DOMAIN } from "@/utils/constants";
-import { Button, Form, Input } from "antd";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import useLoading from "@/hooks/useLoading";
+import { Input } from "@/components/ui/Input";
+import { Button } from "@/components/ui/Button";
 
 interface AddCommentFormProps {
   articleId: number;
@@ -14,11 +15,11 @@ interface AddCommentFormProps {
 const AddCommentForm = ({ articleId }: AddCommentFormProps) => {
   const router = useRouter();
   const { loading, withLoading } = useLoading();
-
   const [text, setText] = useState("");
 
-  const formSubmitHandler = async () => {
-    if (text === "") return toast.error("Please write something");
+  const formSubmitHandler = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (text.trim() === "") return toast.error("Please write something");
 
     await withLoading(async () => {
       try {
@@ -32,23 +33,20 @@ const AddCommentForm = ({ articleId }: AddCommentFormProps) => {
   };
 
   return (
-    <Form onFinish={formSubmitHandler}>
+    <form onSubmit={formSubmitHandler} className="flex flex-col gap-3">
       <Input
-        className="rounded-lg text-xl p-2 w-full bg-white focus:shadow-md"
         type="text"
-        placeholder="Add a comment..."
+        placeholder="Share your thoughts…"
+        aria-label="Comment"
         value={text}
         onChange={(e) => setText(e.target.value)}
       />
-      <Button
-        size="large"
-        loading={loading}
-        htmlType="submit"
-        className="bg-green-700 text-white mt-2  w-min text-xl rounded-lg hover:!bg-green-900 hover:!text-white hover:!border-green-900 transition"
-      >
-        Comment
-      </Button>
-    </Form>
+      <div className="flex justify-end">
+        <Button type="submit" loading={loading}>
+          Post comment
+        </Button>
+      </div>
+    </form>
   );
 };
 
