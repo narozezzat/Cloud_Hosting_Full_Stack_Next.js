@@ -5,7 +5,7 @@ import Link from "next/link";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Article } from "@/generated/prisma";
 import RowActions from "./RowActions";
-import Pagination from "@/components/articles/Pagination";
+import Pagination from "@/components/ui/Pagination";
 import { formatDate } from "@/utils/formatDate";
 import { Badge } from "@/components/ui/Badge";
 import { DataTable } from "@/components/ui/DataTable";

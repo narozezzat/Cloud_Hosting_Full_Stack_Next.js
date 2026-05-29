@@ -29,7 +29,8 @@ const NAV = [
   },
   {
     label: "Comments",
-    href: "/admin/comments-table",
+    href: "/admin/comments-table?pageNumber=1",
+    match: "/admin/comments-table",
     icon: MessageSquare,
   },
   { label: "Analytics", href: "/admin/analytics", icon: BarChart3 },

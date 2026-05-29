@@ -4,15 +4,20 @@ import * as React from "react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Comment } from "@/generated/prisma";
 import CommentRowActions from "./CommentRowActions";
+import Pagination from "@/components/ui/Pagination";
 import { formatDate } from "@/utils/formatDate";
 import { DataTable } from "@/components/ui/DataTable";
 
 interface AdminCommentsTableClientProps {
   comments: Comment[];
+  pages: number;
+  currentPage: number;
 }
 
 export default function AdminCommentsTableClient({
   comments,
+  pages,
+  currentPage,
 }: AdminCommentsTableClientProps) {
   const columns = React.useMemo<ColumnDef<Comment>[]>(
     () => [
@@ -48,13 +53,19 @@ export default function AdminCommentsTableClient({
     <DataTable
       columns={columns}
       data={comments}
-      enablePagination
-      pageSize={10}
       emptyState={{
         title: "No comments yet",
         description:
           "When users start engaging with your articles, comments will appear here.",
       }}
+      footer={
+        <Pagination
+          pageNumber={currentPage}
+          pages={pages}
+          route="/admin/comments-table"
+          className="mt-0"
+        />
+      }
     />
   );
 }

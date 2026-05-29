@@ -1,13 +1,24 @@
 import { Comment } from "@/generated/prisma";
 import { DOMAIN } from "@/utils/constants";
 
-// Get all comments
-export async function getAllComments(token: string): Promise<Comment[]> {
-  const response = await fetch(`${DOMAIN}/api/comments`, {
-    headers: {
-      Cookie: `jwtToken=${token}`,
+interface PaginatedComments {
+  comments: Comment[];
+  count: number;
+}
+
+// Get all comments (paginated)
+export async function getAllComments(
+  token: string,
+  pageNumber: string,
+): Promise<PaginatedComments> {
+  const response = await fetch(
+    `${DOMAIN}/api/comments?pageNumber=${pageNumber}`,
+    {
+      headers: {
+        Cookie: `jwtToken=${token}`,
+      },
     },
-  });
+  );
 
   if (!response.ok) {
     throw new Error("Failed to fetch comments");

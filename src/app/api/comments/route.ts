@@ -3,6 +3,7 @@ import prisma from "@/utils/db";
 import { verifyToken } from "@/utils/verifyToken";
 import { CreateCommentDto } from "@/utils/dtos";
 import { createCommentSchema } from "@/utils/validationSchema";
+import { COMMENT_PER_PAGE } from "@/utils/constants";
 
 /**
  *  @method  POST
@@ -49,7 +50,7 @@ export async function POST(request: NextRequest) {
 /**
  *  @method  GET
  *  @route   ~/api/comments
- *  @desc    Get All Comments
+ *  @desc    Get All Comments (paginated)
  *  @access  private (only admin)
  */
 export async function GET(request: NextRequest) {
@@ -62,8 +63,19 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const comments = await prisma.comment.findMany();
-    return NextResponse.json(comments, { status: 200 });
+    const pageNumber =
+      request.nextUrl.searchParams.get("pageNumber") || "1";
+
+    const [comments, count] = await Promise.all([
+      prisma.comment.findMany({
+        skip: COMMENT_PER_PAGE * (parseInt(pageNumber) - 1),
+        take: COMMENT_PER_PAGE,
+        orderBy: { createdAt: "desc" },
+      }),
+      prisma.comment.count(),
+    ]);
+
+    return NextResponse.json({ comments, count }, { status: 200 });
   } catch (error) {
     return NextResponse.json(
       { message: "internal server error" },

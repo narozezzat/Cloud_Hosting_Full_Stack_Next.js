@@ -28,7 +28,7 @@ const QUICK_LINKS = [
   {
     label: "Review comments",
     description: "Moderate community discussion.",
-    href: "/admin/comments-table",
+    href: "/admin/comments-table?pageNumber=1",
     icon: MessageSquare,
   },
   {
