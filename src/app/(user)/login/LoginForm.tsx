@@ -4,7 +4,6 @@ import useLoading from "@/hooks/useLoading";
 import { DOMAIN } from "@/lib/constants";
 import { getErrorMessage } from "@/lib/getErrorMessage";
 import axios from "axios";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import * as React from "react";
 import { toast } from "react-toastify";
@@ -15,7 +14,6 @@ import { FormField } from "@/components/ui/FormField";
 import { PasswordInput } from "@/components/ui/PasswordInput";
 
 const LoginForm = () => {
-  const router = useRouter();
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const { loading, withLoading } = useLoading();
@@ -28,8 +26,10 @@ const LoginForm = () => {
     try {
       await withLoading(async () => {
         await axios.post(`${DOMAIN}/api/users/login`, { email, password });
-        router.replace("/");
-        router.refresh();
+        // Full navigation so the server re-renders the root layout's Header
+        // with the new auth cookie. A soft router.replace + refresh races and
+        // can leave the header showing the logged-out state until a reload.
+        window.location.assign("/");
       });
     } catch (error) {
       toast.error(getErrorMessage(error));

@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { ChevronRight, LogOut, User } from "lucide-react";
@@ -35,13 +34,13 @@ const UserDropdown = ({
   align = "end",
   side,
 }: UserDropdownProps) => {
-  const router = useRouter();
-
   const handleLogout = async () => {
     try {
       await axios.get(`${DOMAIN}/api/users/logout`);
-      router.push("/");
-      router.refresh();
+      // Full navigation so the server re-renders the root layout's Header
+      // without the auth cookie (a soft push + refresh can race and leave
+      // the header showing the logged-in state until a manual reload).
+      window.location.assign("/");
     } catch {
       toast.warning("Something went wrong");
     }

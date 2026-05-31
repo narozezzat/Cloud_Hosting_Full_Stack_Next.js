@@ -3,7 +3,6 @@ import useLoading from "@/hooks/useLoading";
 import { DOMAIN } from "@/lib/constants";
 import { getErrorMessage } from "@/lib/getErrorMessage";
 import axios from "axios";
-import { useRouter } from "next/navigation";
 import * as React from "react";
 import { toast } from "react-toastify";
 import { Mail, User } from "lucide-react";
@@ -35,8 +34,6 @@ function passwordStrength(pw: string): {
 }
 
 const RegisterForm = () => {
-  const router = useRouter();
-
   const [username, setUsername] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -57,8 +54,10 @@ const RegisterForm = () => {
           password,
           username,
         });
-        router.replace("/");
-        router.refresh();
+        // Full navigation so the server re-renders the root layout's Header
+        // with the new auth cookie (a soft replace + refresh can race and
+        // leave the header logged-out until a manual reload).
+        window.location.assign("/");
       });
     } catch (error) {
       toast.error(getErrorMessage(error));
