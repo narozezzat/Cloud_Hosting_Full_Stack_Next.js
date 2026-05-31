@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Menu, ShieldCheck } from "lucide-react";
+import { ChevronsUpDown, Menu, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { Logo } from "@/components/brand/Logo";
 import { Button } from "@/components/ui/Button";
@@ -87,16 +87,29 @@ export function HeaderMobileMenu({
 
         <SheetFooter>
           {username ? (
-            <div className="flex items-center justify-between gap-3">
-              <div className="flex min-w-0 items-center gap-3">
-                <Avatar name={username} size="sm" />
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-semibold">{username}</p>
-                  <p className="text-xs text-muted-foreground">Signed in</p>
-                </div>
-              </div>
-              <UserDropdown username={username} />
-            </div>
+            <UserDropdown
+              username={username}
+              align="start"
+              side="top"
+              trigger={
+                <button
+                  type="button"
+                  aria-label={`Account menu for ${username}`}
+                  className="flex w-full items-center gap-3 rounded-xl border border-border bg-card px-3 py-2.5 text-left transition-colors hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                >
+                  <Avatar name={username} size="sm" />
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-sm font-semibold">
+                      {username}
+                    </span>
+                    <span className="block text-xs text-muted-foreground">
+                      Signed in
+                    </span>
+                  </span>
+                  <ChevronsUpDown className="h-4 w-4 shrink-0 text-muted-foreground" />
+                </button>
+              }
+            />
           ) : (
             <div className="flex flex-col gap-2">
               <Button asChild variant="outline" size="md">
