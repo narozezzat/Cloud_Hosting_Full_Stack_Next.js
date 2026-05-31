@@ -26,12 +26,3 @@ export type SingleArticle = Article & {
   category: Category | null;
   comments: CommentWithUser[];
 };
-
-/** Grouped results returned by the admin unified search (`/api/admin/search`). */
-export type AdminSearchResults = {
-  articles: (Pick<Article, "id" | "title"> & {
-    category: Pick<Category, "name"> | null;
-  })[];
-  users: Pick<User, "id" | "username" | "email" | "isAdmin">[];
-  categories: Pick<Category, "id" | "name" | "slug">[];
-};

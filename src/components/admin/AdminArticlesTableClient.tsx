@@ -9,6 +9,7 @@ import Pagination from "@/components/ui/Pagination";
 import { formatDate } from "@/lib/formatDate";
 import { Badge } from "@/components/ui/Badge";
 import { DataTable } from "@/components/ui/DataTable";
+import { useAdminSearch } from "@/components/admin/search/AdminSearchContext";
 
 interface AdminArticlesTableClientProps {
   articles: Article[];
@@ -21,6 +22,12 @@ export default function AdminArticlesTableClient({
   pages,
   currentPage,
 }: AdminArticlesTableClientProps) {
+  const { query } = useAdminSearch();
+  const q = query.trim().toLowerCase();
+  const filtered = q
+    ? articles.filter((a) => a.title.toLowerCase().includes(q))
+    : articles;
+
   const columns = React.useMemo<ColumnDef<Article>[]>(
     () => [
       {
@@ -69,18 +76,27 @@ export default function AdminArticlesTableClient({
   return (
     <DataTable
       columns={columns}
-      data={articles}
-      emptyState={{
-        title: "No articles yet",
-        description: "Add your first article from the dashboard.",
-      }}
+      data={filtered}
+      emptyState={
+        q
+          ? {
+              title: "No matching articles",
+              description: `No articles on this page match “${query}”.`,
+            }
+          : {
+              title: "No articles yet",
+              description: "Add your first article from the dashboard.",
+            }
+      }
       footer={
-        <Pagination
-          pageNumber={currentPage}
-          pages={pages}
-          route="/admin/articles-table"
-          className="mt-0"
-        />
+        q ? undefined : (
+          <Pagination
+            pageNumber={currentPage}
+            pages={pages}
+            route="/admin/articles-table"
+            className="mt-0"
+          />
+        )
       }
     />
   );

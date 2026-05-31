@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/table";
 import ConfirmationModal from "@/components/common/modals/ConfirmationModal";
 import useLoading from "@/hooks/useLoading";
+import { useAdminSearch } from "@/components/admin/search/AdminSearchContext";
 
 interface AdminUsersClientProps {
   users: AdminUserRow[];
@@ -39,6 +40,16 @@ export default function AdminUsersClient({
   );
   const [busyId, setBusyId] = React.useState<number | null>(null);
   const { loading: deleting, withLoading: withDeleting } = useLoading();
+  const { query } = useAdminSearch();
+
+  const q = query.trim().toLowerCase();
+  const filteredUsers = q
+    ? users.filter(
+        (u) =>
+          u.username.toLowerCase().includes(q) ||
+          u.email.toLowerCase().includes(q),
+      )
+    : users;
 
   const toggleAdmin = async (user: AdminUserRow) => {
     setBusyId(user.id);
@@ -85,7 +96,17 @@ export default function AdminUsersClient({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {users.map((user) => {
+          {filteredUsers.length === 0 && (
+            <TableRow className="hover:bg-transparent">
+              <TableCell
+                colSpan={6}
+                className="h-24 text-center text-muted-foreground"
+              >
+                No users match “{query}”.
+              </TableCell>
+            </TableRow>
+          )}
+          {filteredUsers.map((user) => {
             const isSelf = user.id === currentUserId;
             return (
               <TableRow key={user.id}>

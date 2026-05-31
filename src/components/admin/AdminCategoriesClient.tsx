@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/EmptyState";
 import ConfirmationModal from "@/components/common/modals/ConfirmationModal";
 import useLoading from "@/hooks/useLoading";
+import { useAdminSearch } from "@/components/admin/search/AdminSearchContext";
 
 interface AdminCategoriesClientProps {
   categories: CategoryWithCount[];
@@ -27,6 +28,12 @@ export default function AdminCategoriesClient({
     React.useState<CategoryWithCount | null>(null);
   const { loading: creating, withLoading: withCreating } = useLoading();
   const { loading: deleting, withLoading: withDeleting } = useLoading();
+  const { query } = useAdminSearch();
+
+  const q = query.trim().toLowerCase();
+  const filteredCategories = q
+    ? categories.filter((c) => c.name.toLowerCase().includes(q))
+    : categories;
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -78,9 +85,14 @@ export default function AdminCategoriesClient({
           title="No categories yet"
           description="Create your first category to organize articles."
         />
+      ) : filteredCategories.length === 0 ? (
+        <EmptyState
+          title="No matching categories"
+          description={`No categories match “${query}”.`}
+        />
       ) : (
         <ul className="divide-y divide-border rounded-md border border-border">
-          {categories.map((c) => (
+          {filteredCategories.map((c) => (
             <li
               key={c.id}
               className="flex items-center justify-between gap-3 px-4 py-3"

@@ -1,32 +1,22 @@
-import {
-  LayoutDashboard,
-  FileText,
-  MessageSquare,
-  BarChart3,
-  Tag,
-  Users,
-  type LucideIcon,
-} from "lucide-react";
-
-/** A static page the command palette can jump to (always available). */
-export interface NavCommand {
-  label: string;
-  href: string;
-  icon: LucideIcon;
-  /** Extra terms (besides the label) that should match this command. */
-  keywords?: string[];
+/** Per-page search configuration for the admin dashboard topbar. */
+export interface AdminSearchPage {
+  /** Pathname prefix this config applies to. */
+  match: string;
+  /** Placeholder shown in the search field on this page. */
+  placeholder: string;
 }
 
-export const NAV_COMMANDS: NavCommand[] = [
-  { label: "Overview", href: "/admin", icon: LayoutDashboard, keywords: ["dashboard", "home"] },
-  { label: "Articles", href: "/admin/articles-table?pageNumber=1", icon: FileText, keywords: ["posts"] },
-  { label: "Comments", href: "/admin/comments-table?pageNumber=1", icon: MessageSquare },
-  { label: "Categories", href: "/admin/categories", icon: Tag, keywords: ["tags"] },
-  { label: "Users", href: "/admin/users", icon: Users, keywords: ["accounts", "members"] },
-  { label: "Analytics", href: "/admin/analytics", icon: BarChart3, keywords: ["stats", "metrics"] },
+/**
+ * Pages that expose a searchable list. The topbar shows its search field only
+ * on these routes; everywhere else (Overview, Analytics) it stays hidden.
+ */
+export const ADMIN_SEARCH_PAGES: AdminSearchPage[] = [
+  { match: "/admin/articles-table", placeholder: "Search articles by title…" },
+  { match: "/admin/comments-table", placeholder: "Search comments…" },
+  { match: "/admin/categories", placeholder: "Search categories…" },
+  { match: "/admin/users", placeholder: "Search users by name or email…" },
 ];
 
-export function matchesNavCommand(cmd: NavCommand, query: string): boolean {
-  const haystack = [cmd.label, ...(cmd.keywords ?? [])].join(" ").toLowerCase();
-  return haystack.includes(query.toLowerCase());
+export function getAdminSearchPage(pathname: string): AdminSearchPage | null {
+  return ADMIN_SEARCH_PAGES.find((p) => pathname.startsWith(p.match)) ?? null;
 }
