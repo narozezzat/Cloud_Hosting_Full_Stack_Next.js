@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import prisma from "@/lib/db";
+import { Prisma } from "@/generated/prisma";
 import { verifyTokenForPage } from "@/lib/auth/verifyToken";
 import { AdminUserRow } from "@/lib/types";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
@@ -9,12 +10,29 @@ import { Card } from "@/components/ui/Card";
 
 export const dynamic = "force-dynamic";
 
-export default async function AdminUsersPage() {
+interface AdminUsersPageProps {
+  searchParams: { q?: string };
+}
+
+export default async function AdminUsersPage({
+  searchParams,
+}: AdminUsersPageProps) {
   const token = cookies().get("jwtToken")?.value || "";
   const payload = verifyTokenForPage(token);
   if (!payload || !payload.isAdmin) redirect("/");
 
+  const q = searchParams.q?.trim() || "";
+  const where: Prisma.UserWhereInput = q
+    ? {
+        OR: [
+          { username: { contains: q, mode: "insensitive" } },
+          { email: { contains: q, mode: "insensitive" } },
+        ],
+      }
+    : {};
+
   const users = (await prisma.user.findMany({
+    where,
     orderBy: { createdAt: "desc" },
     select: {
       id: true,
@@ -35,7 +53,11 @@ export default async function AdminUsersPage() {
       />
       <Card className="flex rounded-md min-h-0 flex-1 flex-col overflow-hidden p-0">
         <div className="overflow-auto">
-          <AdminUsersClient users={users} currentUserId={payload.id} />
+          <AdminUsersClient
+            users={users}
+            currentUserId={payload.id}
+            searchQuery={q}
+          />
         </div>
       </Card>
     </div>

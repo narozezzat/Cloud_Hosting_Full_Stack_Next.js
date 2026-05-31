@@ -7,25 +7,21 @@ import CommentRowActions from "./CommentRowActions";
 import Pagination from "@/components/ui/Pagination";
 import { formatDate } from "@/lib/formatDate";
 import { DataTable } from "@/components/ui/DataTable";
-import { useAdminSearch } from "@/components/admin/search/AdminSearchContext";
 
 interface AdminCommentsTableClientProps {
   comments: Comment[];
   pages: number;
   currentPage: number;
+  /** Active server-side search term, preserved across pagination. */
+  searchQuery?: string;
 }
 
 export default function AdminCommentsTableClient({
   comments,
   pages,
   currentPage,
+  searchQuery,
 }: AdminCommentsTableClientProps) {
-  const { query } = useAdminSearch();
-  const q = query.trim().toLowerCase();
-  const filtered = q
-    ? comments.filter((c) => c.text.toLowerCase().includes(q))
-    : comments;
-
   const columns = React.useMemo<ColumnDef<Comment>[]>(
     () => [
       {
@@ -59,12 +55,12 @@ export default function AdminCommentsTableClient({
   return (
     <DataTable
       columns={columns}
-      data={filtered}
+      data={comments}
       emptyState={
-        q
+        searchQuery
           ? {
               title: "No matching comments",
-              description: `No comments on this page match “${query}”.`,
+              description: `No comments match “${searchQuery}”.`,
             }
           : {
               title: "No comments yet",
@@ -73,14 +69,13 @@ export default function AdminCommentsTableClient({
             }
       }
       footer={
-        q ? undefined : (
-          <Pagination
-            pageNumber={currentPage}
-            pages={pages}
-            route="/admin/comments-table"
-            className="mt-0"
-          />
-        )
+        <Pagination
+          pageNumber={currentPage}
+          pages={pages}
+          route="/admin/comments-table"
+          query={{ q: searchQuery }}
+          className="mt-0"
+        />
       }
     />
   );

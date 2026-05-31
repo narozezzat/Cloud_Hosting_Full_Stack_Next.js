@@ -22,17 +22,19 @@ import {
 } from "@/components/ui/table";
 import ConfirmationModal from "@/components/common/modals/ConfirmationModal";
 import useLoading from "@/hooks/useLoading";
-import { useAdminSearch } from "@/components/admin/search/AdminSearchContext";
 
 interface AdminUsersClientProps {
   users: AdminUserRow[];
   /** The signed-in admin — can't delete or demote themselves here. */
   currentUserId: number;
+  /** Active server-side search term (drives the empty-state copy). */
+  searchQuery?: string;
 }
 
 export default function AdminUsersClient({
   users,
   currentUserId,
+  searchQuery,
 }: AdminUsersClientProps) {
   const router = useRouter();
   const [pendingDelete, setPendingDelete] = React.useState<AdminUserRow | null>(
@@ -40,16 +42,6 @@ export default function AdminUsersClient({
   );
   const [busyId, setBusyId] = React.useState<number | null>(null);
   const { loading: deleting, withLoading: withDeleting } = useLoading();
-  const { query } = useAdminSearch();
-
-  const q = query.trim().toLowerCase();
-  const filteredUsers = q
-    ? users.filter(
-        (u) =>
-          u.username.toLowerCase().includes(q) ||
-          u.email.toLowerCase().includes(q),
-      )
-    : users;
 
   const toggleAdmin = async (user: AdminUserRow) => {
     setBusyId(user.id);
@@ -96,17 +88,19 @@ export default function AdminUsersClient({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {filteredUsers.length === 0 && (
+          {users.length === 0 && (
             <TableRow className="hover:bg-transparent">
               <TableCell
                 colSpan={6}
                 className="h-24 text-center text-muted-foreground"
               >
-                No users match “{query}”.
+                {searchQuery
+                  ? `No users match “${searchQuery}”.`
+                  : "No users yet."}
               </TableCell>
             </TableRow>
           )}
-          {filteredUsers.map((user) => {
+          {users.map((user) => {
             const isSelf = user.id === currentUserId;
             return (
               <TableRow key={user.id}>

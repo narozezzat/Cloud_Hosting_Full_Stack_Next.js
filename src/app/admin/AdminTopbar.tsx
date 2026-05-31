@@ -2,13 +2,12 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Bell, ChevronRight, Home, Menu, Search } from "lucide-react";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import UserDropdown from "@/components/layout/header/UserDropdown";
 import { AdminSearchField } from "@/components/admin/search/AdminSearchField";
 import { getAdminSearchPage } from "@/components/admin/search/adminSearchConfig";
-import { useAdminSearch } from "@/components/admin/search/AdminSearchContext";
 
 const TITLES: Record<string, string> = {
   "/admin": "Overview",
@@ -40,12 +39,13 @@ export default function AdminTopbar({
   username,
   onOpenMobileNav,
 }: AdminTopbarProps) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const pathname = usePathname() || "/admin";
   const crumbs = getCrumbs(pathname);
   const current = crumbs[crumbs.length - 1];
 
   const searchPage = getAdminSearchPage(pathname);
-  const { setQuery } = useAdminSearch();
   const [mobileSearchOpen, setMobileSearchOpen] = React.useState(false);
 
   // Collapse the mobile search whenever the route changes.
@@ -55,7 +55,12 @@ export default function AdminTopbar({
 
   const closeMobileSearch = () => {
     setMobileSearchOpen(false);
-    setQuery("");
+    // Clear the active query so a hidden filter doesn't silently persist.
+    const params = new URLSearchParams(Array.from(searchParams.entries()));
+    params.delete("q");
+    params.delete("pageNumber");
+    const qs = params.toString();
+    router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
   };
 
   return (

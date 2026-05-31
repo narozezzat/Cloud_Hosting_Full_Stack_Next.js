@@ -1,19 +1,35 @@
-import { getAllComments } from "@/lib/api/adminApiCall";
 import { COMMENT_PER_PAGE } from "@/lib/constants";
-import { cookies } from "next/headers";
+import prisma from "@/lib/db";
+import { Comment, Prisma } from "@/generated/prisma";
 import { Card } from "@/components/ui/Card";
 import AdminCommentsTableClient from "@/components/admin/AdminCommentsTableClient";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
 
+export const dynamic = "force-dynamic";
+
 interface AdminCommentsTableProps {
-  searchParams: { pageNumber?: string };
+  searchParams: { pageNumber?: string; q?: string };
 }
 
 export default async function AdminCommentsTable({
-  searchParams: { pageNumber },
+  searchParams: { pageNumber, q },
 }: AdminCommentsTableProps) {
-  const token = cookies().get("jwtToken")?.value || "";
-  const { comments, count } = await getAllComments(token, pageNumber || "1");
+  const search = q?.trim() || "";
+  const currentPage = parseInt(pageNumber || "1") || 1;
+
+  const where: Prisma.CommentWhereInput = search
+    ? { text: { contains: search, mode: "insensitive" } }
+    : {};
+
+  const [comments, count] = await Promise.all([
+    prisma.comment.findMany({
+      where,
+      skip: COMMENT_PER_PAGE * (currentPage - 1),
+      take: COMMENT_PER_PAGE,
+      orderBy: { createdAt: "desc" },
+    }) as Promise<Comment[]>,
+    prisma.comment.count({ where }),
+  ]);
   const pages = Math.ceil(count / COMMENT_PER_PAGE);
 
   return (
@@ -28,7 +44,8 @@ export default async function AdminCommentsTable({
         <AdminCommentsTableClient
           comments={comments}
           pages={pages}
-          currentPage={parseInt(pageNumber || "1") || 1}
+          currentPage={currentPage}
+          searchQuery={search}
         />
       </Card>
     </div>
