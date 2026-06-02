@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { Trash2, ShieldCheck, Shield } from "lucide-react";
-import { DOMAIN } from "@/lib/constants";
+import { API_BASE_URL } from "@/lib/constants";
 import { getErrorMessage } from "@/lib/getErrorMessage";
 import { AdminUserRow } from "@/lib/types";
 import { formatDate } from "@/lib/formatDate";
@@ -46,7 +46,7 @@ export default function AdminUsersClient({
   const toggleAdmin = async (user: AdminUserRow) => {
     setBusyId(user.id);
     try {
-      await axios.patch(`${DOMAIN}/api/users/${user.id}`, {
+      await axios.patch(`${API_BASE_URL}/api/users/${user.id}`, {
         isAdmin: !user.isAdmin,
       });
       toast.success(
@@ -64,7 +64,7 @@ export default function AdminUsersClient({
     if (!pendingDelete) return;
     try {
       await withDeleting(async () => {
-        await axios.delete(`${DOMAIN}/api/users/${pendingDelete.id}`);
+        await axios.delete(`${API_BASE_URL}/api/users/${pendingDelete.id}`);
         toast.success("User deleted");
         setPendingDelete(null);
         router.refresh();

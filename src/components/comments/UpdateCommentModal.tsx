@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { Pencil } from "lucide-react";
-import { DOMAIN } from "@/lib/constants";
+import { API_BASE_URL } from "@/lib/constants";
 import { getErrorMessage } from "@/lib/getErrorMessage";
 import { Modal } from "@/components/ui/Modal";
 import { Button } from "@/components/ui/Button";
@@ -44,7 +44,7 @@ const UpdateCommentModal = ({
     if (!updatedText.trim()) return toast.info("Please write something");
     try {
       setLoading(true);
-      await axios.put(`${DOMAIN}/api/comments/${commentId}`, {
+      await axios.put(`${API_BASE_URL}/api/comments/${commentId}`, {
         text: updatedText,
       });
       toast.success("Comment updated");

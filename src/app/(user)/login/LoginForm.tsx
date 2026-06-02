@@ -1,7 +1,7 @@
 "use client";
 
 import useLoading from "@/hooks/useLoading";
-import { DOMAIN } from "@/lib/constants";
+import { API_BASE_URL } from "@/lib/constants";
 import { getErrorMessage } from "@/lib/getErrorMessage";
 import axios from "axios";
 import Link from "next/link";
@@ -25,7 +25,7 @@ const LoginForm = () => {
 
     try {
       await withLoading(async () => {
-        await axios.post(`${DOMAIN}/api/users/login`, { email, password });
+        await axios.post(`${API_BASE_URL}/api/users/login`, { email, password });
         // Full navigation so the server re-renders the root layout's Header
         // with the new auth cookie. A soft router.replace + refresh races and
         // can leave the header showing the logged-out state until a reload.

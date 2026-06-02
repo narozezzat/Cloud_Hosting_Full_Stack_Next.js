@@ -1,5 +1,5 @@
 "use client";
-import { DOMAIN } from "@/lib/constants";
+import { API_BASE_URL } from "@/lib/constants";
 import { getErrorMessage } from "@/lib/getErrorMessage";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -38,7 +38,7 @@ const AddCommentForm = ({
 
     await withLoading(async () => {
       try {
-        await axios.post(`${DOMAIN}/api/comments`, {
+        await axios.post(`${API_BASE_URL}/api/comments`, {
           text,
           articleId,
           parentId: parentId ?? null,

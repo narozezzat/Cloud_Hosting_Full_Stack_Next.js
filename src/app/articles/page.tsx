@@ -1,6 +1,5 @@
 import { cookies } from "next/headers";
 import { Plus } from "lucide-react";
-import { getArticles } from "@/lib/api/articleApiCall";
 import ArticleItem from "@/components/articles/ArticleItem";
 import Pagination from "@/components/ui/Pagination";
 import SearchArticleInput from "@/components/articles/SearchArticleInput";
@@ -29,14 +28,22 @@ interface ArticlesPageProps {
 export default async function ArticlesPage({ searchParams }: ArticlesPageProps) {
   const pageNumber = searchParams.pageNumber || "1";
   const categoryId = searchParams.categoryId;
+  const currentPage = Math.max(parseInt(pageNumber) || 1, 1);
   // A non-numeric categoryId would crash the Prisma filter — treat it as a
   // bad resource reference and 404 instead of throwing a 500.
   if (categoryId && Number.isNaN(parseInt(categoryId))) notFound();
 
+  const articleWhere = categoryId ? { categoryId: parseInt(categoryId) } : {};
   const [articles, count, categories] = await Promise.all([
-    getArticles(pageNumber, categoryId) as Promise<ArticleWithCategory[]>,
+    prisma.article.findMany({
+      where: articleWhere,
+      skip: ARTICLE_PER_PAGE * (currentPage - 1),
+      take: ARTICLE_PER_PAGE,
+      orderBy: { createdAt: "desc" },
+      include: { category: true },
+    }) as Promise<ArticleWithCategory[]>,
     prisma.article.count({
-      where: categoryId ? { categoryId: parseInt(categoryId) } : {},
+      where: articleWhere,
     }),
     prisma.category.findMany({
       orderBy: { name: "asc" },
@@ -104,7 +111,7 @@ export default async function ArticlesPage({ searchParams }: ArticlesPageProps) 
           </div>
         )}
         <Pagination
-          pageNumber={parseInt(pageNumber) || 1}
+          pageNumber={currentPage}
           route="/articles"
           pages={pages}
           query={{ categoryId }}

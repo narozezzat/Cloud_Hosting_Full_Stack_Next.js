@@ -1,9 +1,9 @@
-import { DOMAIN } from "@/lib/constants";
+import { API_BASE_URL } from "@/lib/constants";
 import { CategoryWithCount } from "@/lib/types";
 
 // Get all categories (with article counts)
 export async function getCategories(): Promise<CategoryWithCount[]> {
-  const response = await fetch(`${DOMAIN}/api/categories`, {
+  const response = await fetch(`${API_BASE_URL}/api/categories`, {
     cache: "no-store",
   });
 

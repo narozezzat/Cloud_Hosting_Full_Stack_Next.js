@@ -1,6 +1,6 @@
 "use client";
 import useLoading from "@/hooks/useLoading";
-import { DOMAIN } from "@/lib/constants";
+import { API_BASE_URL } from "@/lib/constants";
 import { getErrorMessage } from "@/lib/getErrorMessage";
 import axios from "axios";
 import * as React from "react";
@@ -49,7 +49,7 @@ const RegisterForm = () => {
 
     try {
       await withLoading(async () => {
-        await axios.post(`${DOMAIN}/api/users/register`, {
+        await axios.post(`${API_BASE_URL}/api/users/register`, {
           email,
           password,
           username,

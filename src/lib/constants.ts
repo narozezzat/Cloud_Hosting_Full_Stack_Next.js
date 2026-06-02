@@ -8,3 +8,5 @@ export const DOMAIN =
   process.env.NODE_ENV === "production"
     ? PRODUCTION_DOMAIN
     : DEVELOPMENT_DOMAIN;
+
+export const API_BASE_URL = "";

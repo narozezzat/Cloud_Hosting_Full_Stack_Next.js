@@ -5,7 +5,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { Mail } from "lucide-react";
 import useLoading from "@/hooks/useLoading";
-import { DOMAIN } from "@/lib/constants";
+import { API_BASE_URL } from "@/lib/constants";
 import { getErrorMessage } from "@/lib/getErrorMessage";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
@@ -22,7 +22,7 @@ const ForgotPasswordForm = () => {
 
     try {
       await withLoading(async () => {
-        const res = await axios.post(`${DOMAIN}/api/users/forgot-password`, {
+        const res = await axios.post(`${API_BASE_URL}/api/users/forgot-password`, {
           email,
         });
         toast.success(res.data.message);

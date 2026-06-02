@@ -1,6 +1,6 @@
 "use client";
 import axios from "axios";
-import { DOMAIN } from "@/lib/constants";
+import { API_BASE_URL } from "@/lib/constants";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { Button } from "antd";
@@ -10,7 +10,7 @@ const LogoutButton = () => {
   const router = useRouter();
   const logoutHandler = async () => {
     try {
-      await axios.get(`${DOMAIN}/api/users/logout`);
+      await axios.get(`${API_BASE_URL}/api/users/logout`);
       router.push("/");
       router.refresh();
     } catch (error) {

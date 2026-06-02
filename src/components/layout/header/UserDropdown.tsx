@@ -5,7 +5,7 @@ import Link from "next/link";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { ChevronRight, LogOut, User } from "lucide-react";
-import { DOMAIN } from "@/lib/constants";
+import { API_BASE_URL } from "@/lib/constants";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -36,7 +36,7 @@ const UserDropdown = ({
 }: UserDropdownProps) => {
   const handleLogout = async () => {
     try {
-      await axios.get(`${DOMAIN}/api/users/logout`);
+      await axios.get(`${API_BASE_URL}/api/users/logout`);
       // Full navigation so the server re-renders the root layout's Header
       // without the auth cookie (a soft push + refresh can race and leave
       // the header showing the logged-in state until a manual reload).

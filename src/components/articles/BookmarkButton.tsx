@@ -5,7 +5,7 @@ import axios from "axios";
 import { Bookmark } from "lucide-react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import { DOMAIN } from "@/lib/constants";
+import { API_BASE_URL } from "@/lib/constants";
 import { getErrorMessage } from "@/lib/getErrorMessage";
 import { cn } from "@/lib/cn";
 
@@ -39,7 +39,7 @@ export function BookmarkButton({
     setPending(true);
 
     try {
-      const url = `${DOMAIN}/api/articles/${articleId}/bookmark`;
+      const url = `${API_BASE_URL}/api/articles/${articleId}/bookmark`;
       if (next) await axios.post(url);
       else await axios.delete(url);
       if (refreshOnChange) router.refresh();

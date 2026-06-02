@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { Pencil } from "lucide-react";
-import { DOMAIN } from "@/lib/constants";
+import { API_BASE_URL } from "@/lib/constants";
 import { getErrorMessage } from "@/lib/getErrorMessage";
 import { useControllableState } from "@/hooks/useControllableState";
 import { Article } from "@/generated/prisma";
@@ -64,7 +64,7 @@ const EditArticleModal = ({
 
     try {
       setLoading(true);
-      await axios.put(`${DOMAIN}/api/articles/${article.id}`, {
+      await axios.put(`${API_BASE_URL}/api/articles/${article.id}`, {
         title,
         description,
         categoryId,

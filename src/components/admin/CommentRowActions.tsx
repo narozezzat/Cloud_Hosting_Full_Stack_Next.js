@@ -7,7 +7,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { MoreHorizontal, ExternalLink, Trash2 } from "lucide-react";
 import { Comment } from "@/generated/prisma";
-import { DOMAIN } from "@/lib/constants";
+import { API_BASE_URL } from "@/lib/constants";
 import { getErrorMessage } from "@/lib/getErrorMessage";
 import ConfirmationModal from "@/components/common/modals/ConfirmationModal";
 import { Button } from "@/components/ui/Button";
@@ -33,7 +33,7 @@ export default function CommentRowActions({
   const deleteCommentHandler = async () => {
     try {
       setIsLoading(true);
-      await axios.delete(`${DOMAIN}/api/comments/${comment.id}`);
+      await axios.delete(`${API_BASE_URL}/api/comments/${comment.id}`);
       toast.success("Comment deleted");
       setIsModalOpen(false);
       router.refresh();

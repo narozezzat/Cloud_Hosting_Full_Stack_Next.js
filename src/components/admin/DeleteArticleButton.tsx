@@ -5,7 +5,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { Trash2 } from "lucide-react";
-import { DOMAIN } from "@/lib/constants";
+import { API_BASE_URL } from "@/lib/constants";
 import { getErrorMessage } from "@/lib/getErrorMessage";
 import { useControllableState } from "@/hooks/useControllableState";
 import ConfirmationModal from "@/components/common/modals/ConfirmationModal";
@@ -36,7 +36,7 @@ const DeleteArticleButton = ({
   const deleteArticleHandler = async () => {
     try {
       setIsLoading(true);
-      await axios.delete(`${DOMAIN}/api/articles/${articleId}`);
+      await axios.delete(`${API_BASE_URL}/api/articles/${articleId}`);
       toast.success("Article deleted");
       setOpen(false);
       router.refresh();

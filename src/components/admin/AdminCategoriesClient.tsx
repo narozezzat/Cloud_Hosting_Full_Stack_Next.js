@@ -5,7 +5,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { Plus, Trash2, Tag } from "lucide-react";
-import { DOMAIN } from "@/lib/constants";
+import { API_BASE_URL } from "@/lib/constants";
 import { getErrorMessage } from "@/lib/getErrorMessage";
 import { CategoryWithCount } from "@/lib/types";
 import { Input } from "@/components/ui/Input";
@@ -36,7 +36,7 @@ export default function AdminCategoriesClient({
     if (!name.trim()) return toast.error("Category name is required");
     try {
       await withCreating(async () => {
-        await axios.post(`${DOMAIN}/api/categories`, { name: name.trim() });
+        await axios.post(`${API_BASE_URL}/api/categories`, { name: name.trim() });
         toast.success("Category created");
         setName("");
         router.refresh();
@@ -50,7 +50,7 @@ export default function AdminCategoriesClient({
     if (!pendingDelete) return;
     try {
       await withDeleting(async () => {
-        await axios.delete(`${DOMAIN}/api/categories/${pendingDelete.id}`);
+        await axios.delete(`${API_BASE_URL}/api/categories/${pendingDelete.id}`);
         toast.success("Category deleted");
         setPendingDelete(null);
         router.refresh();

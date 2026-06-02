@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import axios from "axios";
-import { DOMAIN } from "@/lib/constants";
+import { API_BASE_URL } from "@/lib/constants";
 import { CategoryWithCount } from "@/lib/types";
 
 /** Fetch the category list on the client (used by article modals & filters). */
@@ -15,7 +15,7 @@ export function useCategories(enabled = true) {
     let active = true;
     setLoading(true);
     axios
-      .get<CategoryWithCount[]>(`${DOMAIN}/api/categories`)
+      .get<CategoryWithCount[]>(`${API_BASE_URL}/api/categories`)
       .then((res) => {
         if (active) setCategories(res.data);
       })

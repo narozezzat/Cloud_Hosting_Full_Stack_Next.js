@@ -1,5 +1,5 @@
 "use client";
-import { DOMAIN } from "@/lib/constants";
+import { API_BASE_URL } from "@/lib/constants";
 import { getErrorMessage } from "@/lib/getErrorMessage";
 import { CommentWithReplies, CommentWithUser } from "@/lib/types";
 import axios from "axios";
@@ -43,7 +43,7 @@ const CommentItem = ({
   const commentDeleteHandler = async () => {
     try {
       await withLoading(async () => {
-        await axios.delete(`${DOMAIN}/api/comments/${comment.id}`);
+        await axios.delete(`${API_BASE_URL}/api/comments/${comment.id}`);
         router.refresh();
         setShowDeleteModal(false);
       });

@@ -5,7 +5,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { Plus, FileText } from "lucide-react";
-import { DOMAIN } from "@/lib/constants";
+import { API_BASE_URL } from "@/lib/constants";
 import { getErrorMessage } from "@/lib/getErrorMessage";
 import { Button } from "@/components/ui/Button";
 import { Modal } from "@/components/ui/Modal";
@@ -44,7 +44,7 @@ const AddArticleModal = ({ trigger }: AddArticleModalProps) => {
 
     try {
       setLoading(true);
-      await axios.post(`${DOMAIN}/api/articles`, {
+      await axios.post(`${API_BASE_URL}/api/articles`, {
         title,
         description,
         categoryId,

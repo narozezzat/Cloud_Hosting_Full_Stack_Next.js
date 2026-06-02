@@ -5,7 +5,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import useLoading from "@/hooks/useLoading";
-import { DOMAIN } from "@/lib/constants";
+import { API_BASE_URL } from "@/lib/constants";
 import { getErrorMessage } from "@/lib/getErrorMessage";
 import { Button } from "@/components/ui/Button";
 import { FormField } from "@/components/ui/FormField";
@@ -37,7 +37,7 @@ const ResetPasswordForm = ({ token }: ResetPasswordFormProps) => {
 
     try {
       await withLoading(async () => {
-        await axios.post(`${DOMAIN}/api/users/reset-password`, {
+        await axios.post(`${API_BASE_URL}/api/users/reset-password`, {
           token,
           password,
         });

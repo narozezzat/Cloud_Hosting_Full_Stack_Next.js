@@ -5,7 +5,7 @@ import axios from "axios";
 import { Heart } from "lucide-react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import { DOMAIN } from "@/lib/constants";
+import { API_BASE_URL } from "@/lib/constants";
 import { getErrorMessage } from "@/lib/getErrorMessage";
 import { cn } from "@/lib/cn";
 
@@ -42,7 +42,7 @@ export function LikeButton({
     setPending(true);
 
     try {
-      const url = `${DOMAIN}/api/articles/${articleId}/like`;
+      const url = `${API_BASE_URL}/api/articles/${articleId}/like`;
       const res = nextLiked
         ? await axios.post(url)
         : await axios.delete(url);

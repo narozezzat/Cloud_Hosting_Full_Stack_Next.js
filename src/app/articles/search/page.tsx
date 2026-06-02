@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { getArticlesBasedOnSearch } from "@/lib/api/articleApiCall";
 import ArticleItem from "@/components/articles/ArticleItem";
 import SearchArticleInput from "@/components/articles/SearchArticleInput";
 import { SearchFilters } from "@/components/articles/SearchFilters";
 import { ArticleWithCategory, CategoryWithCount } from "@/lib/types";
 import prisma from "@/lib/db";
+import { Prisma } from "@/generated/prisma";
 import { Section } from "@/components/ui/Section";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Badge } from "@/components/ui/Badge";
@@ -21,10 +21,22 @@ const SearchArticlePage = async ({ searchParams }: SearchArticlePageProps) => {
   // Guard the only param that feeds a DB filter; a non-numeric id can't match.
   if (categoryId && Number.isNaN(parseInt(categoryId))) notFound();
 
+  const articleWhere: Prisma.ArticleWhereInput = {};
+  if (searchText) {
+    articleWhere.OR = [
+      { title: { contains: searchText, mode: "insensitive" } },
+      { description: { contains: searchText, mode: "insensitive" } },
+    ];
+  }
+  if (categoryId) articleWhere.categoryId = parseInt(categoryId);
+
   const [articles, categories] = await Promise.all([
-    getArticlesBasedOnSearch(searchText, { categoryId, sort }) as Promise<
-      ArticleWithCategory[]
-    >,
+    prisma.article.findMany({
+      where: articleWhere,
+      include: { category: true },
+      orderBy: { createdAt: sort === "oldest" ? "asc" : "desc" },
+      take: searchText || categoryId ? 50 : 6,
+    }) as Promise<ArticleWithCategory[]>,
     prisma.category.findMany({
       orderBy: { name: "asc" },
       include: { _count: { select: { articles: true } } },
